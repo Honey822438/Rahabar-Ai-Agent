@@ -5,7 +5,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 1.4 cluster. **Open:** 1.2 still has to be named in the first PR (needs U1).
+**Now:** 1.6 NetworkPolicy check. **Open:** 1.2 still has to be named in the first PR (needs U1).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
@@ -40,9 +40,9 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
   *Done when:* ≥6 docs and ≥40 pages download; `fetch.py --verify` passes; the corpus is named in the first PR (§2 approval).
 - [x] **1.3 Dockerfiles (§10).** api, indexer (with tesseract), ui. Pinned bases, non-root `USER`, exec-form `CMD`; `.dockerignore` lists `.git`, `__pycache__`, `.venv`, corpus.
   *Done when:* all 3 build; `docker run` api answers `/healthz`.
-- [ ] **1.4 Cluster.** `make cluster` (B1, U4). Free memory first: only about 6 GB is available and minikube alone takes 6 GB.
+- [x] **1.4 Cluster.** `make cluster` (B1, U4). Free memory first: only about 6 GB is available and minikube alone takes 6 GB.
   *Done when:* node Ready; calico, metrics-server and ingress running.
-- [ ] **1.5 Manifests on stubs (§4).** All objects in `k8s/base` + overlays, ConfigMap `RETRIEVER=stub`, `LLM_PROVIDER=stub`, `EMBED_MODEL=dummy-768`, Job `--dummy`. Traps to handle:
+- [x] **1.5 Manifests on stubs (§4).** All objects in `k8s/base` + overlays, ConfigMap `RETRIEVER=stub`, `LLM_PROVIDER=stub`, `EMBED_MODEL=dummy-768`, Job `--dummy`. Traps to handle:
   - `chromadb/chroma:1.0.12`, and verify Chroma and Redis run under `runAsNonRoot` + `readOnlyRootFilesystem` (set UID and `fsGroup`).
   - `secret.placeholder.yaml` is committed with `REPLACE_ME` and **never listed in kustomization**.
   - Jobs are immutable: use `ttlSecondsAfterFinished` so re-applying doesn't fail. CronJob uses `concurrencyPolicy: Forbid`.
@@ -102,3 +102,4 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 ## Progress notes
 (Append key decisions, known issues and real failures here before each /clear.)
 - 1.2 findings: 9 docs, 279 PDF pages. The 2023 rules (26 pages, 243 chars of text) and the entrepreneurship policy (8 pages, no fonts) both need OCR, so the version pair depends on OCR working. The pair is genuine: CGPA 2.00 is clause 1.26 in 2023 and 1.25 in 2026. Hostels are only mentioned in the annual reports and Student Handbook, so must-abstain questions should ask for hostel rules or fees, not whether hostels exist.
+- Note 7 candidates: (a) a Service named `chroma` injects `CHROMA_PORT=tcp://...`, which crashes the Chroma server; fixed with `enableServiceLinks: false`. (b) minikube runs containerd and `minikube image load` failed on the indexer with Docker 29; `make images` now uses `minikube image build`.

@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reindex
+  namespace: rahbar
+  labels: { app: indexer }
+spec:
+  schedule: "0 3 * * 0"
+  # A second writer must never overlap a running one.
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels: { app: indexer }
+        spec:
+            restartPolicy: OnFailure
+            enableServiceLinks: false
+            serviceAccountName: indexer
+            automountServiceAccountToken: false
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              seccompProfile: { type: RuntimeDefault }
+            containers:
+              - name: indexer
+                image: rahbar-indexer:dev
+                imagePullPolicy: IfNotPresent
+                # Stub phase. Task 2.6 removes --dummy; keep the Job and CronJob identical.
+                command: ["python", "-m", "pipeline.run", "--dummy"]
+                envFrom:
+                  - configMapRef: { name: rahbar-config }
+                resources:
+                  requests: { cpu: 500m, memory: 512Mi }
+                  limits: { cpu: "2", memory: 1536Mi }
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  capabilities:
+                    drop:
+                      - ALL
+                volumeMounts:
+                  - { name: tmp, mountPath: /tmp }
+            volumes:
+              - name: tmp
+                emptyDir: {}
