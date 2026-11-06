@@ -5,7 +5,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 1.6 NetworkPolicy check. **Open:** 1.2 still has to be named in the first PR (needs U1).
+**Now:** 1.7 golden set (Malaika), 2.1 indexer (Rehan). **Open:** 1.2 still has to be named in the first PR (needs U1).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
@@ -48,7 +48,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
   - Jobs are immutable: use `ttlSecondsAfterFinished` so re-applying doesn't fail. CronJob uses `concurrencyPolicy: Forbid`.
   - Requests and limits on every container, **including init containers**.
   *Done when:* pods Running/Completed; Ingress serves `/` and `/api/ask`; HPA shows a real %, not `<unknown>`.
-- [ ] **1.6 NetworkPolicy (§4.7).** Default deny + the allow list, with DNS egress.
+- [x] **1.6 NetworkPolicy (§4.7).** Default deny + the allow list, with DNS egress.
   *Done when:* from `ui`, chroma is unreachable; from `api`, chroma and redis work; DNS resolves. Save the output.
 - [ ] **1.7 Golden set (§5.1), before any tuning.** `eval/golden.yaml` with ≥15 questions: 8 ordinary, 2 version, 2 exact-term, 2 must-abstain, 1 injection. Each has its doc + section, taken from reading the PDFs, not from retrieved chunks.
 - [ ] **1.8 First PR** `dev` → `main`, naming the corpus (needs U1). Start `docs/AI-USAGE.md` and a running log for Engineering Note 7 (a real failure that cost over an hour).
@@ -103,3 +103,4 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 (Append key decisions, known issues and real failures here before each /clear.)
 - 1.2 findings: 9 docs, 279 PDF pages. The 2023 rules (26 pages, 243 chars of text) and the entrepreneurship policy (8 pages, no fonts) both need OCR, so the version pair depends on OCR working. The pair is genuine: CGPA 2.00 is clause 1.26 in 2023 and 1.25 in 2026. Hostels are only mentioned in the annual reports and Student Handbook, so must-abstain questions should ask for hostel rules or fees, not whether hostels exist.
 - Note 7 candidates: (a) a Service named `chroma` injects `CHROMA_PORT=tcp://...`, which crashes the Chroma server; fixed with `enableServiceLinks: false`. (b) minikube runs containerd and `minikube image load` failed on the indexer with Docker 29; `make images` now uses `minikube image build`.
+- Q7 raw material, CHROMA_PORT bug (6 Nov): **Symptom:** `chroma-0` in CrashLoopBackOff, 6 restarts, while api, redis and ui were healthy. **Prime suspect beforehand (not a tested guess):** the non-root/read-only securityContext, which 1.5 had listed as a Chroma risk. **What revealed it:** `kubectl logs chroma-0`: `Error loading config: invalid type: found string "tcp://10.100.217.229:8000", expected u16 for key "PORT" in CHROMA_ environment variable(s)`. **Cause:** Kubernetes injects `CHROMA_PORT` for a Service named `chroma`, and Chroma reads `CHROMA_*` as config. **Fix:** `enableServiceLinks: false`. **Caveat:** this took minutes, not over an hour, and the log line pointed straight at it, so Q7 needs a longer failure if one happens.

@@ -1,0 +1,32 @@
+Fri Nov  6 09:03:22 AM UTC 2026
+## kubectl get networkpolicy
+NAME                          POD-SELECTOR   AGE
+allow-dns-egress              <none>         57m
+api-egress                    app=api        57m
+api-from-ingress-and-ui       app=api        57m
+chroma-from-api-and-indexer   app=chroma     57m
+default-deny-all              <none>         57m
+indexer-egress                app=indexer    57m
+redis-from-api                app=redis      57m
+ui-from-ingress               app=ui         57m
+
+## from api pod
+chroma:8000 dns-ok connect-OK
+redis:6379 dns-ok connect-OK
+generativelanguage.googleapis.com:443 dns-ok connect-OK
+
+## from ui pod: DNS
+Name:	chroma.rahbar.svc.cluster.local
+Address: 10.100.217.229
+
+
+
+## from ui pod: connections
+chroma:8000 -> connect-BLOCKED
+redis:6379 -> connect-BLOCKED
+
+## ingress still serves
+ui 200
+
+## control: same nc from ui to an allowed path (kube-dns TCP 53)
+connect-OK
