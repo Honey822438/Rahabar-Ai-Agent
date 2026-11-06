@@ -7,6 +7,7 @@ import httpx
 from ...config import Settings
 from ...schemas import Answer, Passage
 from ...services.prompt import build_messages
+from ...services.telemetry import record_generation
 
 
 class OllamaProvider:
@@ -29,4 +30,7 @@ class OllamaProvider:
             timeout=self.settings.llm_timeout_seconds,
         )
         response.raise_for_status()
-        return Answer.model_validate_json(response.json()["message"]["content"])
+        body = response.json()
+        record_generation(self.settings.llm_model, body.get("prompt_eval_count", 0),
+                          body.get("eval_count", 0))
+        return Answer.model_validate_json(body["message"]["content"])

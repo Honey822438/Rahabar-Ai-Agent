@@ -48,14 +48,29 @@ class ChromaRetriever:
     name = "chroma"
 
     def __init__(self, settings: Settings) -> None:
-        import chromadb  # the thin client, from chromadb-client in requirements.txt
-        from chromadb.config import Settings as ChromaSettings
-
         self.settings = settings
-        self.client = chromadb.HttpClient(host=settings.chroma_host, port=settings.chroma_port,
-                                          settings=ChromaSettings(anonymized_telemetry=False))
+        self._client: Any = None
 
-    def _embed_query(self, question: str) -> list[float]:
+    def _collection(self) -> Any:
+        """Looked up each time: the indexer replaces the collection when it re-indexes."""
+        if self._client is None:
+            # Connects on creation, so it's lazy: a pod must start while Chroma is down, and
+            # then report not ready rather than crash.
+            import chromadb  # the thin client, from chromadb-client in requirements.txt
+            from chromadb.config import Settings as ChromaSettings
+
+            self._client = chromadb.HttpClient(
+                host=self.settings.chroma_host, port=self.settings.chroma_port,
+                settings=ChromaSettings(anonymized_telemetry=False))
+        return self._client.get_collection(self.settings.collection)
+
+    def count(self) -> int:
+        return int(self._collection().count())
+
+    def index_metadata(self) -> dict[str, object]:
+        return dict(self._collection().metadata or {})
+
+    def embed(self, question: str) -> list[float]:
         prefix = QUERY_PREFIX if self.settings.embed_model.startswith("nomic") else ""
         response = httpx.post(
             f"{self.settings.ollama_url}/api/embed",
@@ -65,10 +80,9 @@ class ChromaRetriever:
         response.raise_for_status()
         return list(response.json()["embeddings"][0])
 
-    def retrieve(self, question: str, k: int) -> list[Passage]:
-        vector = self._embed_query(question)
-        # Looked up on every request: the indexer replaces the collection when it re-indexes.
-        collection: Any = self.client.get_collection(self.settings.collection)
+    def retrieve(self, question: str, k: int, vector: list[float] | None = None) -> list[Passage]:
+        vector = vector if vector is not None else self.embed(question)
+        collection = self._collection()
         version = requested_version(question)
         # An older-version question reads only superseded documents, so a current document
         # can't out-rank the one that was asked for.

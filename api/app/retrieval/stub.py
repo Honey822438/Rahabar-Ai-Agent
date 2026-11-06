@@ -6,6 +6,8 @@ Switch to RETRIEVER=chroma in the ConfigMap once your index exists.
 
 from __future__ import annotations
 
+import hashlib
+
 from ..schemas import Passage
 
 _PASSAGES = [
@@ -42,5 +44,19 @@ _PASSAGES = [
 class StubRetriever:
     name = "stub"
 
-    def retrieve(self, question: str, k: int) -> list[Passage]:
+    def retrieve(self, question: str, k: int, vector: list[float] | None = None) -> list[Passage]:
         return [p.model_copy() for p in _PASSAGES[:k]]
+
+    def __init__(self, embed_model: str = "stub") -> None:
+        self.embed_model = embed_model
+
+    def embed(self, question: str) -> list[float]:
+        """Deterministic, so the cache can be exercised with no model."""
+        digest = hashlib.sha256(question.encode()).digest()
+        return [byte / 255 for byte in digest]
+
+    def count(self) -> int:
+        return 3
+
+    def index_metadata(self) -> dict[str, object]:
+        return {"embed_model": self.embed_model, "dimension": 32, "index_generation": "stub"}

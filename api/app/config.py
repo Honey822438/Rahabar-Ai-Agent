@@ -41,6 +41,11 @@ class Settings:
     hosted_base_url: str = ""        # e.g. an OpenAI-compatible endpoint
     llm_api_key: str = field(default="", repr=False)   # from the Secret; never log it
 
+    # Semantic cache. No REDIS_HOST means no cache and no Redis readiness check (unit tests).
+    redis_host: str = ""
+    redis_port: int = 6379
+    cache_threshold: float = 0.95
+
     # Below this similarity nothing retrieved counts as evidence, so the service abstains.
     relevance_floor: float = 0.5
     llm_timeout_seconds: float = 30.0
@@ -66,6 +71,9 @@ def get_settings() -> Settings:
         ollama_url=os.environ.get("OLLAMA_URL", "http://host.minikube.internal:11434"),
         hosted_base_url=os.environ.get("HOSTED_BASE_URL", ""),
         llm_api_key=os.environ.get("LLM_API_KEY", ""),
+        redis_host=os.environ.get("REDIS_HOST", ""),
+        redis_port=_int("REDIS_PORT", 6379),
+        cache_threshold=_float("CACHE_THRESHOLD", 0.95),
         relevance_floor=_float("RELEVANCE_FLOOR", 0.5),
         llm_timeout_seconds=_float("LLM_TIMEOUT_SECONDS", 30.0),
         groq_base_url=os.environ.get("GROQ_BASE_URL", "https://api.groq.com/openai/v1/"),

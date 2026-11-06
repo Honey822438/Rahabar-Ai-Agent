@@ -39,8 +39,17 @@ class FakeRetriever:
     def __init__(self, passages: list[Passage]) -> None:
         self.passages = passages
 
-    def retrieve(self, question: str, k: int) -> list[Passage]:
+    def embed(self, question: str) -> list[float]:
+        return [1.0, 0.0]
+
+    def retrieve(self, question: str, k: int, vector: list[float] | None = None) -> list[Passage]:
         return self.passages
+
+    def count(self) -> int:
+        return len(self.passages)
+
+    def index_metadata(self) -> dict[str, object]:
+        return {"index_generation": "g1"}
 
 
 class ScriptedProvider:
