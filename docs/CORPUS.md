@@ -15,7 +15,7 @@ Exact files, versions and SHA-256 hashes are in `corpus/MANIFEST.md`. Check them
 | 7 | Exact-term content | Academic Rules Handbook (Jun 2026), Fee Structure page | Clause 1.21 (attendance), clause 5.4 (minimum CGPA of 2.00 to avoid academic warning), and fee amounts |
 
 ## Note on the absent topic
-"Absent" means no hostel rules, fees or allotment process. The word itself is not absent: the two annual reports and the Student Handbook mention that hostels exist (8 matching lines in the extracted text, about 5 distinct passages because the extractor repeats some pages: 2 in Annual Report 2019-20, 4 in Annual Report 2023-24 including a first-aid-box mention, 2 in the Student Handbook). A search of all 9 documents, with the two scanned PDFs OCR'd, finds no other hostel text. This explains why hostel questions score above unrelated ones in retrieval.
+"Absent" means no hostel rules, fees or allotment process. The word itself is not absent: the two annual reports and the Student Handbook mention that hostels exist (7 lines across them). This explains why hostel questions score above unrelated ones in retrieval.
 
 So must-abstain questions should ask about things the corpus really lacks, such as hostel fees, and not "does the university have a hostel?", which it can answer. The system must abstain on these even though similar words are retrieved.
 
