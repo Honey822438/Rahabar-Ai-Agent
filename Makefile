@@ -4,7 +4,7 @@
 SHELL := /bin/bash
 NS ?= rahbar
 TAG ?= dev
-PY ?= python3
+PY ?= python3.12
 VENV ?= .venv
 BIN := $(abspath $(VENV))/bin
 # The Ingress address. On Linux this is the minikube IP. On macOS or Windows with the
