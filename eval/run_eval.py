@@ -159,6 +159,8 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=HERE / "results.json")
     parser.add_argument("--update-baseline", action="store_true",
                         help="write these results as the new baseline")
+    parser.add_argument("--pace", type=float, default=0.0,
+                        help="seconds between questions, for a provider's rate limit")
     args = parser.parse_args()
 
     questions = load_golden(args.golden)
@@ -166,6 +168,7 @@ def main() -> int:
     headers = {"Host": args.host} if args.host else {}
     with httpx.Client(timeout=120.0, headers=headers) as client:
         for q in questions:
+            time.sleep(args.pace)
             started = time.perf_counter()
             response = ask(client, args.api, q["question"])
             rows.append({
