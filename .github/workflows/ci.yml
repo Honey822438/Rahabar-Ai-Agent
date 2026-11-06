@@ -116,7 +116,8 @@ jobs:
       - name: Apply the manifests and run the indexer Job on the fixtures
         run: |
           HOST_IP=$(docker network inspect kind \
-            -f '{{range .IPAM.Config}}{{if not (contains .Subnet ":")}}{{.Gateway}}{{end}}{{end}}')
+            | jq -r '.[0].IPAM.Config[] | select(.Subnet | contains(":") | not) | .Gateway')
+          test -n "$HOST_IP"
           sed -i "s/CI_HOST_IP/$HOST_IP/g" k8s/overlays/ci/kustomization.yaml
           kubectl create namespace rahbar
           kubectl create configmap corpus-fixtures -n rahbar \
