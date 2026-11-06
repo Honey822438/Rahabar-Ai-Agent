@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: indexer
+  namespace: rahbar
+  labels: { app: indexer }
+spec:
+  backoffLimit: 3
+  # Jobs are immutable: removing the finished one lets a later apply succeed.
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels: { app: indexer }
+    spec:
+      restartPolicy: OnFailure
+      enableServiceLinks: false
+      serviceAccountName: indexer
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: indexer
+          image: rahbar-indexer:dev
+          imagePullPolicy: IfNotPresent
+          # Stub phase. Task 2.6 removes --dummy; keep the Job and CronJob identical.
+          command: ["python", "-m", "pipeline.run", "--dummy"]
+          envFrom:
+            - configMapRef: { name: rahbar-config }
+          resources:
+            requests: { cpu: 500m, memory: 512Mi }
+            limits: { cpu: "2", memory: 1536Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: {}
