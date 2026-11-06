@@ -1,16 +1,17 @@
 # PLAN.md — RAHBAR execution plan (Fri 6 Nov → Sun 8 Nov 2026, 23:59 PKT)
 
 Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLAUDE.md` and the first plan (`PLAN.original.md`).
+**Team:** A = i24-3012 (Kubernetes/CI: 1.3-1.6, 2.6-2.8, 3.2, 3.3). B = Malaika, i24-3098 (corpus/RAG/eval/docs: 1.2, 1.7, 2.1-2.5, 3.1, 3.4, 3.5). Each reviews the other's PRs.
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 1.2 corpus check. **Next:** 1.3.
+**Now:** 1.3 Dockerfiles. **Open:** 1.2 still has to be named in the first PR (needs U1).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
 ## Blockers and open questions (user)
 - [ ] **B1 Install minikube.** `CLAUDE.md` says it is installed, but it is not on PATH. It blocks 1.3.
-- [ ] **B2 Partner?** The spec says pairs and `main` needs 1 approval. GitHub does not let an author approve their own PR, so a solo author needs a second account to approve, or the rule can't be met. The checker also warns if there is only one commit author.
+- [x] **B2 Partner:** Malaika reviews; `main` keeps 1 required approval.
 - [ ] **B3 Confirm default D1 and D2 below.** Work proceeds on these defaults unless changed.
 
 ## User-only tasks (Claude never handles keys)
@@ -100,3 +101,4 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 
 ## Progress notes
 (Append key decisions, known issues and real failures here before each /clear.)
+- 1.2 findings: 9 docs, 279 PDF pages. The 2023 rules (26 pages, 243 chars of text) and the entrepreneurship policy (8 pages, no fonts) both need OCR, so the version pair depends on OCR working. The pair is genuine: CGPA 2.00 is clause 1.26 in 2023 and 1.25 in 2026. Hostels are only mentioned in the annual reports and Student Handbook, so must-abstain questions should ask for hostel rules or fees, not whether hostels exist.
