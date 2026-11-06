@@ -17,7 +17,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 ## User-only tasks (Claude never handles keys)
 - [ ] **U1** Create the GitHub repo, push, create `dev`, protect `main` (PR + CI required + 1 approval). Screenshot → `docs/evidence/`.
 - [ ] **U2** Create a Gemini key in a new AI Studio project and put it in the gitignored `.env`. Cluster: `kubectl create secret generic rahbar-secret -n rahbar --from-literal=LLM_API_KEY="..."` (optionally `--from-literal=GROQ_API_KEY="..."`).
-- [ ] **U3** Create a Docker Hub access token → GitHub Secrets `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`. Needed by Saturday evening.
+- [x] **U3** Create a Docker Hub access token → GitHub Secrets `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`. Needed by Saturday evening.
 - [ ] **U4** Run `make cluster` and `OLLAMA_HOST=0.0.0.0 ollama serve`, approve PRs, take the GitHub screenshots, submit on Classroom.
 - [ ] **U5** `sudo apt install tesseract-ocr` for local indexer runs (the image installs its own).
 
@@ -105,3 +105,4 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - Note 7 candidates: (a) a Service named `chroma` injects `CHROMA_PORT=tcp://...`, which crashes the Chroma server; fixed with `enableServiceLinks: false`. (b) minikube runs containerd and `minikube image load` failed on the indexer with Docker 29; `make images` now uses `minikube image build`.
 - Q7 raw material, CHROMA_PORT bug (6 Nov): **Symptom:** `chroma-0` in CrashLoopBackOff, 6 restarts, while api, redis and ui were healthy. **Prime suspect beforehand (not a tested guess):** the non-root/read-only securityContext, which 1.5 had listed as a Chroma risk. **What revealed it:** `kubectl logs chroma-0`: `Error loading config: invalid type: found string "tcp://10.100.217.229:8000", expected u16 for key "PORT" in CHROMA_ environment variable(s)`. **Cause:** Kubernetes injects `CHROMA_PORT` for a Service named `chroma`, and Chroma reads `CHROMA_*` as config. **Fix:** `enableServiceLinks: false`. **Caveat:** this took minutes, not over an hour, and the log line pointed straight at it, so Q7 needs a longer failure if one happens.
 - Q7 candidate, handbook text (6 Nov): retrieved chunks mixed unrelated text. Wrong first belief: two-column pages, so a column splitter was written and it changed nothing. What revealed it: `extract_words()` showed x up to 800 on a 420-wide page, so the PDFs hold hidden text beyond the visible page. Fix: `page.within_bbox(page.bbox)`. Time spent was under an hour, so note that honestly.
+- Docker Hub user for cd.yml: `h1oney123` (GitHub Secrets `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN` set).
