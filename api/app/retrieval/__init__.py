@@ -8,7 +8,7 @@ def get_retriever(settings: Settings) -> Retriever:
     if settings.retriever == "stub":
         from .stub import StubRetriever
 
-        return StubRetriever()
+        return StubRetriever(settings.embed_model)
     if settings.retriever == "chroma":
         from .chroma import ChromaRetriever
 

@@ -21,6 +21,8 @@ from .logjson import configure_logging, request_id_var
 from .providers.llm import get_provider
 from .retrieval import get_retriever
 from .routes import ask, health, metrics
+from .routes.health import embed_pin_conflict
+from .services.cache import get_cache
 
 log = logging.getLogger("rahbar.api")
 
@@ -32,9 +34,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.settings = settings
     app.state.retriever = get_retriever(settings)
     app.state.provider = get_provider(settings)
-    # STARTER-TODO(4.4): compare the collection's embedding-model metadata with
-    # settings.embed_model here, and make /readyz fail on a mismatch.
-    # This process only reads the index. The indexer Job writes it.
+    app.state.cache = get_cache(settings)
+    # This process only reads the index. The indexer Job writes it. A mismatch here is logged,
+    # and /readyz keeps failing until it is fixed. An unreachable Chroma just waits for /readyz.
+    try:
+        embed_pin_conflict(app.state.retriever, settings)
+    except Exception as exc:
+        log.warning("index not reachable at startup", extra={"error": type(exc).__name__})
     log.info(
         "api started",
         extra={"retriever": settings.retriever, "llm_provider": settings.llm_provider,

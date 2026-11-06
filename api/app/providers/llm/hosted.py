@@ -15,6 +15,7 @@ import httpx
 from ...config import Settings
 from ...schemas import Answer, Passage
 from ...services.prompt import build_messages
+from ...services.telemetry import record_generation
 
 log = logging.getLogger("rahbar.hosted")
 
@@ -79,7 +80,10 @@ class HostedProvider:
                                                       "status": response.status_code})
                 continue
             response.raise_for_status()
-            content = response.json()["choices"][0]["message"]["content"]
-            log.info("generated", extra={"target": target.label, "model": target.model})
+            body = response.json()
+            content = body["choices"][0]["message"]["content"]
+            usage = body.get("usage") or {}
+            record_generation(target.model, usage.get("prompt_tokens", 0),
+                              usage.get("completion_tokens", 0))
             return Answer.model_validate_json(content)
         raise failure
