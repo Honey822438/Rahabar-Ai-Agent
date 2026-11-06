@@ -1,0 +1,79 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: indexer
+  namespace: rahbar
+  labels: { app: indexer }
+spec:
+  backoffLimit: 3
+  # Jobs are immutable: removing the finished one lets a later apply succeed.
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels: { app: indexer }
+    spec:
+      restartPolicy: OnFailure
+      enableServiceLinks: false
+      serviceAccountName: indexer
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      initContainers:
+        - name: fetch-corpus
+          image: rahbar-indexer:dev
+          imagePullPolicy: IfNotPresent
+          # Skips files already on the volume, so a retry doesn't download them again.
+          command: ["python", "corpus/fetch.py"]
+          env:
+            - { name: CORPUS_RAW_DIR, value: /corpus }
+            - { name: CORPUS_MANIFEST, value: /tmp/MANIFEST.md }
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: corpus, mountPath: /corpus }
+            - { name: tmp, mountPath: /tmp }
+      containers:
+        - name: indexer
+          image: rahbar-indexer:dev
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "pipeline.run"]
+          envFrom:
+            - configMapRef: { name: rahbar-config }
+          # Measured peak 196 MiB (cgroup memory.peak, full corpus with OCR). Request covers the peak;
+          # the 512Mi limit leaves about 2.6x for a larger corpus. See docs/evidence/kubectl-top.txt.
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: corpus, mountPath: /corpus, readOnly: true }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: corpus
+          persistentVolumeClaim:
+            claimName: corpus
+        - name: tmp
+          emptyDir: {}

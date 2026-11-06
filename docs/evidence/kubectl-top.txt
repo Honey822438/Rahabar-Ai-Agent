@@ -1,0 +1,21 @@
+# Why the requests and limits are what they are. Peaks are cgroup memory.peak read on 2026-11-06;
+# `kubectl top` samples missed the indexer's true peak (177Mi against 196 MiB).
+#
+# workload  peak       request  limit   reasoning
+# indexer   196 MiB    256Mi    512Mi   was 512Mi/1536Mi; lowered after this measurement. Full corpus with OCR, about 8.5 min. Over the limit: OOMKilled, exit code 137.
+# chroma    195 MiB    256Mi    768Mi   peak during a re-index of 372 chunks; room for index growth.
+# api       77 MiB     128Mi    384Mi   no uncached load test yet, so the margin is deliberately generous.
+# redis     13 MiB     64Mi     128Mi   few cache entries so far; room for many more.
+# ui        8 MiB      32Mi     64Mi    nginx serving one static page.
+#
+# The running-pods output below is idle. The indexer is absent because it runs only as a Job.
+$ kubectl -n rahbar top pods
+NAME                     CPU(cores)   MEMORY(bytes)   
+api-67bb4b7cd8-bg2th     3m           69Mi            
+api-67bb4b7cd8-jqln7     3m           70Mi            
+api-67bb4b7cd8-pqhv9     3m           72Mi            
+chroma-0                 20m          79Mi            
+redis-86c745b94b-vwfj6   14m          3Mi             
+ui-7676999498-r7rhn      1m           2Mi             
+
+# Indexer during evidence-reindex-2, 5s sampling: max top value 177Mi, memory.peak 205160448 bytes (196 MiB), 0 restarts.

@@ -1,0 +1,134 @@
+name: cd
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  KIND_VERSION: v0.27.0
+  INGRESS_NGINX_VERSION: controller-v1.12.1
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: make install
+      - name: ruff and mypy
+        run: |
+          .venv/bin/ruff check api indexer eval corpus
+          (cd api && ../.venv/bin/mypy app)
+          (cd indexer && ../.venv/bin/mypy pipeline)
+      - name: pytest (stubs only, coverage at least 60%)
+        run: |
+          (cd api && ../.venv/bin/pytest -q --cov=app --cov-fail-under=60)
+          (cd indexer && ../.venv/bin/pytest -q)
+
+  build-push:
+    needs: test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: api
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rahbar-api:${{ github.sha }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: indexer/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rahbar-indexer:${{ github.sha }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ui
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rahbar-ui:${{ github.sha }}
+
+  deploy:
+    needs: build-push
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start Ollama on the runner, as on a laptop
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          sudo systemctl stop ollama
+          OLLAMA_HOST=0.0.0.0 nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for _ in $(seq 1 30); do curl -sf localhost:11434/api/tags > /dev/null && break; sleep 2; done
+          ollama pull nomic-embed-text
+      - name: Create the ephemeral kind cluster with ingress-nginx
+        run: |
+          curl -fsSLo /tmp/kind "https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-linux-amd64"
+          sudo install /tmp/kind /usr/local/bin/kind
+          kind create cluster --config ci/kind-config.yaml --wait 120s
+          kubectl apply -f "https://raw.githubusercontent.com/kubernetes/ingress-nginx/${INGRESS_NGINX_VERSION}/deploy/static/provider/kind/deploy.yaml"
+          kubectl wait -n ingress-nginx --for=condition=Ready pod \
+            -l app.kubernetes.io/component=controller --timeout=180s
+      - name: Deploy the images just published, by commit SHA
+        run: |
+          HOST_IP=$(docker network inspect kind \
+            | jq -r '.[0].IPAM.Config[] | select(.Subnet | contains(":") | not) | .Gateway')
+          test -n "$HOST_IP"
+          sed -i "s/CI_HOST_IP/$HOST_IP/g" k8s/overlays/ci/kustomization.yaml
+          (cd k8s/overlays/ci && for image in api indexer ui; do
+            kustomize edit set image "rahbar-$image=$HUB_USER/rahbar-$image:$GITHUB_SHA"
+          done)
+          kubectl create namespace rahbar
+          kubectl create configmap corpus-fixtures -n rahbar \
+            --from-file=eval/fixtures/academic-rules-2023.md \
+            --from-file=eval/fixtures/academic-rules-2026.md \
+            --from-file=eval/fixtures/fees-2026.md
+          kubectl apply -k k8s/overlays/ci
+          kubectl wait -n rahbar --for=condition=complete job/indexer --timeout=300s
+          kubectl rollout status -n rahbar statefulset/chroma --timeout=180s
+          kubectl rollout status -n rahbar deploy/redis --timeout=120s
+          kubectl rollout status -n rahbar deploy/ui --timeout=120s
+          kubectl rollout status -n rahbar deploy/api --timeout=180s
+      - name: Check the running api is this commit
+        run: |
+          running=$(kubectl get deploy api -n rahbar -o jsonpath='{.spec.template.spec.containers[0].image}')
+          test "${running##*:}" = "$GITHUB_SHA"
+      - name: Wait for the Ingress to route to the API
+        # A ready pod can reach nginx a moment later; until then nginx answers 503. GET on /api/ask
+        # gives 405 from the API itself, so this asks nothing and costs nothing.
+        run: |
+          for _ in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: rahbar.local' http://localhost/api/ask || true)
+            echo "ingress answered $code"
+            test "$code" = 405 && exit 0
+            sleep 2
+          done
+          exit 1
+      - name: Smoke test through the Ingress
+        run: |
+          test "$(curl -s -m 20 -o /dev/null -w '%{http_code}' -H 'Host: rahbar.local' http://localhost/)" = 200
+          ask() {
+            curl -sf -m 60 -X POST http://localhost/api/ask -H 'Host: rahbar.local' \
+              -H 'Content-Type: application/json' -d "{\"question\": \"$1\"}"
+          }
+          ask "How much is the BS fee per credit hour?" \
+            | jq -e '.answered_from_context == true and (.citations | length) > 0'
+          ask "How do I apply for a hostel room?" \
+            | jq -e '.answered_from_context == false and (.citations | length) == 0'
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          kubectl get pods,jobs,endpoints -n rahbar || true
+          kubectl describe pods -n rahbar | tail -60 || true
+          kubectl logs -n rahbar job/indexer --all-containers --tail=40 || true
+          kubectl logs -n rahbar deploy/api --tail=40 || true

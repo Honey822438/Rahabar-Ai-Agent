@@ -1,0 +1,26 @@
+# CI only: the fixture corpus, the stub LLM (no key on a pull request) and real embeddings
+# from Ollama on the runner. ci.yml replaces CI_HOST_IP with the kind network's gateway.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - target: { kind: ConfigMap, name: rahbar-config }
+    patch: |-
+      - { op: replace, path: /data/LLM_PROVIDER, value: stub }
+      - { op: replace, path: /data/OLLAMA_URL, value: "http://CI_HOST_IP:11434" }
+      # Measured on the fixtures: the absent hostel topic scores 0.56, the lowest answerable 0.72.
+      - { op: replace, path: /data/RELEVANCE_FLOOR, value: "0.65" }
+  - target: { kind: NetworkPolicy, name: api-egress }
+    patch: |-
+      - { op: replace, path: /spec/egress/2/to/0/ipBlock/cidr, value: CI_HOST_IP/32 }
+  - target: { kind: NetworkPolicy, name: indexer-egress }
+    patch: |-
+      - { op: replace, path: /spec/egress/1/to/0/ipBlock/cidr, value: CI_HOST_IP/32 }
+  # The fixtures come from a ConfigMap that ci.yml creates, so nothing is downloaded.
+  - target: { kind: Job, name: indexer }
+    patch: |-
+      - { op: remove, path: /spec/template/spec/initContainers }
+      - op: replace
+        path: /spec/template/spec/volumes/0
+        value: { name: corpus, configMap: { name: corpus-fixtures } }

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chroma
+  namespace: rahbar
+  labels: { app: chroma }
+spec:
+  serviceName: chroma
+  replicas: 1
+  selector:
+    matchLabels: { app: chroma }
+  template:
+    metadata:
+      labels: { app: chroma }
+    spec:
+      # A Service named chroma would inject CHROMA_PORT=tcp://..., which Chroma and our config misread.
+      enableServiceLinks: false
+      serviceAccountName: chroma
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: chroma
+          # Must match chromadb-client in api/ and indexer/requirements.txt.
+          image: chromadb/chroma:1.0.12
+          imagePullPolicy: IfNotPresent
+          ports:
+            - { name: http, containerPort: 8000 }
+          readinessProbe:
+            httpGet: { path: /api/v2/heartbeat, port: 8000 }
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /api/v2/heartbeat, port: 8000 }
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          # Measured peak 195 MiB during a full re-index of 372 chunks; the limit allows the index to grow.
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

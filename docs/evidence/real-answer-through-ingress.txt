@@ -1,0 +1,67 @@
+Fri Nov  6 09:56:33 AM UTC 2026
+Q: What minimum CGPA is required to avoid academic warning?
+{
+ "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+ "citations": [],
+ "answered_from_context": false,
+ "confidence": "low",
+ "provider": "hosted",
+ "cached": false
+}
+top score 0.9063995499999999
+
+Q: What did the 2023 rules say about attendance?
+{
+ "answer": "Students are required to maintain 100% attendance in lectures, labs, tutorials, seminars, and discussions as prescribed by the course instructor. An absence of a maximum of 20% of the total attendance may be condoned by the HoD for genuine reasons, such as illness. Failure to meet these attendance requirements renders the student ineligible to appear in the final examination and results in an F/A grade in the course.",
+ "citations": [
+  {
+   "source": "undergraduate-academic-rules-aug-2023.pdf",
+   "section": "Attendance Requirements",
+   "page": 7
+  }
+ ],
+ "answered_from_context": true,
+ "confidence": "high",
+ "provider": "hosted",
+ "cached": false
+}
+top score 0.7036335499999999
+
+Q: What is the hostel curfew time and hostel fee?
+{
+ "answer": "The documents do not cover it.",
+ "citations": [],
+ "answered_from_context": false,
+ "confidence": "high",
+ "provider": "hosted",
+ "cached": false
+}
+top score 0.6196224699999999
+
+Q: What minimum CGPA is required to avoid academic warning?
+{
+ "answer": "The minimum CGPA required to avoid academic warning depends on the program: 2.00 for BS/BBA programs, 2.50 for MS/MBA programs, and 3.00 for PhD programs.",
+ "citations": [
+  {
+   "source": "academic-rules-handbook-jun-2026.pdf",
+   "section": "Academic Warning/Probation",
+   "page": 24
+  },
+  {
+   "source": "grading-page.html",
+   "section": "Warning/Probation",
+   "page": 1
+  },
+  {
+   "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+   "section": "Academic Rules & Regulations FAST-NUCES",
+   "page": 2
+  }
+ ],
+ "answered_from_context": true,
+ "confidence": "high",
+ "provider": "hosted",
+ "cached": false
+}
+top score 0.9063995499999999
+

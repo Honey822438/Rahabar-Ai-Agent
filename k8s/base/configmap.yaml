@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rahbar-config
+  namespace: rahbar
+data:
+  RETRIEVER: "chroma"
+  LLM_PROVIDER: "hosted"
+  # The embedding pin: the one key both the api and the indexer read.
+  EMBED_MODEL: "nomic-embed-text"
+  CHROMA_HOST: "chroma"
+  CHROMA_PORT: "8000"
+  CHROMA_COLLECTION: "rahbar"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  TOP_K: "5"
+  # Provisional until measured on the golden set (task 2.5).
+  CHUNK_SIZE: "400"
+  CHUNK_OVERLAP: "50"
+  RELEVANCE_FLOOR: "0.5"
+  CACHE_THRESHOLD: "0.95"
+  # 0.2: answers are facts in strict JSON, so low randomness; it does not prevent hallucination.
+  TEMPERATURE: "0.2"
+  LLM_MODEL: "gemini-flash-lite-latest"
+  HOSTED_BASE_URL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+  LLM_TIMEOUT_SECONDS: "30"
+  # Used only if GROQ_API_KEY exists in the Secret.
+  GROQ_BASE_URL: "https://api.groq.com/openai/v1/"
+  GROQ_MODELS: "openai/gpt-oss-20b,qwen/qwen3.8-27b"
+  OLLAMA_URL: "http://host.minikube.internal:11434"
+  CORPUS_DIR: "/corpus"
+  LOG_LEVEL: "INFO"

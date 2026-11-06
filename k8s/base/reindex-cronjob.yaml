@@ -1,0 +1,84 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reindex
+  namespace: rahbar
+  labels: { app: indexer }
+spec:
+  schedule: "0 3 * * 0"
+  # A second writer must never overlap a running one.
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels: { app: indexer }
+        spec:
+            restartPolicy: OnFailure
+            enableServiceLinks: false
+            serviceAccountName: indexer
+            automountServiceAccountToken: false
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              fsGroup: 10001
+              seccompProfile: { type: RuntimeDefault }
+            initContainers:
+              - name: fetch-corpus
+                image: rahbar-indexer:dev
+                imagePullPolicy: IfNotPresent
+                # Skips files already on the volume, so a retry doesn't download them again.
+                command: ["python", "corpus/fetch.py"]
+                env:
+                  - { name: CORPUS_RAW_DIR, value: /corpus }
+                  - { name: CORPUS_MANIFEST, value: /tmp/MANIFEST.md }
+                resources:
+                  requests:
+                    cpu: 50m
+                    memory: 128Mi
+                  limits:
+                    cpu: 500m
+                    memory: 256Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  capabilities:
+                    drop:
+                      - ALL
+                volumeMounts:
+                  - { name: corpus, mountPath: /corpus }
+                  - { name: tmp, mountPath: /tmp }
+            containers:
+              - name: indexer
+                image: rahbar-indexer:dev
+                imagePullPolicy: IfNotPresent
+                command: ["python", "-m", "pipeline.run"]
+                envFrom:
+                  - configMapRef: { name: rahbar-config }
+                # Measured peak 196 MiB (cgroup memory.peak, full corpus with OCR). Request covers the peak;
+                # the 512Mi limit leaves about 2.6x for a larger corpus. See docs/evidence/kubectl-top.txt.
+                resources:
+                  requests:
+                    cpu: 500m
+                    memory: 256Mi
+                  limits:
+                    cpu: "2"
+                    memory: 512Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  capabilities:
+                    drop:
+                      - ALL
+                volumeMounts:
+                  - { name: corpus, mountPath: /corpus, readOnly: true }
+                  - { name: tmp, mountPath: /tmp }
+            volumes:
+              - name: corpus
+                persistentVolumeClaim:
+                  claimName: corpus
+              - name: tmp
+                emptyDir: {}

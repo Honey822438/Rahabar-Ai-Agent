@@ -1,0 +1,18 @@
+Fri Nov  6 09:44:47 AM UTC 2026
+$ collection built with dummy-768; ConfigMap EMBED_MODEL=nomic-embed-text; API restarted, no re-index
+
+$ kubectl get pods -n rahbar -l app=api
+NAME                   READY   STATUS    RESTARTS   AGE
+api-586679955d-pkc7w   0/1     Running   0          45s
+api-5d4b9d868b-knjkx   1/1     Running   0          9m51s
+api-5d4b9d868b-p7gwb   1/1     Running   0          10m
+api-5d4b9d868b-pwsb5   1/1     Running   0          10m
+
+$ kubectl logs api-586679955d-pkc7w | grep conflict | tail -1
+{"ts": "2026-11-06T09:44:39Z", "level": "ERROR", "logger": "rahbar.health", "msg": "refusing readiness: embedding model conflict", "request_id": "fdf558a165894939b203ce5be78d7750", "indexed_model": "dummy-768", "embed_model": "nomic-embed-text"}
+
+$ kubectl describe pod api-586679955d-pkc7w | grep Readiness
+  Warning  Unhealthy  9s (x5 over 39s)   kubelet            spec.containers{api}: Readiness probe failed: HTTP probe failed with statuscode: 503
+
+$ GET /readyz from inside that pod
+503 {"status":"not ready","checks":{"chroma":"ok","collection":"ok","embed_pin":"embed_model mismatch: index built with 'dummy-768', EMBED_MODEL is 'nomic-embed-text'","redis":"ok"}}

@@ -1,0 +1,6 @@
+# Captured 2026-11-06T13:24:46Z
+$ kubectl -n rahbar get hpa
+NAME   REFERENCE        TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+api    Deployment/api   cpu: 3%/70%   3         8         3          5h18m
+
+# Immediately after the pod delete and rollouts this read cpu: <unknown>/70% for a short time, until metrics-server had samples for the new pods.

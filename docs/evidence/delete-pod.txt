@@ -1,0 +1,20 @@
+# Captured 2026-11-06T13:14:36Z. Same 0.5s loop through the Ingress during the delete.
+NAME                   READY   STATUS    RESTARTS   AGE
+api-67bb4b7cd8-dtnpb   1/1     Running   0          59s
+api-67bb4b7cd8-jqln7   1/1     Running   0          65s
+api-67bb4b7cd8-pqhv9   1/1     Running   0          52s
+$ kubectl -n rahbar delete pod api-67bb4b7cd8-dtnpb
+pod "api-67bb4b7cd8-dtnpb" deleted from rahbar namespace
+pod/api-67bb4b7cd8-bg2th condition met
+pod/api-67bb4b7cd8-jqln7 condition met
+pod/api-67bb4b7cd8-pqhv9 condition met
+NAME                   READY   STATUS    RESTARTS   AGE
+api-67bb4b7cd8-bg2th   1/1     Running   0          32s
+api-67bb4b7cd8-jqln7   1/1     Running   0          97s
+api-67bb4b7cd8-pqhv9   1/1     Running   0          84s
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME   ENDPOINTS                                                     AGE
+api    10.244.120.115:8000,10.244.120.117:8000,10.244.120.118:8000   5h8m
+# HTTP status counts during the delete
+     51 200
+# All requests in this file were semantic-cache hits: they exercise Ingress, Service, API, Ollama and Redis, not Gemini.

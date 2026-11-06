@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import time
@@ -33,9 +34,10 @@ import httpx
 import yaml
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE / "raw"
+# The indexer's init container overrides these: its image filesystem is read-only.
+RAW = Path(os.environ.get("CORPUS_RAW_DIR", HERE / "raw"))
 SOURCES = HERE / "sources.yaml"
-MANIFEST = HERE / "MANIFEST.md"
+MANIFEST = Path(os.environ.get("CORPUS_MANIFEST", HERE / "MANIFEST.md"))
 USER_AGENT = "RAHBAR-coursework-fetcher/1.0 (CS4032 student project; one request at a time)"
 PAUSE_SECONDS = 2.0
 DRIVE_VIEW = re.compile(r"https?://drive\.google\.com/file/d/([^/?#]+)")
