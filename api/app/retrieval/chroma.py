@@ -14,18 +14,34 @@ EMBED_TIMEOUT_SECONDS = 30.0
 # nomic-embed-text is trained with task prefixes. The indexer uses "search_document: ".
 QUERY_PREFIX = "search_query: "
 
+OLDER = "older"
+# How many extra hits to fetch when post-filtering by year, as Chroma has no prefix match.
+YEAR_OVERFETCH = 4
+
 _DOCUMENT_WORD = r"(?:rules?|regulations?|handbook|policy|policies|edition|version|prospectus)"
-_ASKS_FOR_OLDER = re.compile(
-    rf"\b(?:older|previous|earlier|former|outdated|superseded|old)\s+(?:\w+\s+)?{_DOCUMENT_WORD}\b"
-    rf"|\b20(?:[01]\d|2[0-5])\s+(?:\w+\s+)?{_DOCUMENT_WORD}\b"
-    rf"|\b{_DOCUMENT_WORD}\s+(?:\w+\s+)?(?:of|from|in|before)\s+20(?:[01]\d|2[0-5])\b",
+_OLDER_YEAR = r"20(?:[01]\d|2[0-5])"
+_NAMES_YEAR = re.compile(
+    rf"\b(?P<a>{_OLDER_YEAR})\s+(?:\w+\s+)?{_DOCUMENT_WORD}\b"
+    rf"|\b{_DOCUMENT_WORD}\s+(?:\w+\s+)?(?:of|from|in|before)\s+(?P<b>{_OLDER_YEAR})\b",
+    re.IGNORECASE,
+)
+_NAMES_OLDER = re.compile(
+    rf"\b(?:older|previous|earlier|former|outdated|superseded|old)\s+(?:\w+\s+)?{_DOCUMENT_WORD}\b",
     re.IGNORECASE,
 )
 
 
+def requested_version(question: str) -> str | None:
+    """An older year the question names, OLDER if it asks for "the old policy", else None."""
+    named = _NAMES_YEAR.search(question)
+    if named:
+        return named.group("a") or named.group("b")
+    return OLDER if _NAMES_OLDER.search(question) else None
+
+
 def asks_for_older_version(question: str) -> bool:
     """True only when the question explicitly names an older document version."""
-    return bool(_ASKS_FOR_OLDER.search(question))
+    return requested_version(question) is not None
 
 
 class ChromaRetriever:
@@ -53,9 +69,19 @@ class ChromaRetriever:
         vector = self._embed_query(question)
         # Looked up on every request: the indexer replaces the collection when it re-indexes.
         collection: Any = self.client.get_collection(self.settings.collection)
-        where = None if asks_for_older_version(question) else {"superseded": False}
-        found = collection.query(query_embeddings=[vector], n_results=k, where=where,
+        version = requested_version(question)
+        # An older-version question reads only superseded documents, so a current document
+        # can't out-rank the one that was asked for.
+        where = {"superseded": version is not None}
+        limit = k * YEAR_OVERFETCH if version not in (None, OLDER) else k
+        found = collection.query(query_embeddings=[vector], n_results=limit, where=where,
                                  include=["documents", "metadatas", "distances"])
+        passages = self._to_passages(found, version)
+        return passages[:k]
+
+    @staticmethod
+    def _to_passages(found: Any, version: str | None) -> list[Passage]:
+        year = version if version not in (None, OLDER) else None
         return [
             Passage(
                 chunk_id=chunk_id,
@@ -69,4 +95,7 @@ class ChromaRetriever:
                 found["ids"][0], found["documents"][0], found["metadatas"][0],
                 found["distances"][0], strict=True,
             )
+            # No document from that year means an empty result, so the service abstains
+            # instead of quoting a different version.
+            if year is None or str(meta["doc_version"]).startswith(year)
         ]

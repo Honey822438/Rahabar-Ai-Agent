@@ -12,18 +12,28 @@ from app.retrieval import chroma
 from app.retrieval.chroma import ChromaRetriever, asks_for_older_version
 
 
+ROWS = [  # closest first, as Chroma returns them
+    ("rules-2026.pdf#0001", "Attendance is required.", "rules-2026.pdf", "2026-06", False, 0.1),
+    ("rules-2023.pdf#0001", "Attendance was required.", "rules-2023.pdf", "2023-08", True, 0.3),
+    ("old-2019.pdf#0001", "Older attendance rule.", "old-2019.pdf", "2019-01", True, 0.4),
+]
+
+
 class FakeCollection:
+    """Applies the `superseded` filter the way Chroma does."""
+
     def __init__(self) -> None:
         self.calls: list[dict[str, Any]] = []
 
     def query(self, **kwargs: Any) -> dict[str, Any]:
         self.calls.append(kwargs)
+        rows = [r for r in ROWS if r[4] == kwargs["where"]["superseded"]][:kwargs["n_results"]]
         return {
-            "ids": [["rules.pdf#0001"]],
-            "documents": [["5.4 Minimum CGPA is 2.00."]],
-            "metadatas": [[{"source": "rules.pdf", "section": "Warning", "page": 24,
-                            "doc_version": "2026", "superseded": False}]],
-            "distances": [[0.25]],
+            "ids": [[r[0] for r in rows]],
+            "documents": [[r[1] for r in rows]],
+            "metadatas": [[{"source": r[2], "section": "Attendance", "page": 7,
+                            "doc_version": r[3], "superseded": r[4]} for r in rows]],
+            "distances": [[r[5] for r in rows]],
         }
 
 
@@ -51,9 +61,8 @@ def retriever(monkeypatch: pytest.MonkeyPatch) -> tuple[ChromaRetriever, FakeCol
 
 def test_maps_hits_and_converts_distance_to_similarity(retriever: tuple) -> None:
     passages = retriever[0].retrieve("What is the minimum CGPA?", k=5)
-    assert len(passages) == 1
-    assert (passages[0].chunk_id, passages[0].page, passages[0].score) == (
-        "rules.pdf#0001", 24, 0.75)
+    assert [(p.chunk_id, p.page, p.score) for p in passages] == [
+        ("rules-2026.pdf#0001", 7, 0.9)]
     assert retriever[1].calls[0]["n_results"] == 5
 
 
@@ -68,9 +77,19 @@ def test_superseded_documents_are_filtered_by_default(retriever: tuple) -> None:
     assert retriever[1].calls[0]["where"] == {"superseded": False}
 
 
-def test_filter_is_lifted_when_an_older_version_is_asked_for(retriever: tuple) -> None:
-    retriever[0].retrieve("What did the 2023 rules say about attendance?", k=5)
-    assert retriever[1].calls[0]["where"] is None
+def test_named_year_ranks_that_version_first(retriever: tuple) -> None:
+    passages = retriever[0].retrieve("What did the 2023 rules say about attendance?", k=5)
+    assert passages[0].source == "rules-2023.pdf"
+    assert {p.source for p in passages} == {"rules-2023.pdf"}
+
+
+def test_old_policy_reads_only_superseded_documents(retriever: tuple) -> None:
+    passages = retriever[0].retrieve("What did the old policy say about attendance?", k=5)
+    assert [p.source for p in passages] == ["rules-2023.pdf", "old-2019.pdf"]
+
+
+def test_a_year_with_no_document_retrieves_nothing(retriever: tuple) -> None:
+    assert retriever[0].retrieve("What did the 2021 rules say about attendance?", k=5) == []
 
 
 @pytest.mark.parametrize("question,expected", [

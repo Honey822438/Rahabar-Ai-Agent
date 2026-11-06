@@ -41,6 +41,14 @@ class Settings:
     hosted_base_url: str = ""        # e.g. an OpenAI-compatible endpoint
     llm_api_key: str = field(default="", repr=False)   # from the Secret; never log it
 
+    # Below this similarity nothing retrieved counts as evidence, so the service abstains.
+    relevance_floor: float = 0.5
+    llm_timeout_seconds: float = 30.0
+    # Optional fallback, used only if the key exists: tried in order when Gemini fails.
+    groq_base_url: str = "https://api.groq.com/openai/v1/"
+    groq_models: str = "openai/gpt-oss-20b,qwen/qwen3.8-27b"
+    groq_api_key: str = field(default="", repr=False)   # from the Secret; never log it
+
     log_level: str = "INFO"
 
 
@@ -58,5 +66,10 @@ def get_settings() -> Settings:
         ollama_url=os.environ.get("OLLAMA_URL", "http://host.minikube.internal:11434"),
         hosted_base_url=os.environ.get("HOSTED_BASE_URL", ""),
         llm_api_key=os.environ.get("LLM_API_KEY", ""),
+        relevance_floor=_float("RELEVANCE_FLOOR", 0.5),
+        llm_timeout_seconds=_float("LLM_TIMEOUT_SECONDS", 30.0),
+        groq_base_url=os.environ.get("GROQ_BASE_URL", "https://api.groq.com/openai/v1/"),
+        groq_models=os.environ.get("GROQ_MODELS", "openai/gpt-oss-20b,qwen/qwen3.8-27b"),
+        groq_api_key=os.environ.get("GROQ_API_KEY", ""),
         log_level=os.environ.get("LOG_LEVEL", "INFO"),
     )
