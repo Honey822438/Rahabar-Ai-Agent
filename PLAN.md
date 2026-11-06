@@ -5,7 +5,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 2.1 re-index check, then 2.3 generation. **Open:** 1.2 corpus must be named in the first PR; 2.5 should check that older-version questions rank the older document first.
+**Now:** 2.4 production steps. **Open:** 1.2 corpus must be named in the first PR; 2.5 must raise RELEVANCE_FLOOR above hostel scores (0.58-0.61 seen, floor is 0.5).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
@@ -56,10 +56,10 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Friday checkpoint:** the stub system works through the Ingress on minikube.
 
 ## Saturday — real RAG, then CI/CD
-- [ ] **2.1 Indexer (§3.1).** `extract` (pymupdf; OCR pages with no text; strip repeating headers/footers; keep headings; also read `.md` + front matter for fixtures), `clean`, `chunk` (sections → paragraphs → sentences + overlap), `embed` (prefixes, batched), `store` (metadata `source, section, page, doc_version, superseded`; collection metadata `embed_model, dim, index_generation`; D8).
+- [x] **2.1 Indexer (§3.1).** `extract` (pymupdf; OCR pages with no text; strip repeating headers/footers; keep headings; also read `.md` + front matter for fixtures), `clean`, `chunk` (sections → paragraphs → sentences + overlap), `embed` (prefixes, batched), `store` (metadata `source, section, page, doc_version, superseded`; collection metadata `embed_model, dim, index_generation`; D8).
   *Done when:* runs locally; logs chunk count and storage amplification; retrieves a known clause.
 - [x] **2.2 Retriever (§3.2).** `ChromaRetriever`: same model + query prefix, top_k, `superseded=false` unless an older version is explicitly asked for, returns scores.
-- [ ] **2.3 Generation (§3.4–3.5).** Hosted provider per `CLAUDE.md` (confirm the model name on the first call, JSON mode, timeout), `ollama-host`, delimited numbered evidence. In code: relevance floor → abstain, validate → retry once → canned fallback (never a 500), citation check that drops anything not in `retrieved`.
+- [x] **2.3 Generation (§3.4–3.5).** Hosted provider per `CLAUDE.md` (confirm the model name on the first call, JSON mode, timeout), `ollama-host`, delimited numbered evidence. In code: relevance floor → abstain, validate → retry once → canned fallback (never a 500), citation check that drops anything not in `retrieved`.
   *Done when:* tests cover abstention, fallback, a fabricated citation and a **poisoned chunk**, all with stubs.
 - [ ] **2.4 Production steps (§3.2–3.3, 4.3–4.4, 4.8).** Redis semantic cache + skip rules (follow-ups, abstentions, out-of-scope, failed validation) + D1, turn storage, `/readyz` naming the failure, embed-pin check, metrics, per-request log line.
   *Done when:* unit tests pass, coverage ≥60%, ≥12 tests in total.
