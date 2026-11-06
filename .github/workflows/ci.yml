@@ -134,6 +134,17 @@ jobs:
           kubectl rollout status -n rahbar deploy/redis --timeout=120s
           kubectl rollout status -n rahbar deploy/ui --timeout=120s
           kubectl rollout status -n rahbar deploy/api --timeout=180s
+      - name: Wait for the Ingress to route to the API
+        # A ready pod can reach nginx a moment later; until then nginx answers 503. GET on /api/ask
+        # gives 405 from the API itself, so this asks nothing and costs nothing.
+        run: |
+          for _ in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: rahbar.local' http://localhost/api/ask || true)
+            echo "ingress answered $code"
+            test "$code" = 405 && exit 0
+            sleep 2
+          done
+          exit 1
       - name: Eval gate through the Ingress (section 5.4)
         run: |
           .venv/bin/python eval/run_eval.py --api http://localhost --host rahbar.local \
