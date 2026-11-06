@@ -1,7 +1,5 @@
 # Indexing and retrieval pipeline
 
-<!-- STARTER-TODO(3.3, 5.2): the chunking table, cache thresholds and evaluation results still need golden-set numbers. -->
-
 ## Extraction
 
 `indexer/pipeline/extract.py` uses `pdfplumber`, runs OCR on any page with under 20 characters of text, and turns HTML tables into rows.
@@ -78,18 +76,66 @@ Rules in `indexer/pipeline/clean.py`, applied in this order:
 ## Chunking
 Method and reasoning are in ADR 0003. Size counts whitespace-separated words, as a stand-in for tokens.
 
-Current provisional setting: 400/50, giving 372 chunks and a storage amplification of 1.05 (72,054 stored words / 68,604 original). The table below is filled once the golden set exists.
+**Shipped: 400/50**, giving 411 chunks and a storage amplification of 1.04 (71,398 stored words / 68,605 original).
 
-| Size (tokens) | Overlap (tokens) | recall@5 | Chunks stored |
-| --- | --- | --- | --- |
+Measured by retrieval only with the shipped heading fix and keyword boost, on the 15 answerable golden questions:
+
+| Size (tokens) | Overlap (tokens) | recall@3 | recall@5 | Chunks stored | Storage amplification |
+| --- | --- | --- | --- | --- | --- |
+| 250 | 50 | 0.93 | 1.00 | 535 | 1.12 |
+| 400 | 50 | 0.93 | 1.00 | 411 | 1.04 |
+| 600 | 100 | 0.93 | 1.00 | 372 | 1.05 |
+
+**The golden set does not separate these three on recall.** We chose 400/50 for two smaller reasons: the lowest storage amplification, and q12 ranks first where 250/50 ranks it second. With only 15 questions, that is weak evidence.
+
+**The bigger change was the keyword boost.** At 400/50 before the boost and heading fix, recall@3 was 0.80, recall@5 was 0.87 and exact-term recall was 0 of 2. That earlier figure used the same questions before Prospectus alternatives were added, so part of the gain comes from the golden set change. q05's rank stays 5, so it misses at recall@3.
 
 ## Embedding
 `nomic-embed-text` through Ollama on the host, with 768-dimensional vectors, using the `search_document:` and `search_query:` prefixes. The pin is one key, `EMBED_MODEL` in `k8s/base/configmap.yaml:10`, read by both the API and the indexer.
 
 The indexer records `embed_model` and `dimension` in the collection metadata (`indexer/pipeline/store.py:42-48`). The API compares them on every `/readyz` call, returns 503 and logs the conflict on a mismatch (`api/app/routes/health.py:17-26`). Evidence: `docs/evidence/embed-pin-mismatch.txt`.
 
+## Relevance floor: two layers
+No single floor can separate these, at 400/50:
+
+| Question | Should it answer? | Top score |
+| --- | --- | --- |
+| Off-topic, such as cooking or Python code (5 tried, plus one personal question) | No | 0.51 to 0.59 |
+| Hostel room allotment (q14) | No | 0.62 |
+| Bus route to campus (not in the golden set) | No | 0.70 |
+| Clause 1.21 (q09) | Yes | 0.71 |
+| Hostel fee (q13) | No | 0.74 |
+
+The hostel fee question sits above an answerable one, because fee pages are genuinely close to it in meaning. A floor high enough to stop it would also block q09.
+
+- **Layer 1, `RELEVANCE_FLOOR` = 0.65:** catches clearly irrelevant questions without calling the model. It sits between off-topic questions and the lowest answerable score, and also stops q14.
+- **Layer 2, the model and code:** evidence that passes goes to the model, which sets `answered_from_context=false` when it doesn't answer the question. The citation check then drops anything not retrieved for this request.
+
+Layer 2 depends on the model's judgement, so it can fail where a threshold could not. That is why the gate requires 100% must-abstain in the live eval. In the baseline run, q14 stopped at layer 1 and q13 at layer 2.
+
 ## Semantic cache
-Thresholds you tried, the false hit that ruled one out, the one you shipped.
+Measured on 6 paraphrase pairs that should hit and 7 different-question pairs that must not:
+
+| Threshold | Correct hits (of 6) | False hits (of 7) |
+| --- | --- | --- |
+| 0.85 | 6 | 5 |
+| 0.90 | 5 | 2 |
+| **0.92 (shipped)** | 5 | 0 |
+| 0.95 | 3 | 0 |
+
+**The false hit that ruled out 0.90:** "What minimum CGPA must an MS student maintain to avoid a warning?" against the same question for an undergraduate scores 0.919. The answers differ, 2.5 against 2.00. "Clause 1.21" against "clause 1.25" scores 0.917.
+
+0.92 is the lowest threshold tried with zero false hits, but its margin is only 0.001 and the test set is small, so it should be re-checked if questions change. Re-indexing clears the cache (ADR 0002).
 
 ## Evaluation method
-How recall@k matches retrieved passages to golden ones (by source and section? by chunk id?).
+`eval/run_eval.py` sends each golden question through the Ingress. A retrieved chunk matches a golden passage when the source file is the same and one section name contains the other. A passage may list `alternatives`, other current documents stating the same rule, and finding any one counts. Citation validity checks each citation's source, section and page against that response's retrieved chunks.
+
+Chunking and threshold tuning used retrieval or embeddings only, to save Gemini quota; only the final eval used Gemini, paced at 8 seconds between questions.
+
+**Baseline (`eval/baseline.json`):** recall@3 0.93, recall@5 1.00, citation validity 1.00, must-abstain 100%.
+
+**What these numbers do not show:**
+- Gemini returned 503 twice for q12, so that run gave a canned fallback and it scored as not answered. The first run had the same outage on q05, where a repeat asked by hand answered correctly. We reran once with a clean cache and kept that run, and report the fallback rather than hide it.
+- q02 answered "six years", which is correct, but `expect` looks for "6 years". `expect` is not part of the gate.
+- Scores of 1.00 on 15 questions are small-sample results, and part of this golden set shaped the boost and the section mapping.
+- Section names were matched to the index after the questions were written; the questions and answers were not changed to fit retrieval.

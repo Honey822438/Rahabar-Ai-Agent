@@ -16,6 +16,7 @@ from __future__ import annotations
 import re
 from collections import Counter
 
+from .chunk import heading_of
 from .models import Document, Page
 
 EDGE_LINES = 2
@@ -24,6 +25,7 @@ MIN_PAGES_FOR_REPEATS = 3
 TOC_LINE = re.compile(r"^.{3,90}?(?:\s|\.{2,})\s*\d{1,3}$")
 PAGE_NUMBER = re.compile(r"^(?:page\s+)?\d{1,3}(?:\s*(?:of|/)\s*\d{1,3})?$", re.I)
 LIST_START = re.compile(r"^(?:\d+(?:\.\d+)+\.?\s|\d+[.)]\s|[a-z][.)]\s|[ivx]+\)\s|[•\-*]\s|#)")
+NUMBERED_LINE = re.compile(r"^\d+\.\s")
 LIGATURES = {"ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl", " ": " ",
              "’": "'", "‘": "'", "“": '"', "”": '"', "­": ""}
 
@@ -79,6 +81,10 @@ def _paragraphs(lines: list[str]) -> str:
             current = current[:-1] + line
         else:
             current = f"{current} {line}".strip()
+        # A numbered heading ends here, or the next line would be joined on and hide it.
+        if current == line and NUMBERED_LINE.match(line) and heading_of(line):
+            done.append(current)
+            current = ""
     if current:
         done.append(current)
     return "\n\n".join(done)

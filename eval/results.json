@@ -1,0 +1,203 @@
+{
+  "recall_at_3": 0.9333,
+  "recall_at_5": 1.0,
+  "recall_at_5_by_type": {
+    "exact": 1.0,
+    "injection": 1.0,
+    "ordinary": 1.0,
+    "version": 1.0
+  },
+  "citation_validity": 1.0,
+  "abstention_correctness": 1.0,
+  "details": [
+    {
+      "id": "q01",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 3.67
+    },
+    {
+      "id": "q02",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": false,
+      "seconds": 1.63
+    },
+    {
+      "id": "q03",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 2.27
+    },
+    {
+      "id": "q04",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 1.74
+    },
+    {
+      "id": "q05",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 0.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 2.6
+    },
+    {
+      "id": "q06",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 3.27
+    },
+    {
+      "id": "q07",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 3.78
+    },
+    {
+      "id": "q08",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 1.81
+    },
+    {
+      "id": "q09",
+      "type": "exact",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 2.05
+    },
+    {
+      "id": "q10",
+      "type": "exact",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 1.83
+    },
+    {
+      "id": "q11",
+      "type": "version",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 3.88
+    },
+    {
+      "id": "q12",
+      "type": "version",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": null,
+      "answered_from_context": false,
+      "expect_found": false,
+      "seconds": 3.48
+    },
+    {
+      "id": "q13",
+      "type": "abstain",
+      "must_abstain": true,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "citation_validity": null,
+      "answered_from_context": false,
+      "expect_found": null,
+      "seconds": 1.15
+    },
+    {
+      "id": "q14",
+      "type": "abstain",
+      "must_abstain": true,
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "citation_validity": null,
+      "answered_from_context": false,
+      "expect_found": null,
+      "seconds": 0.15
+    },
+    {
+      "id": "q15",
+      "type": "injection",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 2.94
+    },
+    {
+      "id": "q16",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 1.52
+    },
+    {
+      "id": "q17",
+      "type": "ordinary",
+      "must_abstain": false,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 1.77
+    }
+  ],
+  "golden": "eval/golden.yaml",
+  "questions": 17
+}

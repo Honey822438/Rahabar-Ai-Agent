@@ -78,3 +78,11 @@ def test_gate_fails_on_invalid_citations() -> None:
     fake = {"source": "fake.pdf", "section": "None", "page": 9}
     results = run_eval.summarise([row("ordinary", [A], [A], [fake])])
     assert "citation validity" in run_eval.gate(results, None)[0]
+
+
+def test_recall_counts_one_alternative_as_the_whole_passage() -> None:
+    other = {"source": "c.pdf", "section": "X"}
+    relevant = [{**other, "alternatives": [A]}]
+    assert run_eval.recall_at_k(relevant, [A], 5) == 1.0
+    assert run_eval.recall_at_k(relevant, [other], 5) == 1.0
+    assert run_eval.recall_at_k(relevant, [{"source": "z.pdf", "section": "Y"}], 5) == 0.0

@@ -58,13 +58,19 @@ def _same_passage(relevant: dict, retrieved: dict) -> bool:
     return wanted in found or found in wanted
 
 
+def _found(relevant: dict, retrieved: dict) -> bool:
+    """A passage may list `alternatives`: other documents stating the same rule. Any one counts."""
+    return any(_same_passage(option, retrieved)
+               for option in [relevant, *relevant.get("alternatives", [])])
+
+
 def recall_at_k(relevant: list[dict], retrieved: list[dict], k: int) -> float | None:
     """Fraction of the relevant (source, section) pairs found in the top k retrieved.
     Return None when the question has no relevant passages (must-abstain questions)."""
     if not relevant:
         return None
     top = retrieved[:k]
-    return sum(any(_same_passage(r, hit) for hit in top) for r in relevant) / len(relevant)
+    return sum(any(_found(r, hit) for hit in top) for r in relevant) / len(relevant)
 
 
 def _citation_matches(citation: dict, retrieved: list[dict]) -> bool:
@@ -153,6 +159,8 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=HERE / "results.json")
     parser.add_argument("--update-baseline", action="store_true",
                         help="write these results as the new baseline")
+    parser.add_argument("--pace", type=float, default=0.0,
+                        help="seconds between questions, for a provider's rate limit")
     args = parser.parse_args()
 
     questions = load_golden(args.golden)
@@ -160,6 +168,7 @@ def main() -> int:
     headers = {"Host": args.host} if args.host else {}
     with httpx.Client(timeout=120.0, headers=headers) as client:
         for q in questions:
+            time.sleep(args.pace)
             started = time.perf_counter()
             response = ask(client, args.api, q["question"])
             rows.append({

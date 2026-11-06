@@ -1,13 +1,13 @@
 # PLAN.md — RAHBAR execution plan (Fri 6 Nov → Sun 8 Nov 2026, 23:59 PKT)
 
-Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLAUDE.md` and the first plan (`PLAN.original.md`).
+Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLAUDE.md`.
 **Team:** see the ownership table in `CLAUDE.md`. Each task below is tagged with its owner.
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 2.7 needs a green PR run; 2.8 cd.yml written, needs a successful run on `main`; 2.5 eval once the golden set (1.7) arrives. **Open:** 1.2 corpus must be named in the first PR; 2.5 must raise RELEVANCE_FLOOR above hostel scores (0.62 seen, floor is 0.5).
-**Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
-**Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
+**Now:** PR #2 is open with CI green; merging it gives the first `cd.yml` run (2.8). 2.5 eval starts when the golden set (1.7) arrives, and must raise RELEVANCE_FLOOR above hostel scores (0.62 seen, floor is 0.5). U1 still needs its branch-protection screenshot.
+**Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`, minikube, tesseract.
+**Not installed locally:** `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
 ## Dependencies
 2.5, the baseline, the gate demo (3.2), FAILURE-ANALYSIS numbers (3.4) and ENGINEERING-NOTES Q5 all wait on Malaika's 1.7 golden set.
@@ -15,23 +15,23 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Also [Malaika], no task number:** `ui/index.html` branding (no API changes), manual test notes in `docs/evidence/manual-test-notes.md`, PR reviews and approvals.
 
 ## Blockers and open questions (user)
-- [ ] [Rehan] **B1 Install minikube.** `CLAUDE.md` says it is installed, but it is not on PATH. It blocks 1.3.
+- [x] [Rehan] **B1 Install minikube.** Done: on PATH.
 - [x] [Rehan + Malaika] **B2 Partner:** Malaika reviews; `main` keeps 1 required approval.
-- [ ] [Rehan] **B3 Confirm default D1 and D2 below.** Work proceeds on these defaults unless changed.
+- [x] [Rehan] **B3 Confirm default D1 and D2 below.** Work proceeds on these defaults unless changed.
 
 ## User-only tasks (Claude never handles keys)
 - [ ] [Rehan] **U1** Create the GitHub repo, push, create `dev`, protect `main` (PR + CI required + 1 approval). Screenshot → `docs/evidence/`.
-- [ ] [Rehan] **U2** Create a Gemini key in a new AI Studio project and put it in the gitignored `.env`. Cluster: `kubectl create secret generic rahbar-secret -n rahbar --from-literal=LLM_API_KEY="..."` (optionally `--from-literal=GROQ_API_KEY="..."`).
+- [x] [Rehan] **U2** Create a Gemini key in a new AI Studio project and put it in the gitignored `.env`. Cluster: `kubectl create secret generic rahbar-secret -n rahbar --from-literal=LLM_API_KEY="..."` (optionally `--from-literal=GROQ_API_KEY="..."`).
 - [x] [Rehan] **U3** Create a Docker Hub access token → GitHub Secrets `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`. Needed by Saturday evening.
 - [ ] [Rehan; Malaika approves PRs] **U4** Run `make cluster` and `OLLAMA_HOST=0.0.0.0 ollama serve`, approve PRs, take the GitHub screenshots, submit on Classroom.
-- [ ] [Rehan] **U5** `sudo apt install tesseract-ocr` for local indexer runs (the image installs its own).
+- [x] [Rehan] **U5** `sudo apt install tesseract-ocr` for local indexer runs (the image installs its own).
 
 ## Decisions that fill gaps or conflicts
 | # | Problem | Decision |
 |---|---|---|
 | D1 | The cache must be flushed on re-index, but §4.7 says Redis accepts traffic **from api only**, so the indexer can't flush it. | The indexer writes `index_generation` to the collection metadata. The API keys cache entries by generation and deletes old ones when it changes. |
 | D2 | The `CLAUDE.md` NetworkPolicy allows Groq HTTPS but not Gemini, the primary provider. Google IPs also change. | api egress: 443 to `0.0.0.0/0` except private ranges. Indexer gets the same only if fetching the corpus needs it. |
-| D3 | `PLAN.original.md` 2.3 says Groq; `CLAUDE.md` says Gemini. | `CLAUDE.md` wins: Gemini first, Groq only if its key exists. |
+| D3 | The first draft of this plan said Groq; `CLAUDE.md` says Gemini. | `CLAUDE.md` wins: Gemini first, Groq only if its key exists. |
 | D4 | Tuning could burn Gemini's low free quota. | Chunking and cache tuning use retrieval only, with the stub LLM. Gemini runs only for final evals. |
 | D5 | The real corpus and the CI fixtures can't share a baseline. | `eval/baseline.json` = real corpus (submitted). `eval/baseline.fixture.json` = CI gate. Add a `--baseline` flag if needed. |
 | D6 | CI has no Gemini key on PRs, and must not need one. | e2e-eval uses Ollama + `nomic-embed-text` on the runner and the stub LLM. Abstention therefore rests on the relevance floor, which is enforced in code before any LLM call. |
@@ -41,7 +41,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 ## Friday — foundation, stubs on Kubernetes, corpus
 - [x] [Rehan] **1.1 Repo.** Unzip the kit as the first commit, keeping `CLAUDE.md` and `PLAN.md`. Add `LICENSE`, then `git init` and create `dev`. Use conventional commit prefixes from here on (checker: 25+ commits).
   *Done when:* `make install && make test && make lint` pass (11 tests).
-- [ ] [Rehan] **1.2 Corpus check first (§2).** The 2023 rules PDF "would not open" when the spec was written, and the version pair is the most common weak choice. Run `pdffonts` to confirm the scan. If 2023 is dead, use another genuine pair (Prospectus 2026 vs Handbook, or annual report editions). Write `sources.yaml`, run the fetch, commit `MANIFEST.md`.
+- [x] [Rehan] **1.2 Corpus check first (§2).** The 2023 rules PDF "would not open" when the spec was written, and the version pair is the most common weak choice. Run `pdffonts` to confirm the scan. If 2023 is dead, use another genuine pair (Prospectus 2026 vs Handbook, or annual report editions). Write `sources.yaml`, run the fetch, commit `MANIFEST.md`.
   *Done when:* ≥6 docs and ≥40 pages download; `fetch.py --verify` passes; the corpus is named in the first PR (§2 approval).
 - [x] [Rehan] **1.3 Dockerfiles (§10).** api, indexer (with tesseract), ui. Pinned bases, non-root `USER`, exec-form `CMD`; `.dockerignore` lists `.git`, `__pycache__`, `.venv`, corpus.
   *Done when:* all 3 build; `docker run` api answers `/healthz`.
@@ -56,7 +56,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - [x] [Rehan] **1.6 NetworkPolicy (§4.7).** Default deny + the allow list, with DNS egress.
   *Done when:* from `ui`, chroma is unreachable; from `api`, chroma and redis work; DNS resolves. Save the output.
 - [ ] [Malaika] **1.7 Golden set (§5.1), before any tuning.** `eval/golden.yaml` with ≥15 questions: 8 ordinary, 2 version, 2 exact-term, 2 must-abstain, 1 injection. Each has its doc + section, taken from reading the PDFs, not from retrieved chunks.
-- [ ] [Rehan; Malaika approves] **1.8 First PR** `dev` → `main`, naming the corpus (needs U1). Start `docs/AI-USAGE.md` and a running log for Engineering Note 7 (a real failure that cost over an hour).
+- [x] [Rehan; Malaika approves] **1.8 First PR** `dev` → `main`, naming the corpus (needs U1). Start `docs/AI-USAGE.md` and a running log for Engineering Note 7 (a real failure that cost over an hour).
 
 **Friday checkpoint:** the stub system works through the Ingress on minikube.
 
@@ -71,7 +71,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - [ ] [Rehan] **2.5 Eval code + tuning (§3.1, 3.3, 5).** The 4 functions in `run_eval.py`. Run **3 (size, overlap) configs**, recall@3/@5 overall and by type (D4). Add keyword boost only if exact-term recall is poor. Choose the cache threshold: lowest with zero false hits, recording the false hit that ruled one out.
 - [x] [Rehan] **2.6 Switch the cluster to real.** Do the pin demo **first**: set the real `EMBED_MODEL` without re-indexing → 0/1 READY + log line, save evidence. Then add the secret (U2), Ollama `ipBlock` and D7, and re-index.
   *Done when:* through the Ingress, one question gets a cited answer and an absent topic abstains.
-- [ ] [Rehan] **2.7 ci.yml (§6).** lint → test → manifests (`kubeconform -strict`) → build (no push) → Trivy → e2e-eval (kind + ingress-nginx + `overlays/ci`, D5, D6). Least-privilege `permissions:`.
+- [x] [Rehan] **2.7 ci.yml (§6).** lint → test → manifests (`kubeconform -strict`) → build (no push) → Trivy → e2e-eval (kind + ingress-nginx + `overlays/ci`, D5, D6). Least-privilege `permissions:`.
   *Done when:* green on a PR. The e2e job is the hardest part, so start it by 18:00.
 - [ ] [Rehan] **2.8 cd.yml (§6).** test → build-push (`needs:`, `${{ github.sha }}`) → deploy (`needs:`, ephemeral cluster, `rollout status`, smoke test through the Ingress). Needs U3.
   *Done when:* a successful run exists on `main`. **This link is a required deliverable, so don't leave it to Sunday night.**
@@ -89,7 +89,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
   - `README.md` replaced: mermaid diagram, CI badge, API table, secret command, apply order, indexer command.
 - [ ] [Rehan] **3.6 Clean-clone test.** Fresh clone + fresh `minikube delete && make cluster`, following only the README.
   *Done when:* §1.3 passes end to end.
-- [ ] [Rehan] **3.7 Submit by 22:00 (buffer).** `check_submission.py` has no failures; zero `STARTER-TODO`; history scanned for keys (`git log -p | grep -E 'AIza|gsk_'`). Submit the repo URL (public, or instructors added), cd.yml run link, Docker Hub SHA tags link, eval files.
+- [ ] [Rehan] **3.7 Submit by 22:00 (buffer).** `check_submission.py` has no failures; no starter placeholder markers left; history scanned for keys (`git log -p | grep -E 'AIza|gsk_'`). Submit the repo URL (public, or instructors added), cd.yml run link, Docker Hub SHA tags link, eval files.
 
 ## If time runs out
 **Cut first:** `ollama-incluster` → hybrid retrieval (explain it in the notes) → extra failure-analysis detail (keep 4 stages) → Groq fallback.
