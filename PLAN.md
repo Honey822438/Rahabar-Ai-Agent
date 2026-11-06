@@ -5,7 +5,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 2.7 ci.yml is green on a push to `dev` (all 6 jobs, reported by the user), still needs a green PR run; 2.8 cd.yml next; 2.5 eval once the golden set (1.7) arrives. **Open:** 1.2 corpus must be named in the first PR; 2.5 must raise RELEVANCE_FLOOR above hostel scores (0.62 seen, floor is 0.5).
+**Now:** 2.7 needs a green PR run; 2.8 cd.yml written, needs a successful run on `main`; 2.5 eval once the golden set (1.7) arrives. **Open:** 1.2 corpus must be named in the first PR; 2.5 must raise RELEVANCE_FLOOR above hostel scores (0.62 seen, floor is 0.5).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
