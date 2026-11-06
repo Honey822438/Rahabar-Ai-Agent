@@ -5,7 +5,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 2.5 eval (needs the golden set, 1.7) or 2.6 switch the cluster to real. **Open:** 1.2 corpus must be named in the first PR; 2.5 must raise RELEVANCE_FLOOR above hostel scores (0.58-0.61 seen, floor is 0.5).
+**Now:** 2.7 ci.yml; 2.5 eval once the golden set (1.7) arrives. **Open:** 1.2 corpus must be named in the first PR; 2.5 must raise RELEVANCE_FLOOR above hostel scores (0.62 seen, floor is 0.5).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
@@ -64,7 +64,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - [x] **2.4 Production steps (§3.2–3.3, 4.3–4.4, 4.8).** Redis semantic cache + skip rules (follow-ups, abstentions, out-of-scope, failed validation) + D1, turn storage, `/readyz` naming the failure, embed-pin check, metrics, per-request log line.
   *Done when:* unit tests pass, coverage ≥60%, ≥12 tests in total.
 - [ ] **2.5 Eval code + tuning (§3.1, 3.3, 5).** The 4 functions in `run_eval.py`. Run **3 (size, overlap) configs**, recall@3/@5 overall and by type (D4). Add keyword boost only if exact-term recall is poor. Choose the cache threshold: lowest with zero false hits, recording the false hit that ruled one out.
-- [ ] **2.6 Switch the cluster to real.** Do the pin demo **first**: set the real `EMBED_MODEL` without re-indexing → 0/1 READY + log line, save evidence. Then add the secret (U2), Ollama `ipBlock` and D7, and re-index.
+- [x] **2.6 Switch the cluster to real.** Do the pin demo **first**: set the real `EMBED_MODEL` without re-indexing → 0/1 READY + log line, save evidence. Then add the secret (U2), Ollama `ipBlock` and D7, and re-index.
   *Done when:* through the Ingress, one question gets a cited answer and an absent topic abstains.
 - [ ] **2.7 ci.yml (§6).** lint → test → manifests (`kubeconform -strict`) → build (no push) → Trivy → e2e-eval (kind + ingress-nginx + `overlays/ci`, D5, D6). Least-privilege `permissions:`.
   *Done when:* green on a PR. The e2e job is the hardest part, so start it by 18:00.
