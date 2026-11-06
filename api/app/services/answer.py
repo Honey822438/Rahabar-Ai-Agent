@@ -90,7 +90,7 @@ def answer_question(
         if hit is not None:
             answer = Answer(reasoning="", answer=hit.answer, citations=hit.citations,
                             answered_from_context=True, confidence=hit.confidence)
-        elif not passages or passages[0].score < settings.relevance_floor:
+        elif not passages or max(p.score for p in passages) < settings.relevance_floor:
             # The model is never asked: it can't invent an answer from evidence it doesn't get.
             answer = ABSTENTION
         else:

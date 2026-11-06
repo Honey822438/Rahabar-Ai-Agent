@@ -19,6 +19,10 @@ ROWS = [  # closest first, as Chroma returns them
 ]
 
 
+EXACT_ROW = ("rules-2026.pdf#0002", "Clause 1.21 sets the attendance rule.", "rules-2026.pdf",
+             "2026-06", False, 0.5)
+
+
 class FakeCollection:
     """Applies the `superseded` filter the way Chroma does."""
 
@@ -27,7 +31,11 @@ class FakeCollection:
 
     def query(self, **kwargs: Any) -> dict[str, Any]:
         self.calls.append(kwargs)
-        rows = [r for r in ROWS if r[4] == kwargs["where"]["superseded"]][:kwargs["n_results"]]
+        rows = [r for r in ROWS if r[4] == kwargs["where"]["superseded"]]
+        contains = kwargs.get("where_document", {}).get("$contains")
+        if contains:  # far from the query, so a plain vector search would not reach it
+            rows = [r for r in [*rows, EXACT_ROW] if contains in r[1]]
+        rows = rows[:kwargs["n_results"]]
         return {
             "ids": [[r[0] for r in rows]],
             "documents": [[r[1] for r in rows]],
@@ -103,3 +111,17 @@ def test_a_year_with_no_document_retrieves_nothing(retriever: tuple) -> None:
 ])
 def test_asks_for_older_version(question: str, expected: bool) -> None:
     assert asks_for_older_version(question) is expected
+
+
+def test_exact_term_chunk_comes_first_with_its_true_score(retriever) -> None:
+    instance, _, _ = retriever
+    passages = instance.retrieve("What does clause 1.21 say?", k=2)
+    assert [p.chunk_id for p in passages] == ["rules-2026.pdf#0002", "rules-2026.pdf#0001"]
+    assert passages[0].score == pytest.approx(0.5)
+
+
+def test_question_without_exact_term_keeps_vector_order(retriever) -> None:
+    instance, collection, _ = retriever
+    passages = instance.retrieve("Is attendance required?", k=1)
+    assert passages[0].chunk_id == "rules-2026.pdf#0001"
+    assert all("where_document" not in call for call in collection.calls)

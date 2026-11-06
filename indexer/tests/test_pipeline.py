@@ -237,3 +237,11 @@ def test_failed_build_leaves_the_live_index_alone(monkeypatch: pytest.MonkeyPatc
     with pytest.raises(RuntimeError):
         store([_chunk()], [[0.1]], get_settings())
     assert client.collections["rahbar"].metadata == {"old": True}
+
+
+def test_numbered_heading_is_not_joined_to_the_next_line() -> None:
+    from pipeline.clean import _paragraphs
+
+    text = _paragraphs(["5. Unacceptable Uses of Generative AI Tools", "The unacceptable use of"])
+    assert text.split("\n\n") == ["5. Unacceptable Uses of Generative AI Tools",
+                                   "The unacceptable use of"]

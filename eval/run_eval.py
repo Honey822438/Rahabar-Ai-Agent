@@ -58,13 +58,19 @@ def _same_passage(relevant: dict, retrieved: dict) -> bool:
     return wanted in found or found in wanted
 
 
+def _found(relevant: dict, retrieved: dict) -> bool:
+    """A passage may list `alternatives`: other documents stating the same rule. Any one counts."""
+    return any(_same_passage(option, retrieved)
+               for option in [relevant, *relevant.get("alternatives", [])])
+
+
 def recall_at_k(relevant: list[dict], retrieved: list[dict], k: int) -> float | None:
     """Fraction of the relevant (source, section) pairs found in the top k retrieved.
     Return None when the question has no relevant passages (must-abstain questions)."""
     if not relevant:
         return None
     top = retrieved[:k]
-    return sum(any(_same_passage(r, hit) for hit in top) for r in relevant) / len(relevant)
+    return sum(any(_found(r, hit) for hit in top) for r in relevant) / len(relevant)
 
 
 def _citation_matches(citation: dict, retrieved: list[dict]) -> bool:

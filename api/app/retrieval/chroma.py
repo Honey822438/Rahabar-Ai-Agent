@@ -44,6 +44,11 @@ def asks_for_older_version(question: str) -> bool:
     return requested_version(question) is not None
 
 
+# Clause numbers such as 1.21, and course codes such as CS-2006.
+EXACT_TERM = re.compile(r"\b(?:\d+\.\d+|[A-Z]{2,4}-?\d{3,4})\b")
+EXACT_HITS = 2
+
+
 class ChromaRetriever:
     name = "chroma"
 
@@ -91,7 +96,26 @@ class ChromaRetriever:
         found = collection.query(query_embeddings=[vector], n_results=limit, where=where,
                                  include=["documents", "metadatas", "distances"])
         passages = self._to_passages(found, version)
-        return passages[:k]
+        return self._boost_exact_terms(question, vector, where, passages, collection, version)[:k]
+
+    def _boost_exact_terms(self, question: str, vector: list[float], where: dict[str, Any],
+                           passages: list[Passage], collection: Any,
+                           version: str | None) -> list[Passage]:
+        """Put chunks holding a clause number or course code first; embeddings blur those.
+        Scores stay true similarities, so the relevance floor is not affected."""
+        exact: list[Passage] = []
+        for term in EXACT_TERM.findall(question):
+            found = collection.query(query_embeddings=[vector], n_results=EXACT_HITS, where=where,
+                                     where_document={"$contains": term},
+                                     include=["documents", "metadatas", "distances"])
+            exact += self._to_passages(found, version)
+        ids = set()
+        ordered = []
+        for passage in exact + passages:
+            if passage.chunk_id not in ids:
+                ids.add(passage.chunk_id)
+                ordered.append(passage)
+        return ordered
 
     @staticmethod
     def _to_passages(found: Any, version: str | None) -> list[Passage]:
