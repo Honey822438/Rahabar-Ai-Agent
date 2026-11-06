@@ -1,0 +1,11 @@
+# Keeps the downloaded documents between index runs. PDFs are never committed or in the image.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: corpus
+  namespace: rahbar
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 256Mi

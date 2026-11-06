@@ -24,13 +24,38 @@ spec:
             securityContext:
               runAsNonRoot: true
               runAsUser: 10001
+              fsGroup: 10001
               seccompProfile: { type: RuntimeDefault }
+            initContainers:
+              - name: fetch-corpus
+                image: rahbar-indexer:dev
+                imagePullPolicy: IfNotPresent
+                # Skips files already on the volume, so a retry doesn't download them again.
+                command: ["python", "corpus/fetch.py"]
+                env:
+                  - { name: CORPUS_RAW_DIR, value: /corpus }
+                  - { name: CORPUS_MANIFEST, value: /tmp/MANIFEST.md }
+                resources:
+                  requests:
+                    cpu: 50m
+                    memory: 128Mi
+                  limits:
+                    cpu: 500m
+                    memory: 256Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  capabilities:
+                    drop:
+                      - ALL
+                volumeMounts:
+                  - { name: corpus, mountPath: /corpus }
+                  - { name: tmp, mountPath: /tmp }
             containers:
               - name: indexer
                 image: rahbar-indexer:dev
                 imagePullPolicy: IfNotPresent
-                # Stub phase. Task 2.6 removes --dummy; keep the Job and CronJob identical.
-                command: ["python", "-m", "pipeline.run", "--dummy"]
+                command: ["python", "-m", "pipeline.run"]
                 envFrom:
                   - configMapRef: { name: rahbar-config }
                 resources:
@@ -47,7 +72,11 @@ spec:
                     drop:
                       - ALL
                 volumeMounts:
+                  - { name: corpus, mountPath: /corpus, readOnly: true }
                   - { name: tmp, mountPath: /tmp }
             volumes:
+              - name: corpus
+                persistentVolumeClaim:
+                  claimName: corpus
               - name: tmp
                 emptyDir: {}

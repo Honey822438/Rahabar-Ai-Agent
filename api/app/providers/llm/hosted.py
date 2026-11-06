@@ -79,6 +79,11 @@ class HostedProvider:
                                                       "model": target.model,
                                                       "status": response.status_code})
                 continue
+            if response.is_error:
+                # The status only: the error body can echo request details.
+                log.error("provider rejected the request", extra={"target": target.label,
+                                                                  "model": target.model,
+                                                                  "status": response.status_code})
             response.raise_for_status()
             body = response.json()
             content = body["choices"][0]["message"]["content"]
