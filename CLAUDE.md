@@ -13,7 +13,7 @@ If you are Malaika's Claude Code: read HANDOFF-MALAIKA.md first, work only on Ma
 A grounded question-answering service over a real FAST-NUCES document corpus. It answers only from the indexed documents, cites [source / section / page], abstains when the corpus doesn't cover a question, and runs on **minikube** as ~15 Kubernetes objects with CI/CD.
 **Deadline: Sun 8 Nov 2026, 23:59 PKT.** Work started Fri 6 Nov. Time is the main constraint: prefer simple, graded-correct solutions over clever ones.
 
-The assignment PDF is the spec. Read `STARTER.md` and `docs/*` templates. Every `STARTER-TODO(x.y)` marks graded work; none may remain at submission (`python scripts/check_submission.py`).
+The assignment PDF is the spec. Read `STARTER.md` and `docs/*` templates. Every starter placeholder marker marks graded work; none may remain at submission (`python scripts/check_submission.py`).
 
 ## Machine
 - **Already installed by the user:** Docker, kubectl, minikube, kustomize-capable kubectl, Ollama. Don't reinstall them; just verify versions.
