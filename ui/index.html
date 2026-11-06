@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RAHBAR</title>
+<title>RAHBAR | FAST-NUCES</title>
 <style>
   :root {
     --bg: #f7f7f5; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e3e2dd;
@@ -22,7 +22,10 @@
          font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   main { max-width: 760px; margin: 0 auto; padding: 32px 16px 160px; }
   header h1 { margin: 0; font-size: 26px; letter-spacing: 0.02em; }
-  header p { margin: 4px 0 24px; color: var(--muted); }
+  header { border-bottom: 3px solid var(--accent); margin-bottom: 20px; }
+  header h1 { color: var(--accent); }
+  header h1 .org { font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; margin-left: 8px; }
+  header p { margin: 4px 0 16px; color: var(--muted); }
   #thread { display: flex; flex-direction: column; gap: 16px; }
   .q { align-self: flex-end; max-width: 85%; background: var(--accent); color: #fff;
        padding: 10px 14px; border-radius: 14px 14px 4px 14px; white-space: pre-wrap; }
@@ -60,8 +63,8 @@
 <body>
 <main>
   <header>
-    <h1>RAHBAR</h1>
-    <p>Answers only from the indexed documents, with sources. If the documents do not cover it, it says so.</p>
+    <h1>RAHBAR <span class="org">FAST-NUCES</span></h1>
+    <p>Your guide to FAST-NUCES rules and policies. Answers only from the indexed documents, with sources. If the documents do not cover it, it says so.</p>
   </header>
   <section id="thread" aria-live="polite"></section>
 </main>
