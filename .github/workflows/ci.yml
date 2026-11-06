@@ -1,0 +1,144 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+
+env:
+  KIND_VERSION: v0.27.0
+  KUBECONFORM_VERSION: v0.6.7
+  INGRESS_NGINX_VERSION: controller-v1.12.1
+  TRIVY_IMAGE: aquasec/trivy:0.58.1
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: make install
+      - run: make lint
+
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: make install
+      - name: pytest (stubs only, coverage at least 60%)
+        run: |
+          (cd api && ../.venv/bin/pytest -q --cov=app --cov-fail-under=60)
+          (cd indexer && ../.venv/bin/pytest -q)
+
+  manifests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kubeconform
+        run: |
+          curl -fsSL "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" \
+            | tar -xz -C /usr/local/bin kubeconform
+      - name: kustomize build | kubeconform
+        run: |
+          for overlay in dev prod ci; do
+            kustomize build "k8s/overlays/$overlay" | kubeconform -strict -summary
+          done
+
+  build:
+    needs: [lint, test, manifests]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build all three images (never pushed from here)
+        run: |
+          docker build -t rahbar-api:dev api
+          docker build -t rahbar-indexer:dev -f indexer/Dockerfile .
+          docker build -t rahbar-ui:dev ui
+
+  scan:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          docker build -t rahbar-api:dev api
+          docker build -t rahbar-indexer:dev -f indexer/Dockerfile .
+          docker build -t rahbar-ui:dev ui
+      - name: Trivy (fail on fixable HIGH or CRITICAL)
+        run: |
+          for image in api indexer ui; do
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "$TRIVY_IMAGE" image \
+              --scanners vuln --ignore-unfixed --severity HIGH,CRITICAL --exit-code 1 \
+              "rahbar-$image:dev"
+          done
+
+  e2e-eval:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: make install
+      - name: Build images
+        run: |
+          docker build -t rahbar-api:dev api
+          docker build -t rahbar-indexer:dev -f indexer/Dockerfile .
+          docker build -t rahbar-ui:dev ui
+      - name: Start Ollama on the runner, as on a laptop
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          sudo systemctl stop ollama
+          OLLAMA_HOST=0.0.0.0 nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for _ in $(seq 1 30); do curl -sf localhost:11434/api/tags > /dev/null && break; sleep 2; done
+          ollama pull nomic-embed-text
+      - name: Create the kind cluster with ingress-nginx
+        run: |
+          curl -fsSLo /tmp/kind "https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-linux-amd64"
+          sudo install /tmp/kind /usr/local/bin/kind
+          kind create cluster --config .github/workflows/kind-config.yaml --wait 120s
+          for image in api indexer ui; do kind load docker-image "rahbar-$image:dev"; done
+          kubectl apply -f "https://raw.githubusercontent.com/kubernetes/ingress-nginx/${INGRESS_NGINX_VERSION}/deploy/static/provider/kind/deploy.yaml"
+          kubectl wait -n ingress-nginx --for=condition=Ready pod \
+            -l app.kubernetes.io/component=controller --timeout=180s
+      - name: Apply the manifests and run the indexer Job on the fixtures
+        run: |
+          HOST_IP=$(docker network inspect kind \
+            -f '{{range .IPAM.Config}}{{if not (contains .Subnet ":")}}{{.Gateway}}{{end}}{{end}}')
+          sed -i "s/CI_HOST_IP/$HOST_IP/g" k8s/overlays/ci/kustomization.yaml
+          kubectl create namespace rahbar
+          kubectl create configmap corpus-fixtures -n rahbar \
+            --from-file=eval/fixtures/academic-rules-2023.md \
+            --from-file=eval/fixtures/academic-rules-2026.md \
+            --from-file=eval/fixtures/fees-2026.md
+          kubectl apply -k k8s/overlays/ci
+          kubectl wait -n rahbar --for=condition=complete job/indexer --timeout=300s
+          kubectl rollout status -n rahbar statefulset/chroma --timeout=180s
+          kubectl rollout status -n rahbar deploy/redis --timeout=120s
+          kubectl rollout status -n rahbar deploy/ui --timeout=120s
+          kubectl rollout status -n rahbar deploy/api --timeout=180s
+      - name: Eval gate through the Ingress (section 5.4)
+        run: |
+          .venv/bin/python eval/run_eval.py --api http://localhost --host rahbar.local \
+            --golden eval/fixtures/golden.fixture.yaml \
+            --baseline eval/baseline.fixture.json --out /tmp/fixture-results.json
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          kubectl get pods,jobs,endpoints -n rahbar || true
+          kubectl describe pods -n rahbar | tail -60 || true
+          kubectl logs -n rahbar job/indexer --all-containers --tail=40 || true
+          kubectl logs -n rahbar deploy/api --tail=40 || true
+          tail -20 /tmp/ollama.log || true
