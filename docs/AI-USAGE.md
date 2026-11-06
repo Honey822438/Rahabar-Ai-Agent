@@ -16,4 +16,4 @@ Commit messages do not carry an AI attribution trailer. This file is the record 
 
 Automated check run by the AI assistant: all 19 quotes in `eval/golden.yaml` were matched against the extracted PDF and web-page text (the 2023 rules via OCR), and the file loads in `eval/run_eval.py` with 17 questions. This is a text match, not a human read of the PDFs. The AI assistant also looked at rendered page images for the two version questions (q11, q12) and confirmed both the 2023 and 2026 wording and the printed page numbers (2023: pp. 15 and 9; 2026: pp. 22 and 13).
 
-Verified by Malaika: ___ of 17 questions
+Verified by Malaika: 17 of 17 questions
