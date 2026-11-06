@@ -33,8 +33,13 @@ Run these in order from the repository root.
 **1. Start Ollama on the host**, in its own terminal, so the cluster can reach it:
 
 ```bash
-ollama pull nomic-embed-text
 OLLAMA_HOST=0.0.0.0 ollama serve
+```
+
+Then, in another terminal:
+
+```bash
+ollama pull nomic-embed-text
 ```
 
 **2. Start the cluster** (minikube with Calico, metrics-server and ingress):
@@ -106,7 +111,7 @@ The `reindex` CronJob also runs this weekly.
 | GET | `/readyz` | No | Readiness; 503 names the failed check |
 | GET | `/metrics` | No | Prometheus metrics |
 
-To reach the last three: `kubectl port-forward -n rahbar svc/api 8000:8000`. If the Service port differs, see `k8s/base/services.yaml`.
+To reach the last three: `kubectl port-forward -n rahbar svc/api 8000:8000`.
 
 ## Local development and tests
 

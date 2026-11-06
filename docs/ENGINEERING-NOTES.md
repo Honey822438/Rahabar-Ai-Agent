@@ -26,12 +26,12 @@ Meanwhile readiness on `/healthz` always passes, so the Service keeps sending tr
 
 Our HPA targets 70% of the CPU request, which is 70m of 100m (`k8s/base/api.yaml:59,92`). While Gemini generates, the API is mostly waiting on a network call (`api/app/providers/llm/hosted.py:50-61`), so the CPU cost is low and the HPA sees almost nothing. It measures JSON parsing, cosine scans and logging, not the work users wait for.
 
-So a pod can be full of slow requests while the HPA reads near idle: `docs/evidence/hpa.txt` shows 3% at rest. In our rollout test, cached traffic at 2 requests per second put two pods at 100m and 157m (`docs/evidence/kubectl-top.txt` shows the idle figures). That means cheap cached requests can trigger scaling more readily than expensive generation does. Adding pods also doesn't help with a provider rate limit, since all pods share one key.
+So a pod can be full of slow requests while the HPA reads near idle. `docs/evidence/hpa.txt` shows 3% at rest; we have not yet measured CPU under a real generation load. Adding pods also doesn't help with a provider rate limit, since all pods share one key.
 
 **The better signal** is requests in flight per pod, or the queue wait, with generation latency alongside it.
 
 **What we would need to build:**
-1. An in-flight gauge in `api/app/services/telemetry.py`; today's metrics (lines 10-16) only cover completed work.
+1. An in-flight gauge in `api/app/services/telemetry.py`; today's metrics (lines 10-16) do not track requests in flight.
 2. Prometheus to scrape `/metrics`.
 3. `prometheus-adapter` or KEDA to expose it to the HPA.
 4. A `Pods` metric in the HPA, replacing lines 88-92 of `api.yaml`.
