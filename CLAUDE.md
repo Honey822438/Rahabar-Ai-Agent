@@ -1,5 +1,14 @@
 # CLAUDE.md — RAHBAR (Assignment 02: Grounded RAG on Kubernetes)
 
+## Team & ownership
+| Owner | Tasks | Notes |
+|---|---|---|
+| Rehan Ahmed (i24-3012) | Dockerfiles, all K8s manifests, minikube cluster, indexer pipeline, retrieval, generation, cache, /readyz, embed pin, ci.yml, cd.yml, 2.5 tuning (floor, cache threshold, 3 chunking configs), eval code (run_eval.py), baseline, gate demo, cluster evidence, FAILURE-ANALYSIS, ADRs, ARCHITECTURE, PIPELINE, ENGINEERING-NOTES, README, final checker + submission | Don't touch Malaika's files without asking |
+| Malaika (i24-3098) | 1.7 golden set (eval/golden.yaml), CORPUS.md review, ui/index.html branding (no API changes), manual test notes (docs/evidence/manual-test-notes.md), PR reviews/approvals, her section in AI-USAGE.md | Works on branches → PR into dev; commits from her own account |
+| Both | Read and understand ADRs + ENGINEERING-NOTES; AI-USAGE.md honest; no secrets; no push to main | |
+
+If you are Malaika's Claude Code: read HANDOFF-MALAIKA.md first, work only on Malaika's tasks, never modify k8s/, api/, indexer/ or workflows unless she explicitly asks, and never push to main.
+
 ## What this is
 A grounded question-answering service over a real FAST-NUCES document corpus. It answers only from the indexed documents, cites [source / section / page], abstains when the corpus doesn't cover a question, and runs on **minikube** as ~15 Kubernetes objects with CI/CD.
 **Deadline: Sun 8 Nov 2026, 23:59 PKT.** Work started Fri 6 Nov. Time is the main constraint: prefer simple, graded-correct solutions over clever ones.
