@@ -5,7 +5,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
-**Now:** 1.3 Dockerfiles. **Open:** 1.2 still has to be named in the first PR (needs U1).
+**Now:** 1.4 cluster. **Open:** 1.2 still has to be named in the first PR (needs U1).
 **Verified 6 Nov:** Docker 29.8.2, kubectl 1.37.1, kustomize, Python 3.12.16, Ollama 0.40.14 with `nomic-embed-text`.
 **Missing:** `minikube`, `tesseract` and `gh`. CI installs its own `kubeconform`, `trivy` and `kind`.
 
@@ -38,7 +38,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
   *Done when:* `make install && make test && make lint` pass (11 tests).
 - [ ] **1.2 Corpus check first (§2).** The 2023 rules PDF "would not open" when the spec was written, and the version pair is the most common weak choice. Run `pdffonts` to confirm the scan. If 2023 is dead, use another genuine pair (Prospectus 2026 vs Handbook, or annual report editions). Write `sources.yaml`, run the fetch, commit `MANIFEST.md`.
   *Done when:* ≥6 docs and ≥40 pages download; `fetch.py --verify` passes; the corpus is named in the first PR (§2 approval).
-- [ ] **1.3 Dockerfiles (§10).** api, indexer (with tesseract), ui. Pinned bases, non-root `USER`, exec-form `CMD`; `.dockerignore` lists `.git`, `__pycache__`, `.venv`, corpus.
+- [x] **1.3 Dockerfiles (§10).** api, indexer (with tesseract), ui. Pinned bases, non-root `USER`, exec-form `CMD`; `.dockerignore` lists `.git`, `__pycache__`, `.venv`, corpus.
   *Done when:* all 3 build; `docker run` api answers `/healthz`.
 - [ ] **1.4 Cluster.** `make cluster` (B1, U4). Free memory first: only about 6 GB is available and minikube alone takes 6 GB.
   *Done when:* node Ready; calico, metrics-server and ingress running.
