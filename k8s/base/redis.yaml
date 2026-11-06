@@ -46,6 +46,7 @@ spec:
           livenessProbe:
             exec: { command: ["redis-cli", "ping"] }
             periodSeconds: 20
+          # Measured peak 13 MiB with few cache entries; the limit leaves room for many more.
           resources:
             requests:
               cpu: 50m

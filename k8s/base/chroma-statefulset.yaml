@@ -37,6 +37,7 @@ spec:
             httpGet: { path: /api/v2/heartbeat, port: 8000 }
             initialDelaySeconds: 20
             periodSeconds: 20
+          # Measured peak 195 MiB during a full re-index of 372 chunks; the limit allows the index to grow.
           resources:
             requests:
               cpu: 100m

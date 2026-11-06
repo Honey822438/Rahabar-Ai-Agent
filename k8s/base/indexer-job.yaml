@@ -53,13 +53,15 @@ spec:
           command: ["python", "-m", "pipeline.run"]
           envFrom:
             - configMapRef: { name: rahbar-config }
+          # Measured peak 196 MiB (cgroup memory.peak, full corpus with OCR). Request covers the peak;
+          # the 512Mi limit leaves about 2.6x for a larger corpus. See docs/evidence/kubectl-top.txt.
           resources:
             requests:
               cpu: 500m
-              memory: 512Mi
+              memory: 256Mi
             limits:
               cpu: "2"
-              memory: 1536Mi
+              memory: 512Mi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

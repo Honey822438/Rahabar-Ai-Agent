@@ -52,6 +52,8 @@ spec:
           lifecycle:
             preStop:
               exec: { command: ["sleep", "10"] }
+          # Measured peak 77 MiB idle plus cached traffic; 128Mi request and 384Mi limit leave room for
+          # concurrent generation. CPU request is also the HPA baseline: 70% of 100m. See docs/evidence/kubectl-top.txt.
           resources:
             requests:
               cpu: 100m
