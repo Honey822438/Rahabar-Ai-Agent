@@ -1,6 +1,6 @@
 # Engineering notes
 
-<!-- STARTER-TODO(7): questions 5 and 7 are still to be answered. -->
+<!-- STARTER-TODO(7): question 7 is still to be answered. -->
 
 ## 1. Indexing in API startup: what breaks with 3 replicas and one Chroma volume?
 
@@ -49,6 +49,15 @@ So a pod can be full of slow requests while the HPA reads near idle. `docs/evide
 
 
 ## 5. recall@5 by question type: where is it worst, and why?
+
+**Exact-term questions were worst.** At 400/50 with embeddings alone, recall@5 was 0 of 2 for exact terms, while ordinary, version and injection questions were found. With the keyword boost (`api/app/retrieval/chroma.py`), every type now scores 1.00 (`eval/results.json`), on a small set of 15.
+
+**Why embeddings struggle:** an embedding captures overall meaning, and `1.21` and `1.25` mean nearly the same to it. We measured "What does clause 1.21 ... require?" against "clause 1.25" at 0.917 cosine similarity. For q09, the top hit was the Prospectus's mixed-column text, and the clause itself did not reach the top 5.
+
+**A remaining weak spot is recall@3:** q05 ranks 5th, because several AI-policy sections share the same vocabulary. Its answer depends on one of them.
+
+**Limits:** the boost matches only the patterns we chose, clause-style numbers and course codes. A worded exact term still depends on embeddings. And the Prospectus has no numbered clauses in its extracted text, so the boost can't help there.
+
 
 ## 6. EMBED_MODEL changed on the API only: what does your system do?
 
