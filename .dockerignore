@@ -1,0 +1,7 @@
+# Only the indexer builds from the repo root. Everything is out unless listed here.
+*
+!indexer/requirements.txt
+!indexer/pipeline
+!corpus/fetch.py
+!corpus/sources.yaml
+**/__pycache__

@@ -44,7 +44,7 @@ images: ## build the three images and load them into minikube (needs yours: Dock
 	# Built inside minikube: its runtime is containerd, and `minikube image load` fails on the
 	# indexer image with Docker 29.
 	minikube image build -t rahbar-api:$(TAG) api
-	minikube image build -t rahbar-indexer:$(TAG) indexer
+	minikube image build -t rahbar-indexer:$(TAG) -f indexer/Dockerfile .
 	minikube image build -t rahbar-ui:$(TAG) ui
 
 apply: ## apply the dev overlay (needs yours: manifests)

@@ -4,11 +4,10 @@ metadata:
   name: rahbar-config
   namespace: rahbar
 data:
-  # Stub phase. Task 2.6 switches these three to chroma / hosted / nomic-embed-text.
-  RETRIEVER: "stub"
-  LLM_PROVIDER: "stub"
+  RETRIEVER: "chroma"
+  LLM_PROVIDER: "hosted"
   # The embedding pin: the one key both the api and the indexer read.
-  EMBED_MODEL: "dummy-768"
+  EMBED_MODEL: "nomic-embed-text"
   CHROMA_HOST: "chroma"
   CHROMA_PORT: "8000"
   CHROMA_COLLECTION: "rahbar"

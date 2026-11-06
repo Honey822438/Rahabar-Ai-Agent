@@ -10,6 +10,7 @@ resources:
   - ui.yaml
   - chroma-statefulset.yaml
   - redis.yaml
+  - corpus-pvc.yaml
   - indexer-job.yaml
   - reindex-cronjob.yaml
   - services.yaml
