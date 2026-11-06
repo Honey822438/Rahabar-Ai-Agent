@@ -24,7 +24,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: make install
-      - run: make lint
+      - name: ruff and mypy
+        run: |
+          .venv/bin/ruff check api indexer eval corpus
+          (cd api && ../.venv/bin/mypy app)
+          (cd indexer && ../.venv/bin/mypy pipeline)
 
   test:
     runs-on: ubuntu-24.04
