@@ -1,7 +1,7 @@
 # PLAN.md — RAHBAR execution plan (Fri 6 Nov → Sun 8 Nov 2026, 23:59 PKT)
 
 Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLAUDE.md` and the first plan (`PLAN.original.md`).
-**Team:** A = i24-3012 (Kubernetes/CI: 1.3-1.6, 2.6-2.8, 3.2, 3.3). B = Malaika, i24-3098 (corpus/RAG/eval/docs: 1.2, 1.7, 2.1-2.5, 3.1, 3.4, 3.5). Each reviews the other's PRs.
+**Team:** A = Rehan Ahmed, i24-3012 (Kubernetes/CI: 1.3-1.6, 2.6-2.8, 3.2, 3.3). B = Malaika, i24-3098 (corpus/RAG/eval/docs: 1.2, 1.7, 2.1-2.5, 3.1, 3.4, 3.5). Each reviews the other's PRs.
 **Rules:** one task at a time. Tick `[x]` only when *Done when* has actually passed. Spec sections are shown as §. Late submissions are not accepted.
 
 ## Status
