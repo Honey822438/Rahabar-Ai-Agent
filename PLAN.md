@@ -73,14 +73,14 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
   *Done when:* through the Ingress, one question gets a cited answer and an absent topic abstains.
 - [x] [Rehan] **2.7 ci.yml (§6).** lint → test → manifests (`kubeconform -strict`) → build (no push) → Trivy → e2e-eval (kind + ingress-nginx + `overlays/ci`, D5, D6). Least-privilege `permissions:`.
   *Done when:* green on a PR. The e2e job is the hardest part, so start it by 18:00.
-- [ ] [Rehan] **2.8 cd.yml (§6).** test → build-push (`needs:`, `${{ github.sha }}`) → deploy (`needs:`, ephemeral cluster, `rollout status`, smoke test through the Ingress). Needs U3.
+- [x] [Rehan] **2.8 cd.yml (§6).** test → build-push (`needs:`, `${{ github.sha }}`) → deploy (`needs:`, ephemeral cluster, `rollout status`, smoke test through the Ingress). Needs U3.
   *Done when:* a successful run exists on `main`. **This link is a required deliverable, so don't leave it to Sunday night.**
 
 **Saturday checkpoint:** a stranger's flow (§1.3) works, and CI is running.
 
 ## Sunday — prove it, write it, submit
 - [ ] [Rehan] **3.1 Final eval on Gemini.** Pace requests to the rate limit. Must-abstain 100%, citation validity ≥95%. Commit `eval/baseline.json` + `results.json`.
-- [ ] [Rehan] **3.2 Gate demo.** PR that fails the gate → screenshot the blocked merge → fix → screenshot green (U4).
+- [x] [Rehan] **3.2 Gate demo.** PR that fails the gate → screenshot the blocked merge → fix → screenshot green (U4).
 - [x] [Rehan] **3.3 Cluster evidence (§4.5–4.6) → `docs/evidence/`.** `kubectl top pods` including indexer peak (then tune requests/limits from it), endpoints with 3+ IPs, HPA, `set image` → `rollout status` → `rollout undo` with a visible change, delete a pod with nothing breaking.
 - [x] [Rehan] **3.4 Failure analysis (§5.5).** A no OCR, B 100-token no overlap, C top_k 1, E no superseded filter. Each: symptom, diagnosis, stage, remedy, and the metric or log line that would have shown it.
 - [ ] [Rehan; Malaika: CORPUS.md review, her AI-USAGE.md section] **3.5 Docs, with real numbers and file:line references.**
@@ -111,3 +111,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - Q7 raw material, CHROMA_PORT bug (6 Nov): **Symptom:** `chroma-0` in CrashLoopBackOff, 6 restarts, while api, redis and ui were healthy. **Prime suspect beforehand (not a tested guess):** the non-root/read-only securityContext, which 1.5 had listed as a Chroma risk. **What revealed it:** `kubectl logs chroma-0`: `Error loading config: invalid type: found string "tcp://10.100.217.229:8000", expected u16 for key "PORT" in CHROMA_ environment variable(s)`. **Cause:** Kubernetes injects `CHROMA_PORT` for a Service named `chroma`, and Chroma reads `CHROMA_*` as config. **Fix:** `enableServiceLinks: false`. **Caveat:** this took minutes, not over an hour, and the log line pointed straight at it, so Q7 needs a longer failure if one happens.
 - Q7 candidate, handbook text (6 Nov): retrieved chunks mixed unrelated text. Wrong first belief: two-column pages, so a column splitter was written and it changed nothing. What revealed it: `extract_words()` showed x up to 800 on a 420-wide page, so the PDFs hold hidden text beyond the visible page. Fix: `page.within_bbox(page.bbox)`. Time spent was under an hour, so note that honestly.
 - Docker Hub user for cd.yml: `h1oney123` (GitHub Secrets `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN` set).
+- CD and gate (7 Nov, as reported by Rehan): cd #1 and #2 green on `main`; gate demo done, ci #17 red then #18 green. Evidence screenshots are in `docs/evidence/`, not yet committed.
+- Cache threshold moved 0.92 → 0.94 (7 Nov). `eval/cache_threshold.py` found a 0.923 false hit (MS vs undergraduate CGPA) that 0.92 would serve; the original pairs were never committed, so the new script and its pairs replace them. The running cluster needs `kubectl apply -k` and an API restart to pick it up; it was stopped during this change, so 0.94 is measured on embeddings only, not live through the API.
+- Note 7: no recorded failure reached an hour. The note says so and uses the handbook hidden-text failure. **Rehan must confirm or replace it with a real longer one, in their own words.**
+- `main` merged into `dev` (7 Nov) so the gate-demo commits are shared; no file content changed by it.
