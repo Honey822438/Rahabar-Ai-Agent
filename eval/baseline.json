@@ -19,7 +19,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 3.67
+      "seconds": 2.98
     },
     {
       "id": "q02",
@@ -30,7 +30,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": false,
-      "seconds": 1.63
+      "seconds": 4.04
     },
     {
       "id": "q03",
@@ -41,7 +41,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 2.27
+      "seconds": 2.72
     },
     {
       "id": "q04",
@@ -52,7 +52,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 1.74
+      "seconds": 2.94
     },
     {
       "id": "q05",
@@ -63,7 +63,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 2.6
+      "seconds": 3.15
     },
     {
       "id": "q06",
@@ -74,7 +74,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 3.27
+      "seconds": 3.43
     },
     {
       "id": "q07",
@@ -85,7 +85,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 3.78
+      "seconds": 1.64
     },
     {
       "id": "q08",
@@ -96,7 +96,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 1.81
+      "seconds": 2.75
     },
     {
       "id": "q09",
@@ -107,7 +107,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 2.05
+      "seconds": 2.4
     },
     {
       "id": "q10",
@@ -118,7 +118,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 1.83
+      "seconds": 3.32
     },
     {
       "id": "q11",
@@ -129,7 +129,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 3.88
+      "seconds": 2.91
     },
     {
       "id": "q12",
@@ -137,10 +137,10 @@
       "must_abstain": false,
       "recall_at_3": 1.0,
       "recall_at_5": 1.0,
-      "citation_validity": null,
-      "answered_from_context": false,
-      "expect_found": false,
-      "seconds": 3.48
+      "citation_validity": 1.0,
+      "answered_from_context": true,
+      "expect_found": true,
+      "seconds": 1.99
     },
     {
       "id": "q13",
@@ -151,7 +151,7 @@
       "citation_validity": null,
       "answered_from_context": false,
       "expect_found": null,
-      "seconds": 1.15
+      "seconds": 1.35
     },
     {
       "id": "q14",
@@ -162,7 +162,7 @@
       "citation_validity": null,
       "answered_from_context": false,
       "expect_found": null,
-      "seconds": 0.15
+      "seconds": 0.12
     },
     {
       "id": "q15",
@@ -173,7 +173,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 2.94
+      "seconds": 1.93
     },
     {
       "id": "q16",
@@ -184,7 +184,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 1.52
+      "seconds": 1.58
     },
     {
       "id": "q17",
@@ -195,7 +195,7 @@
       "citation_validity": 1.0,
       "answered_from_context": true,
       "expect_found": true,
-      "seconds": 1.77
+      "seconds": 1.48
     }
   ],
   "golden": "eval/golden.yaml",

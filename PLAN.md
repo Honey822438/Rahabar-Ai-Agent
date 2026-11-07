@@ -79,7 +79,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 **Saturday checkpoint:** a stranger's flow (§1.3) works, and CI is running.
 
 ## Sunday — prove it, write it, submit
-- [ ] [Rehan] **3.1 Final eval on Gemini.** Pace requests to the rate limit. Must-abstain 100%, citation validity ≥95%. Commit `eval/baseline.json` + `results.json`.
+- [x] [Rehan] **3.1 Final eval on Gemini.** Pace requests to the rate limit. Must-abstain 100%, citation validity ≥95%. Commit `eval/baseline.json` + `results.json`.
 - [x] [Rehan] **3.2 Gate demo.** PR that fails the gate → screenshot the blocked merge → fix → screenshot green (U4).
 - [x] [Rehan] **3.3 Cluster evidence (§4.5–4.6) → `docs/evidence/`.** `kubectl top pods` including indexer peak (then tune requests/limits from it), endpoints with 3+ IPs, HPA, `set image` → `rollout status` → `rollout undo` with a visible change, delete a pod with nothing breaking.
 - [x] [Rehan] **3.4 Failure analysis (§5.5).** A no OCR, B 100-token no overlap, C top_k 1, E no superseded filter. Each: symptom, diagnosis, stage, remedy, and the metric or log line that would have shown it.
@@ -87,7 +87,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
   - ADRs: `0001-indexer-as-job` (**the user should write or rewrite this in their own words; the spec requires it and it's read first**), `0002` cache, `0003` chunking, `0004-llm-provider-and-data-governance` (includes what the free tier means for student questions).
   - `CORPUS.md` (7 properties), `PIPELINE.md`, `ARCHITECTURE.md` (why StatefulSet), `ENGINEERING-NOTES.md` (7 questions), `AI-USAGE.md`.
   - `README.md` replaced: mermaid diagram, CI badge, API table, secret command, apply order, indexer command.
-- [ ] [Rehan] **3.6 Clean-clone test.** Fresh clone + fresh `minikube delete && make cluster`, following only the README.
+- [x] [Rehan] **3.6 Clean-clone test.** Fresh clone + fresh `minikube delete && make cluster`, following only the README.
   *Done when:* §1.3 passes end to end.
 - [ ] [Rehan] **3.7 Submit by 22:00 (buffer).** `check_submission.py` has no failures; no starter placeholder markers left; history scanned for keys (`git log -p | grep -E 'AIza|gsk_'`). Submit the repo URL (public, or instructors added), cd.yml run link, Docker Hub SHA tags link, eval files.
 
@@ -115,3 +115,4 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - Cache threshold moved 0.92 → 0.94 (7 Nov). `eval/cache_threshold.py` found a 0.923 false hit (MS vs undergraduate CGPA) that 0.92 would serve; the original pairs were never committed, so the new script and its pairs replace them. The running cluster needs `kubectl apply -k` and an API restart to pick it up; it was stopped during this change, so 0.94 is measured on embeddings only, not live through the API.
 - Note 7: no recorded failure reached an hour. The note says so and uses the handbook hidden-text failure. **Rehan must confirm or replace it with a real longer one, in their own words.**
 - `main` merged into `dev` (7 Nov) so the gate-demo commits are shared; no file content changed by it.
+- Clean-clone test and final eval (7 Nov): fresh clone of `dev` at `adfc8b7` + `minikube delete` + README order: no README change needed; 411 chunks in 496.6 s; cited answer and abstention through the Ingress. Eval on Gemini, threshold 0.94, 17 questions: recall@3 0.933, recall@5 1.00, citation validity 1.00, abstention 1.00, no fallbacks. q02 `expect_found` is false only because the answer says "six years" and the check looks for "6 years".
