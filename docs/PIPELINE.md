@@ -114,18 +114,21 @@ The hostel fee question sits above an answerable one, because fee pages are genu
 Layer 2 depends on the model's judgement, so it can fail where a threshold could not. That is why the gate requires 100% must-abstain in the live eval. In the baseline run, q14 stopped at layer 1 and q13 at layer 2.
 
 ## Semantic cache
-Measured on 6 paraphrase pairs that should hit and 7 different-question pairs that must not:
+Measured with `eval/cache_threshold.py` on real embeddings: 5 repeated questions and 8 paraphrases that should hit, and 12 different-question pairs that must not:
 
-| Threshold | Correct hits (of 6) | False hits (of 7) |
-| --- | --- | --- |
-| 0.85 | 6 | 5 |
-| 0.90 | 5 | 2 |
-| **0.92 (shipped)** | 5 | 0 |
-| 0.95 | 3 | 0 |
+| Threshold | Repeats (of 5) | Paraphrases (of 8) | False hits (of 12) |
+| --- | --- | --- | --- |
+| 0.85 | 5 | 8 | 4 |
+| 0.90 | 5 | 8 | 2 |
+| 0.92 | 5 | 8 | 1 |
+| 0.93 | 5 | 8 | 0 |
+| **0.94 (shipped)** | 5 | 7 | 0 |
+| 0.95 | 5 | 6 | 0 |
+| 0.96 | 5 | 5 | 0 |
 
-**The false hit that ruled out 0.90:** "What minimum CGPA must an MS student maintain to avoid a warning?" against the same question for an undergraduate scores 0.919. The answers differ, 2.5 against 2.00. "Clause 1.21" against "clause 1.25" scores 0.917.
+**The false hit that ruled out 0.92:** "What minimum CGPA must an MS student maintain to avoid a warning?" against the same question for an undergraduate scores 0.923. The answers differ, 2.5 against 2.00. We first shipped 0.92 from a smaller set of 6 paraphrase and 7 different pairs, where a slightly different wording of this pair scored 0.919. That is why the re-check was needed: small rewording moved it across the line.
 
-0.92 is the lowest threshold tried with zero false hits, but its margin is only 0.001 and the test set is small, so it should be re-checked if questions change. Re-indexing clears the cache (ADR 0002).
+**Why 0.94 and not 0.93:** 0.93 also has zero false hits, but clears that pair by only 0.007. 0.94 clears it by 0.017. The cost is one missed paraphrase (0.938), which only means one extra model call, while a false hit gives a student the wrong rule. Repeated questions score at least 0.998, so they hit at any threshold here. The test set is still small, so re-run the script if the questions change. Re-indexing clears the cache (ADR 0002).
 
 ## Evaluation method
 `eval/run_eval.py` sends each golden question through the Ingress. A retrieved chunk matches a golden passage when the source file is the same and one section name contains the other. A passage may list `alternatives`, other current documents stating the same rule, and finding any one counts. Citation validity checks each citation's source, section and page against that response's retrieved chunks.

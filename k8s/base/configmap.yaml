@@ -20,8 +20,8 @@ data:
   # First layer only: off-topic questions top out at 0.59, the lowest answerable scores 0.71.
   # In-domain gaps (hostel fee 0.74) pass and are declined by the model. See docs/PIPELINE.md.
   RELEVANCE_FLOOR: "0.65"
-  # Lowest tried with zero false hits; 0.90 served an undergraduate answer to an MS question.
-  CACHE_THRESHOLD: "0.92"
+  # 0.92 served an undergraduate answer to an MS question (0.923); 0.94 clears it by 0.017.
+  CACHE_THRESHOLD: "0.94"
   # 0.2: answers are facts in strict JSON, so low randomness; it does not prevent hallucination.
   TEMPERATURE: "0.2"
   LLM_MODEL: "gemini-flash-lite-latest"
