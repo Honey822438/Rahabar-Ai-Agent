@@ -75,14 +75,23 @@ Because `maxUnavailable: 0` (`k8s/base/api.yaml:13`), the rollout stalls: the ol
 
 ## 7. The failure that cost us more than an hour
 
-**No failure we recorded took over an hour, so this is the longest one, and it took under an hour.** It is reported at its real length rather than stretched to fit the question.
+**No failure we recorded took over an hour, so this is the longest one, and it took under an hour.** On Saturday we re run all the pods and docker to chceck the bot on browser
 
-**Symptom (6 Nov):** chunks retrieved from the Student Handbook mixed unrelated text, so answers drawn from them could not be trusted.
+**Symptom (6 Nov):** on Every question bot said "I cant naswer or I'm uncertain. The tags showed “Not covered”, confidence low
 
-**Wrong first belief:** the pages have two columns and the extractor was reading across them. We wrote a column splitter, and it changed nothing.
+**Wrong first belief:** We think bot isnt trained he dont have the document context at all. “It’s just the indexer still running (0/1)” → waited, asked again, same result
 
-**What revealed the cause:** printing `extract_words()` for one page showed x positions up to 800 on a page only 420 wide. The PDF holds hidden text beyond the visible page, and the extractor was reading it as if it were content.
+**What revealed the cause:** kubectl  log deploy/api grep but doesnt show the api attach ollama 
+Why:
+a typo in the request ID (extra letters)
+deploy/api reads only 1 of the 3 pods, and the request went to another pod
+ss -ltnp | grep 11434 → Ollama on 127.0.0.1 only
 
-**Fix:** crop each page to its visible area with `page.within_bbox(page.bbox)` (`indexer/pipeline/extract.py:37`).
+**Fix:** we override the system OLLAMA_HOST=0.0.0.0 
+restart the ollama
+Re-index: kubectl create job --from=cronjob/reindex reindex-now -n rahbar
+Result: 6/6 manual tests passed
 
-**What we learned:** look at the raw extractor output before building a theory about layout. The splitter cost the time; one print would have ruled it out.
+**What we learned:** somethimes the fallback doesnt work  no 500 ,no amde up answer
+The request ID + JSON logs found the broken stage
+With 3 replicas, one pod’s logs ≠ the service’s logs, so search them all
