@@ -1,7 +1,5 @@
 # Engineering notes
 
-<!-- STARTER-TODO(7): question 7 is still to be answered. -->
-
 ## 1. Indexing in API startup: what breaks with 3 replicas and one Chroma volume?
 
 **The failure:** three pods write to one Chroma at the same time. Our `store()` deletes the live collection and renames its build collection (`indexer/pipeline/store.py:41,57-58`). All three replicas would use the same `rahbar__build` name, so one pod's start would delete another's half-written build. The result is a crash, or an index no single run produced.
@@ -76,3 +74,15 @@ Because `maxUnavailable: 0` (`k8s/base/api.yaml:13`), the rollout stalls: the ol
 
 
 ## 7. The failure that cost us more than an hour
+
+**No failure we recorded took over an hour, so this is the longest one, and it took under an hour.** It is reported at its real length rather than stretched to fit the question.
+
+**Symptom (6 Nov):** chunks retrieved from the Student Handbook mixed unrelated text, so answers drawn from them could not be trusted.
+
+**Wrong first belief:** the pages have two columns and the extractor was reading across them. We wrote a column splitter, and it changed nothing.
+
+**What revealed the cause:** printing `extract_words()` for one page showed x positions up to 800 on a page only 420 wide. The PDF holds hidden text beyond the visible page, and the extractor was reading it as if it were content.
+
+**Fix:** crop each page to its visible area with `page.within_bbox(page.bbox)` (`indexer/pipeline/extract.py:37`).
+
+**What we learned:** look at the raw extractor output before building a theory about layout. The splitter cost the time; one print would have ruled it out.
