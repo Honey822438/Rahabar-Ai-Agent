@@ -83,7 +83,7 @@ Built from the assignment PDF, `STARTER.md`, `scripts/check_submission.py`, `CLA
 - [x] [Rehan] **3.2 Gate demo.** PR that fails the gate → screenshot the blocked merge → fix → screenshot green (U4).
 - [x] [Rehan] **3.3 Cluster evidence (§4.5–4.6) → `docs/evidence/`.** `kubectl top pods` including indexer peak (then tune requests/limits from it), endpoints with 3+ IPs, HPA, `set image` → `rollout status` → `rollout undo` with a visible change, delete a pod with nothing breaking.
 - [x] [Rehan] **3.4 Failure analysis (§5.5).** A no OCR, B 100-token no overlap, C top_k 1, E no superseded filter. Each: symptom, diagnosis, stage, remedy, and the metric or log line that would have shown it.
-- [ ] [Rehan; Malaika: CORPUS.md review, her AI-USAGE.md section] **3.5 Docs, with real numbers and file:line references.**
+- [x] [Rehan; Malaika: CORPUS.md review, her AI-USAGE.md section] **3.5 Docs, with real numbers and file:line references.**
   - ADRs: `0001-indexer-as-job` (**the user should write or rewrite this in their own words; the spec requires it and it's read first**), `0002` cache, `0003` chunking, `0004-llm-provider-and-data-governance` (includes what the free tier means for student questions).
   - `CORPUS.md` (7 properties), `PIPELINE.md`, `ARCHITECTURE.md` (why StatefulSet), `ENGINEERING-NOTES.md` (7 questions), `AI-USAGE.md`.
   - `README.md` replaced: mermaid diagram, CI badge, API table, secret command, apply order, indexer command.
