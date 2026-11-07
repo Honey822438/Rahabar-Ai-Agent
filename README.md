@@ -7,6 +7,10 @@
 
 FAST-NUCES students have to dig through long handbooks, scanned PDFs and web pages to find a rule or fee, and a general chatbot can invent an answer that sounds right. RAHBAR answers only from an indexed set of real university documents, cites the source, section and page, and says so when the documents don't cover a question. It runs on Kubernetes (minikube) with a separate indexing Job, a vector database, a semantic cache and CI/CD.
 
+![RAHBAR answering a CGPA question with cited sources and the retrieved passages](docs/evidence/AI_rahbar1.png)
+
+More from the same session: [a version question](docs/evidence/AI_rahbar2.png) · [attendance](docs/evidence/AI_rahbar3.png) · [abstaining on hostel fees](docs/evidence/AI_rahbar4.png) · [a prompt-injection attempt](docs/evidence/AI_rahbar5.png) · [a cache hit](docs/evidence/AI_rahbar6.png)
+
 ## Architecture
 
 ```mermaid
@@ -30,13 +34,24 @@ Details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Decisions are in [d
 
 Run these in order from the repository root.
 
-**1. Start Ollama on the host**, in its own terminal, so the cluster can reach it:
+**1. Make Ollama listen on all interfaces.** By default it binds to `127.0.0.1`, which inside a pod means the pod itself, so the cluster can't reach it on the host.
+
+If Ollama runs as a systemd service (the Linux installer's default), add an override:
+
+```bash
+sudo mkdir -p /etc/systemd/system/ollama.service.d
+printf '[Service]\nEnvironment="OLLAMA_HOST=0.0.0.0"\n' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+```
+
+Without the service, run this in its own terminal instead:
 
 ```bash
 OLLAMA_HOST=0.0.0.0 ollama serve
 ```
 
-Then, in another terminal:
+Then pull the embedding model:
 
 ```bash
 ollama pull nomic-embed-text
@@ -86,7 +101,7 @@ kubectl rollout status deploy/api -n rahbar --timeout=180s
 make ask Q="What minimum CGPA is required to avoid academic warning?"
 ```
 
-For the web UI, add the host once and open <http://rahbar.local/>:
+For the web UI, add the host once and open <http://rahbar.local/>. This appends a line to `/etc/hosts`, normally `192.168.49.2 rahbar.local`:
 
 ```bash
 echo "$(minikube ip) rahbar.local" | sudo tee -a /etc/hosts
@@ -97,10 +112,12 @@ echo "$(minikube ip) rahbar.local" | sudo tee -a /etc/hosts
 The API never indexes. A re-index needs no redeploy, and the cache clears itself when the API sees the new index:
 
 ```bash
-kubectl create job --from=cronjob/reindex manual-reindex-1 -n rahbar
+kubectl create job --from=cronjob/reindex <name> -n rahbar
 ```
 
-The `reindex` CronJob also runs this weekly.
+Use a new `<name>` each time, such as `manual-reindex-1`. The `reindex` CronJob also runs this weekly.
+
+The first `indexer` Job is deleted one hour after it finishes (`ttlSecondsAfterFinished: 3600`). If it has expired, `kubectl apply -k` recreates it, which starts a full re-index.
 
 ## API
 
@@ -112,6 +129,17 @@ The `reindex` CronJob also runs this weekly.
 | GET | `/metrics` | No | Prometheus metrics |
 
 To reach the last three: `kubectl port-forward -n rahbar svc/api 8000:8000`.
+
+## Evaluation
+
+Golden set of 17 questions in [eval/golden.yaml](eval/golden.yaml), run with `python eval/run_eval.py`. Results from [eval/results.json](eval/results.json):
+
+| Metric | Result |
+| --- | --- |
+| Recall@3 | 0.933 |
+| Recall@5 | 1.00 |
+| Citation validity | 1.00 |
+| Abstention correctness | 1.00 |
 
 ## Local development and tests
 
@@ -126,6 +154,20 @@ make dev    # API and UI on http://localhost:8000
 
 - **`ci.yml`:** lint, tests, manifest validation, image builds, a Trivy scan and an end-to-end eval on a kind cluster.
 - **`cd.yml`:** on `main`, test, then push images tagged with the commit SHA to Docker Hub, then deploy that SHA to a temporary kind cluster and smoke-test through the Ingress. The smoke test uses fixtures and a stub LLM.
+
+## Troubleshooting
+
+**`retrieval failed` with `ConnectError` in the API logs.** The API can't connect to a service it needs for retrieval, most often Ollama listening only on `127.0.0.1`. Apply the override in step 1, then check the address:
+
+```bash
+ss -tln | grep 11434    # expect 0.0.0.0:11434 or *:11434, not 127.0.0.1:11434
+```
+
+**Finding one request across the API pods.** Any replica may have served it. Take the request id from the bottom of the answer in the UI, or the `X-Request-ID` response header, and search all replicas. `--tail=-1` is needed because a label selector otherwise shows only the last 10 lines per pod, and `--max-log-requests=8` covers the HPA maximum:
+
+```bash
+kubectl logs -n rahbar -l app=api --prefix --tail=-1 --max-log-requests=8 | grep <request_id>
+```
 
 ## Documents
 
