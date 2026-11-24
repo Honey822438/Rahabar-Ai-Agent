@@ -92,7 +92,9 @@ Work happens on branch **`a3`** of this repo. The plan is **`PLAN-A3.md`**, the 
 ### Team & ownership for A3
 | Owner | Tasks |
 |---|---|
-| **Rehan (i24-3012)** | All code, scripts, manifests, runs, results, report results + short answers |
-| **Malaika (i24-3098)** | **Writing and data only:** Batch B text docs, ≥ 8 human golden questions + reviewing ≥ 8 synthetic, the 30 embedding test pairs, ≥ 8 hand faithfulness labels, the 40 live queries, ≥ 6 new golden questions (E4), the D5 root-cause draft, report tables 1, 2, 5, screenshot collection |
+| **Rehan (i24-3012)** | All code, scripts, manifests, runs, results, report results + short answers; drafts of every input (golden set, pairs, live queries, Batch B, E4 questions, D5) |
+| **Malaika (i24-3098)** | Edits / replaces Rehan's drafts: ≥ 8 hand-written golden questions (`source: human`) and reviews ≥ 8 synthetic ones (`reviewed: true`), edits `eval/pairs/*` and `eval/live_queries.jsonl`; writes the ≥ 8 hand faithfulness labels (`eval/labels/*`); report tables 1, 2, 5; screenshot collection. Optional: improve the Batch B text docs and the D5 draft |
+
+**Rule: Malaika's work never blocks or breaks ours.** Every input she owns has a working draft (by Rehan / Claude Code, labelled `source: synthetic`, `reviewed: false`) that the pipeline uses now; she improves it later. Only questions a human wrote count as `human`. `scripts/validate_inputs.py` runs in CI on PRs into `dev` and `main`, so a malformed edit fails the PR, not the pipeline.
 
 If you are **Malaika's Claude Code**: work only on her tasks above; edit only `eval/golden.jsonl`, `eval/live_queries.jsonl`, `eval/pairs/*`, `eval/labels/*`, `data/batch_b/*.md|txt`, `report/*`. Never touch code, `k8s/` or workflows. Never push to `main`. No Co-Authored-By trailers.

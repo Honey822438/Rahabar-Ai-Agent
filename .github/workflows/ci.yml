@@ -2,7 +2,7 @@ name: ci
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, dev]
   push:
     branches: [dev]
 
@@ -26,9 +26,11 @@ jobs:
       - run: make install
       - name: ruff and mypy
         run: |
-          .venv/bin/ruff check api indexer eval corpus
+          .venv/bin/ruff check api indexer eval corpus scripts/validate_inputs.py
           (cd api && ../.venv/bin/mypy app)
           (cd indexer && ../.venv/bin/mypy pipeline)
+      - name: eval inputs (golden set, live queries, pairs, labels)
+        run: .venv/bin/python scripts/validate_inputs.py
 
   test:
     runs-on: ubuntu-24.04

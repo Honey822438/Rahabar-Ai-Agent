@@ -3,6 +3,7 @@ Builds on RAHBAR (Assignment 02) in the same repo, branch **`a3`** (PRs into `de
 **Team:** Rehan (i24-3012), the engineering. **Malaika (i24-3098)**, the writing and data tasks marked **[M]**. Both must be able to **explain every part at the demo**.
 Rules: every number in the report comes from our own runs; result files are committed under `eval/results/` and `traces/`; all manifests under `k8s/`. **The demo must run on Kubernetes (Docker only = 0).**
 Read `PAPER-NOTES.md` first.
+**Rule: nothing of ours waits for Malaika.** Rehan/Claude Code drafts every input (labelled `source: synthetic`, `reviewed: false`) and the pipeline uses the drafts now. **[M]** now means *Malaika edits or replaces the draft*; her own deliverables are the ≥ 8 hand faithfulness labels, report tables 1, 2, 5 and the screenshots. `scripts/validate_inputs.py` (in CI) guards every edit.
 
 Tick `[x]` only when **Done when** passes.
 
@@ -13,14 +14,14 @@ Tick `[x]` only when **Done when** passes.
   *Done when:* a run prints the per-doc, per-check table and quarantines the failures.
 - [x] **A2 Incremental update:** deterministic chunk ids; unchanged corpus → **0 chunks embedded** (print counts); a changed doc replaces only its chunks; a deleted doc leaves **0 orphans** (count by doc_id); superseded version → `archive/` + `superseded=true` (excluded from retrieval); **restore / rollback** script.
   *Done when:* a second run shows 0 embedded; the orphan count is 0; rollback is shown.
-- [ ] **A3 Batch B** **[M writes the text docs, Rehan does the broken files]**: ≥ 10 docs: 2+ exact duplicates, 1 near-duplicate, 1 truncated or corrupt, 1 missing metadata, 1 newer version of an existing doc, 1 with an injected instruction (+ fillers). Run both batches through A1 and A2.
+- [ ] **A3 Batch B** (Rehan drafts all; **[M]** may improve the text docs): ≥ 10 docs: 2+ exact duplicates, 1 near-duplicate, 1 truncated or corrupt, 1 missing metadata, 1 newer version of an existing doc, 1 with an injected instruction (+ fillers). Run both batches through A1 and A2.
 
 ## Day 2 · Wed 25 — Offline testing suite (Part B)
 - [ ] **B0 Golden set → `eval/golden.jsonl`**, **≥ 25 questions**: ≥ 15 answerable (doc + page), ≥ 5 unanswerable, ≥ 5 hard (paraphrased / multi-chunk / from Batch B). Field `source: human|synthetic`; ≥ 8 human, ≥ 8 synthetic reviewed (`reviewed: true`).
-  **[M]** writes the human questions and reviews the synthetic ones (one commit per small batch).
-- [ ] **B1 Module level:** **[M] writes 15 paraphrase pairs + 15 unrelated pairs**; script: mean cosine of each group, the gap, embedding time per chunk, determinism (embed twice, max difference).
+  Draft done (17 human by Malaika from A02 + 14 synthetic). **[M]** reviews ≥ 8 synthetic (`reviewed: true`) and may add human ones.
+- [ ] **B1 Module level:** 15 paraphrase + 15 unrelated pairs (draft in `eval/pairs/`, **[M]** edits); script: mean cosine of each group, the gap, embedding time per chunk, determinism (embed twice, max difference).
 - [ ] **B2 Component level:** recall@3, recall@5, **MRR, nDCG@5**; **noise test** (≥ 3 irrelevant docs added, or typos in queries) → the change in each metric.
-- [ ] **B3 End-to-end:** **faithfulness** (LLM judge), abstention correctness, citation validity, latency p50 / p95. **[M] hand-labels ≥ 8 answers** → judge agreement %.
+- [ ] **B3 End-to-end:** **faithfulness** (LLM judge), abstention correctness, citation validity, latency p50 / p95. **[M] hand-labels ≥ 8 answers** (`eval/labels/faithfulness.jsonl`: id, question_id, faithful) → judge agreement %.
 - [ ] **B4 Stochasticity:** fixed seeds, run twice, difference per metric + an explanation.
 - [ ] **B5 One command** runs everything → `eval/results/<timestamp>.json` + a summary table.
 
@@ -31,11 +32,11 @@ Tick `[x]` only when **Done when** passes.
 - [ ] **D2 Trace tool:** `python -m tools.trace <id>` prints the exact context + prompt.
 - [ ] **D3 Metrics summary:** top-1 similarity distribution, abstention rate, cache hit rate, p95 per stage, injection attempts flagged, over a time window.
 - [ ] **D4 Guardrail logging:** the injection rail writes its action to the trace; tested with the Batch B injected doc.
-- [ ] **D5 Root cause from a trace only** **[M drafts the 5 lines]**: pick a wrong or abstained answer from B.
-- [ ] **E1 Live queries** **[M]**: ≥ 40 (≈ 28 in-domain, ≥ 12 from an uncovered topic) → `eval/live_queries.jsonl`.
+- [ ] **D5 Root cause from a trace only** (Rehan drafts; **[M]** may edit): pick a wrong or abstained answer from B.
+- [ ] **E1 Live queries** (draft in `eval/live_queries.jsonl`, **[M]** edits): ≥ 40 (≈ 28 in-domain, ≥ 12 from an uncovered topic) → `eval/live_queries.jsonl`.
 - [ ] **E2 Coverage:** nearest golden question per live query, share above a justified threshold, uncovered queries grouped into topics.
 - [ ] **E3 Drift:** ingest Batch B, re-run the suite, report what changed and why.
-- [ ] **E4 Close the gap** **[M writes ≥ 6 new golden questions]**: re-run, coverage rises; the script **exits non-zero** below the threshold.
+- [ ] **E4 Close the gap** (Rehan drafts ≥ 6 new golden questions; **[M]** may replace them): re-run, coverage rises; the script **exits non-zero** below the threshold.
 
 ## Day 4 · Fri 27 — Kubernetes (Part F) + report
 - [ ] **F1** API Deployment, Chroma StatefulSet, Service; **PVC** for the data lake / quarantine / archive / traces.
