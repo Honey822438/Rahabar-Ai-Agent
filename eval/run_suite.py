@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -63,13 +64,17 @@ def main() -> int:
     parser.add_argument("--no-e2e", action="store_true", help="skip the LLM level")
     parser.add_argument("--no-judge", action="store_true", help="skip the faithfulness judge")
     parser.add_argument("--no-noise", action="store_true", help="skip the noise test")
-    parser.add_argument("--rpm", type=float, default=10.0, help="max hosted-LLM calls/minute")
+    parser.add_argument("--rpm", type=float, default=8.0,
+                        help="max hosted-LLM calls/minute (a pause between calls)")
+    parser.add_argument("--temperature", default="0",
+                        help="LLM temperature for the eval run (0: least run-to-run variation)")
     parser.add_argument("--out-dir", type=Path, default=common.EVAL / "results")
     parser.add_argument("--label-sheet", action="store_true",
-                        help="write eval/labels/to_label.jsonl for hand faithfulness labels")
+                        help="write eval/labels/faithfulness_hand.jsonl for hand labels")
     args = parser.parse_args()
 
     common.seed_everything(args.seed)
+    os.environ["TEMPERATURE"] = args.temperature
     settings = common.settings(args.collection)
     golden = common.load_golden(args.golden)
     started = time.time()
@@ -93,7 +98,7 @@ def main() -> int:
     if not args.no_e2e:
         result["e2e"] = e2e.evaluate(settings, golden, use_judge=not args.no_judge, rpm=args.rpm)
         if args.label_sheet:
-            e2e.write_label_sheet(result["e2e"])
+            e2e.write_label_sheet({**result["e2e"], "run": result["timestamp"]})
         print("[suite] end-to-end level done", flush=True)
     result["seconds"] = round(time.time() - started, 1)
 

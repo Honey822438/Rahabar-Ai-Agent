@@ -29,5 +29,5 @@ def test_bad_edits_are_caught(tmp_path: Path) -> None:
     (eval_dir / "labels" / "faithfulness.jsonl").write_text('{"id": "f1"}\n')
     errors = " | ".join(validate_inputs.validate(eval_dir))
     for expected in ("duplicate id", "'reviewed' must be bool", "type must be",
-                     "not valid JSON", "missing field 'faithful'"):
+                     "not valid JSON", "missing field 'label'"):
         assert expected in errors

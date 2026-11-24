@@ -35,6 +35,10 @@ Reply with JSON only: {"faithful": true|false, "score": <0.0-1.0 share of suppor
 "unsupported": ["<claim>", ...]}"""
 
 
+RETRY_STATUS = (429, 500, 502, 503, 504)
+BACKOFF_SECONDS = 15
+
+
 class Pacer:
     """Keeps hosted-LLM calls under the free tier's requests-per-minute limit."""
 
@@ -49,28 +53,43 @@ class Pacer:
         self.last = time.monotonic()
 
 
+def judge_targets(settings: Any) -> list[tuple[str, str, str]]:
+    """(base_url, model, key): Gemini first, then each Groq model if GROQ_API_KEY is set."""
+    targets = [(settings.hosted_base_url, os.environ.get("JUDGE_MODEL", settings.llm_model),
+                settings.llm_api_key)]
+    if settings.groq_api_key:
+        targets += [(settings.groq_base_url, m.strip(), settings.groq_api_key)
+                    for m in settings.groq_models.split(",") if m.strip()]
+    return targets
+
+
 def judge(settings: Any, evidence: list[dict[str, Any]], answer: str, pacer: Pacer,
           attempts: int = 4) -> dict[str, Any] | None:
-    """The judge's verdict, or None if the hosted model stayed unavailable (not counted)."""
+    """The judge's verdict, or None if every hosted model stayed unavailable (not counted)."""
     text = "\n\n".join(f"[{i}] ({e['source']} / {e['section']} / p.{e['page']})\n{e['text']}"
                        for i, e in enumerate(evidence, 1))
-    body = {"model": os.environ.get("JUDGE_MODEL", settings.llm_model), "temperature": 0.0,
-            "response_format": {"type": "json_object"},
-            "messages": [{"role": "system", "content": JUDGE_PROMPT},
-                         {"role": "user", "content": f"EVIDENCE:\n{text}\n\nANSWER:\n{answer}"}]}
-    for attempt in range(attempts):
-        pacer.wait()
-        response = httpx.post(settings.hosted_base_url.rstrip("/") + "/chat/completions",
-                              headers={"Authorization": f"Bearer {settings.llm_api_key}"},
-                              json=body, timeout=60)
-        if response.status_code in (429, 500, 502, 503, 504):
-            time.sleep(15 * (attempt + 1))
-            continue
-        response.raise_for_status()
-        verdict = json.loads(response.json()["choices"][0]["message"]["content"])
-        return {"faithful": bool(verdict.get("faithful")),
-                "score": float(verdict.get("score", 0.0)),
-                "unsupported": list(verdict.get("unsupported", []))}
+    messages = [{"role": "system", "content": JUDGE_PROMPT},
+                {"role": "user", "content": f"EVIDENCE:\n{text}\n\nANSWER:\n{answer}"}]
+    for base_url, model, key in judge_targets(settings):
+        body = {"model": model, "temperature": 0.0, "response_format": {"type": "json_object"},
+                "messages": messages}
+        for attempt in range(attempts):
+            pacer.wait()
+            try:
+                response = httpx.post(base_url.rstrip("/") + "/chat/completions",
+                                      headers={"Authorization": f"Bearer {key}"},
+                                      json=body, timeout=60)
+            except httpx.HTTPError:
+                time.sleep(BACKOFF_SECONDS * (attempt + 1))
+                continue
+            if response.status_code in RETRY_STATUS:
+                time.sleep(BACKOFF_SECONDS * (attempt + 1))
+                continue
+            response.raise_for_status()
+            verdict = json.loads(response.json()["choices"][0]["message"]["content"])
+            return {"faithful": bool(verdict.get("faithful")),
+                    "score": float(verdict.get("score", 0.0)),
+                    "unsupported": list(verdict.get("unsupported", [])), "judge_model": model}
     return None
 
 
@@ -87,7 +106,7 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
         fallback = response.answer == FALLBACK.answer
         if not fallback:
             break
-        time.sleep(20 * (attempt + 1))
+        time.sleep(BACKOFF_SECONDS * 2 * (attempt + 1))
     passages = retriever.retrieve(question["question"], k=settings.top_k)   # same as the call
     by_key = {(p.source, p.section, p.page): p for p in passages}
     retrieved_keys = {(r.source, r.section, r.page) for r in response.retrieved}
@@ -115,16 +134,18 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
     return row
 
 
-def agreement(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
-    labels_path = EVAL / "labels" / "faithfulness.jsonl"
-    sheet_path = EVAL / "labels" / "to_label.jsonl"
-    if not labels_path.exists() or not sheet_path.exists():
+def agreement() -> dict[str, Any] | None:
+    """Hand labels (eval/labels/faithfulness_hand.jsonl, label faithful/unfaithful) against
+    the judge's verdicts on the same answers (eval/labels/judge_verdicts.jsonl)."""
+    hand_path = EVAL / "labels" / "faithfulness_hand.jsonl"
+    judge_path = EVAL / "labels" / "judge_verdicts.jsonl"
+    if not hand_path.exists() or not judge_path.exists():
         return None
-    sheet = {r["id"]: r for r in read_jsonl(sheet_path)}
-    pairs = [(label["faithful"], sheet[label["id"]]["judge_faithful"])
-             for label in read_jsonl(labels_path) if label["id"] in sheet]
+    verdicts = {r["id"]: r["judge_faithful"] for r in read_jsonl(judge_path)}
+    pairs = [(r["label"] == "faithful", verdicts[r["id"]]) for r in read_jsonl(hand_path)
+             if r.get("label") in ("faithful", "unfaithful") and r["id"] in verdicts]
     if not pairs:
-        return None
+        return {"labelled": 0, "agreement": None}
     return {"labelled": len(pairs),
             "agreement": round(sum(h == j for h, j in pairs) / len(pairs), 4)}
 
@@ -162,21 +183,32 @@ def evaluate(settings: Any, golden: list[dict[str, Any]], use_judge: bool = True
         "judge_unavailable": sum("judge" in r and r["judge"] is None for r in rows),
         "latency_p50_s": round(percentile(times, 50), 3),
         "latency_p95_s": round(percentile(times, 95), 3),
-        "judge_agreement": agreement(rows),
+        "judge_agreement": agreement(),
     }
     return {"collection": settings.collection, "model": settings.llm_model,
             "summary": summary, "per_question": all_rows}
 
 
 def write_label_sheet(result: dict[str, Any], n: int = 10) -> None:
-    """Pick answered questions for hand labelling; the judge's verdict is kept for agreement."""
+    """eval/labels/faithfulness_hand.jsonl: answered questions with their retrieved context and
+    an empty `label` for a human. The judge's verdicts go to a separate file, so the labeller
+    does not see them. Existing labels are kept for answers that did not change."""
     rows = [r for r in result["per_question"] if r.get("judge") and not r["fallback"]][:n]
-    path = EVAL / "labels" / "to_label.jsonl"
-    path.parent.mkdir(exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
+    labels_dir = EVAL / "labels"
+    labels_dir.mkdir(exist_ok=True)
+    hand_path = labels_dir / "faithfulness_hand.jsonl"
+    old = {r["id"]: r for r in read_jsonl(hand_path)} if hand_path.exists() else {}
+    with hand_path.open("w", encoding="utf-8") as hand, \
+            (labels_dir / "judge_verdicts.jsonl").open("w", encoding="utf-8") as verdicts:
         for r in rows:
-            handle.write(json.dumps({"id": f"f-{r['id']}", "question_id": r["id"],
-                                     "question": r["question"], "answer": r["answer"],
-                                     "evidence": r["evidence"],
-                                     "judge_faithful": r["judge"]["faithful"]},
-                                    ensure_ascii=False) + "\n")
+            rid = f"f-{r['id']}"
+            keep = old.get(rid, {})
+            label = keep.get("label", "") if keep.get("answer") == r["answer"] else ""
+            hand.write(json.dumps({
+                "id": rid, "question_id": r["id"], "question": r["question"],
+                "context": r["evidence"], "answer": r["answer"], "label": label,
+                "notes": keep.get("notes", "") if label else "",
+                "run": result.get("run", "")}, ensure_ascii=False) + "\n")
+            verdicts.write(json.dumps({"id": rid, "judge_faithful": r["judge"]["faithful"],
+                                       "judge_score": r["judge"]["score"],
+                                       "judge_model": r["judge"]["judge_model"]}) + "\n")

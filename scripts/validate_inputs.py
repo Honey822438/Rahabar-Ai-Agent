@@ -23,7 +23,9 @@ GOLDEN = {"id": str, "question": str, "type": str, "source": str, "reviewed": bo
 RELEVANT = {"doc_id": str, "file": str, "section": str}
 LIVE = {"id": str, "query": str, "in_domain": bool, "topic": str}
 PAIR = {"id": str, "a": str, "b": str}
-LABEL = {"id": str, "question_id": str, "faithful": bool}
+LABEL = {"id": str, "question_id": str, "question": str, "answer": str, "context": list,
+         "label": str}
+LABEL_VALUES = ("", "faithful", "unfaithful")
 
 
 def read_jsonl(path: Path, errors: list[str]) -> list[dict[str, Any]]:
@@ -54,7 +56,7 @@ def check_fields(path: Path, rows: list[dict[str, Any]], schema: dict[str, type]
             elif not isinstance(row[key], kind):
                 errors.append(f"{where}: '{key}' must be {kind.__name__}, "
                               f"got {type(row[key]).__name__}")
-            elif kind is str and key != "expect" and not row[key].strip():
+            elif kind is str and key not in ("expect", "label") and not row[key].strip():
                 errors.append(f"{where}: '{key}' is empty")
 
 
@@ -137,9 +139,12 @@ def validate(eval_dir: Path = EVAL) -> list[str]:
         if len(rows) < 15:
             errors.append(f"{path.name}: {len(rows)} pairs, need >= 15")
     for path in sorted((eval_dir / "labels").glob("*.jsonl")):
-        if path.name == "to_label.jsonl":   # the sheet to label, written by the suite
+        if path.name == "judge_verdicts.jsonl":   # written by the suite, not hand-edited
             continue
-        validate_simple(path, LABEL, ["id"], errors)
+        for row in validate_simple(path, LABEL, ["id"], errors):
+            if row.get("label") not in LABEL_VALUES:
+                errors.append(f"{path.name}:{row['_line']}: label must be '', 'faithful' "
+                              "or 'unfaithful'")
     return errors
 
 

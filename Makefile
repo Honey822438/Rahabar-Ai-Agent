@@ -13,7 +13,9 @@ INGRESS_IP ?= $(shell minikube ip 2>/dev/null)
 HOST ?= rahbar.local
 
 .DEFAULT_GOAL := help
-.PHONY: help install test lint dev cluster images apply secret index ask fetch eval eval-fixtures check
+.PHONY: help install test lint dev cluster images apply secret index ask fetch eval eval-fixtures check suite validate-inputs
+LABEL ?= baseline
+SUITE_ARGS ?=
 
 help: ## list the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -75,3 +77,9 @@ eval-fixtures: ## score the CI fixture golden set against a local `make dev`
 
 check: ## run the submission checker
 	$(PY) scripts/check_submission.py
+
+suite: ## A3 B5: the whole offline suite (module, component + noise, end-to-end), one command
+	$(BIN)/python eval/run_suite.py --label $(LABEL) $(SUITE_ARGS)
+
+validate-inputs: ## A3: check the golden set, live queries, pairs and labels
+	$(BIN)/python scripts/validate_inputs.py
