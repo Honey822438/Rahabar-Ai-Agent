@@ -1,0 +1,11 @@
+doc_id@version                               | quality | complete | recency | unique | max_cos | status   | reason                                                                     
+---------------------------------------------+---------+----------+---------+--------+---------+----------+----------------------------------------------------------------------------
+academic-rules-undergrad@2026-06             | PASS    | PASS     | PASS    | PASS   | -       | VERIFIED |                                                                            
+annual-report-2019-20@2019-20                | PASS    | PASS     | PASS    | PASS   | 0.790   | VERIFIED |                                                                            
+annual-report-2023-24@2023-24                | PASS    | PASS     | PASS    | PASS   | 0.848   | VERIFIED |                                                                            
+faculty-entrepreneurship-and-technical-start | PASS    | PASS     | PASS    | PASS   | 0.800   | VERIFIED |                                                                            
+fee-structure-page@2026-27                   | PASS    | PASS     | PASS    | PASS   | 0.760   | VERIFIED |                                                                            
+grading-page@2026                            | PASS    | PASS     | PASS    | PASS   | 0.815   | VERIFIED |                                                                            
+prospectus-2026-academic-rules-and-regulatio | PASS    | PASS     | PASS    | PASS   | 0.885   | VERIFIED |                                                                            
+student-handbook@2026-06                     | PASS    | PASS     | PASS    | PASS   | 0.859   | VERIFIED |                                                                            
+academic-rules-undergrad@2023-08             | PASS    | PASS     | FAIL    | PASS   | 0.923   | ARCHIVED | recency: newer version 2026-06 of academic-rules-undergrad exists → archive

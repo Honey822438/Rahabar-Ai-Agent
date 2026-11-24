@@ -1,0 +1,266 @@
+{
+  "timestamp": "2026-11-24T18:07:45Z",
+  "lake": "../data/lake",
+  "counts": {
+    "verified": 8,
+    "quarantined": 0,
+    "archived": 1
+  },
+  "documents": [
+    {
+      "doc_id": "academic-rules-undergrad",
+      "version": "2026-06",
+      "file": "academic-rules-handbook-jun-2026.pdf",
+      "sha256": "4cfee3e191b84aeb9168f17656c7642212ff52b90f2780d028b33c154aa74b62",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "57086 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "58 pages, version 2026-06"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "supersedes 2023-08"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    },
+    {
+      "doc_id": "annual-report-2019-20",
+      "version": "2019-20",
+      "file": "annual-report-2019-20.pdf",
+      "sha256": "4d1961e340b13273bb039805ab5fd5e2c7bd0144a5bd5870f2ce4da13becd650",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "47085 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "33 pages, version 2019-20"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.790)"
+        }
+      },
+      "max_cosine": 0.7896,
+      "nearest": "academic-rules-undergrad@2026-06"
+    },
+    {
+      "doc_id": "annual-report-2023-24",
+      "version": "2023-24",
+      "file": "annual-report-2023-24.pdf",
+      "sha256": "3c9d89e84af24df4b939f10e32c620a3877b276acea1db52f1aae4098e5c057a",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "197238 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "85 pages, version 2023-24"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.848)"
+        }
+      },
+      "max_cosine": 0.8478,
+      "nearest": "annual-report-2019-20@2019-20"
+    },
+    {
+      "doc_id": "faculty-entrepreneurship-and-technical-start-ups-policy",
+      "version": "2022-05",
+      "file": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+      "sha256": "c2d5c7648d1593daf34d5c0596ede476e8984b0551830cc1690017e6e22f1359",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "11737 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "8 pages, version 2022-05"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.801)"
+        }
+      },
+      "max_cosine": 0.8005,
+      "nearest": "academic-rules-undergrad@2026-06"
+    },
+    {
+      "doc_id": "fee-structure-page",
+      "version": "2026-27",
+      "file": "fee-structure-page.html",
+      "sha256": "ec8872ae77cac7e96e20e6979933f36b00aaeb0ab3f668a2116e521c655e7b90",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "3648 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-27"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.760)"
+        }
+      },
+      "max_cosine": 0.76,
+      "nearest": "faculty-entrepreneurship-and-technical-start-ups-policy@2022-05"
+    },
+    {
+      "doc_id": "grading-page",
+      "version": "2026",
+      "file": "grading-page.html",
+      "sha256": "66a995b4d8474e914d37bfa14755a5361f47327d5a7314f9b7ec15d9b6176e6e",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "4723 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.815)"
+        }
+      },
+      "max_cosine": 0.8154,
+      "nearest": "academic-rules-undergrad@2026-06"
+    },
+    {
+      "doc_id": "prospectus-2026-academic-rules-and-regulations",
+      "version": "2026",
+      "file": "prospectus-2026-academic-rules-and-regulations.pdf",
+      "sha256": "a7e7f6896a59eb9413c9e8826e6c4c018ebe52045d10cebfcba92ded10a3174a",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "21040 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "5 pages, version 2026"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.885)"
+        }
+      },
+      "max_cosine": 0.8849,
+      "nearest": "grading-page@2026"
+    },
+    {
+      "doc_id": "student-handbook",
+      "version": "2026-06",
+      "file": "student-handbook-jun-2026.pdf",
+      "sha256": "717eb4b8d37e50185ffe952735c08ef19edd16074d547f10ebd22cf23da67c4d",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "68287 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "64 pages, version 2026-06"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.859)"
+        }
+      },
+      "max_cosine": 0.8587,
+      "nearest": "academic-rules-undergrad@2026-06"
+    },
+    {
+      "doc_id": "academic-rules-undergrad",
+      "version": "2023-08",
+      "file": "undergraduate-academic-rules-aug-2023.pdf",
+      "sha256": "cddfe1f5e9770132e27d686abd1c2e6742ef4732f0c2f431ed514bc1691d2004",
+      "status": "archived",
+      "reasons": [
+        "recency: newer version 2026-06 of academic-rules-undergrad exists \u2192 archive"
+      ],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "30873 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "26 pages, version 2023-08"
+        },
+        "recency": {
+          "ok": false,
+          "reason": "newer version 2026-06 of academic-rules-undergrad exists \u2192 archive"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.923)"
+        }
+      },
+      "max_cosine": 0.923,
+      "nearest": "prospectus-2026-academic-rules-and-regulations@2026"
+    }
+  ],
+  "table": "doc_id@version                               | quality | complete | recency | unique | max_cos | status   | reason                                                                     \n---------------------------------------------+---------+----------+---------+--------+---------+----------+----------------------------------------------------------------------------\nacademic-rules-undergrad@2026-06             | PASS    | PASS     | PASS    | PASS   | -       | VERIFIED |                                                                            \nannual-report-2019-20@2019-20                | PASS    | PASS     | PASS    | PASS   | 0.790   | VERIFIED |                                                                            \nannual-report-2023-24@2023-24                | PASS    | PASS     | PASS    | PASS   | 0.848   | VERIFIED |                                                                            \nfaculty-entrepreneurship-and-technical-start | PASS    | PASS     | PASS    | PASS   | 0.800   | VERIFIED |                                                                            \nfee-structure-page@2026-27                   | PASS    | PASS     | PASS    | PASS   | 0.760   | VERIFIED |                                                                            \ngrading-page@2026                            | PASS    | PASS     | PASS    | PASS   | 0.815   | VERIFIED |                                                                            \nprospectus-2026-academic-rules-and-regulatio | PASS    | PASS     | PASS    | PASS   | 0.885   | VERIFIED |                                                                            \nstudent-handbook@2026-06                     | PASS    | PASS     | PASS    | PASS   | 0.859   | VERIFIED |                                                                            \nacademic-rules-undergrad@2023-08             | PASS    | PASS     | FAIL    | PASS   | 0.923   | ARCHIVED | recency: newer version 2026-06 of academic-rules-undergrad exists \u2192 archive"
+}
