@@ -77,6 +77,9 @@ def seed(lake: Lake, source_dir: Path) -> int:
             if path.suffix.lower() not in SUFFIXES or path.name.lower().startswith("readme"):
                 continue
             meta: dict[str, Any] = front_matter(path) if path.suffix.lower() == ".md" else {}
+            sidecar = path.with_name(path.name + ".meta.json")
+            if sidecar.exists():
+                meta.update(json.loads(sidecar.read_text(encoding="utf-8")))
             meta.setdefault("doc_id", slug(meta.get("title") or path.stem))
             items.append((path, meta))
     for path, meta in items:
