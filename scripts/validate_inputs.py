@@ -137,6 +137,8 @@ def validate(eval_dir: Path = EVAL) -> list[str]:
         if len(rows) < 15:
             errors.append(f"{path.name}: {len(rows)} pairs, need >= 15")
     for path in sorted((eval_dir / "labels").glob("*.jsonl")):
+        if path.name == "to_label.jsonl":   # the sheet to label, written by the suite
+            continue
         validate_simple(path, LABEL, ["id"], errors)
     return errors
 

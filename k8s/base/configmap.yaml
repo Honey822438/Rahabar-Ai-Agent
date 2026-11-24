@@ -24,6 +24,9 @@ data:
   CACHE_THRESHOLD: "0.94"
   # 0.2: answers are facts in strict JSON, so low randomness; it does not prevent hallucination.
   TEMPERATURE: "0.2"
+  # Fixed sampling seed (A3 B4). Sent to Groq only: Gemini's OpenAI endpoint rejects "seed" (400).
+  # 0 = do not send one.
+  LLM_SEED: "42"
   LLM_MODEL: "gemini-flash-lite-latest"
   HOSTED_BASE_URL: "https://generativelanguage.googleapis.com/v1beta/openai/"
   LLM_TIMEOUT_SECONDS: "30"

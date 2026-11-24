@@ -42,7 +42,9 @@ class HostedProvider:
         if settings.groq_api_key:
             self.targets += [
                 _Target("groq", settings.groq_base_url, model.strip(), settings.groq_api_key,
-                        {"tool_choice": "none"})
+                        {"tool_choice": "none",
+                         # Gemini's OpenAI endpoint rejects "seed" (400); Groq accepts it.
+                         **({"seed": settings.llm_seed} if settings.llm_seed else {})})
                 for model in settings.groq_models.split(",") if model.strip()
             ]
 
