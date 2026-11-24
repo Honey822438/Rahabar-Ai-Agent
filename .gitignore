@@ -26,3 +26,4 @@ venv/
 
 # A3 data lake (local runs; in the cluster it is a PVC)
 data/lake/
+data/a2demo/
