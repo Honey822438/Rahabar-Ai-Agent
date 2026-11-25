@@ -46,7 +46,23 @@ Reading:
 - On the golden set, retrieval is identical, but expected-fact and faithfulness drop. **That is the provider change
   (Groq gpt-oss-20b instead of Gemini), not Batch B.** The prompts, retrieved chunks and
   citations are the same, and only the generator differs. A clean drift attribution would need the same
-  model on both sides. A Gemini re-run when its quota resets is listed as a follow-up.
+  model on both sides. This is resolved by the Groq-vs-Groq comparison below.
+- **Fair comparison, same generator (Groq vs Groq):** the pre-Batch-B index was rebuilt as
+  `rahbar_e3pre` (10 docs, 420 chunks, OCR cache reused) and the 31 golden questions were re-run with Groq.
+
+  | golden (31), Groq on both sides | before Batch B | after Batch B |
+  |---|---|---|
+  | recall@5 / MRR | 0.962 / 0.866 | 0.962 / 0.866 |
+  | abstention on must-abstain / false abstention | 1.00 / 0.038 | 1.00 / 0.038 |
+  | answer contains expected fact | 0.769 | 0.769 |
+  | faithfulness (judge) | 0.960 | 0.917 |
+  | citation validity | 1.00 | 1.00 |
+
+  With the generator held constant, Batch B causes **no regression** on the golden set. The expected-fact rate is
+  identical. The only per-question flips are h01 (now found) and h05 (now missed), both with different wording from the
+  same chunks. The faithfulness change (-0.04) is about one judged answer out of roughly 24, which is within run-to-run variation (B4).
+  Conclusion: the earlier 0.885 -> 0.769 drop was caused by the change of LLM (Gemini -> Groq), not by the data.
+  Files: `*-e3-pre-batch-b-groq.json`, `e3-compare-golden-groq-vs-groq.md`.
 - Provider counts come from the traces (`llm.answered_by`, `failed_over_from`). Gemini returned
   429 on every call in both reruns (daily free quota exhausted), so Groq answered every LLM call.
 
