@@ -84,6 +84,8 @@ def judge(settings: Any, evidence: list[dict[str, Any]], answer: str, pacer: Pac
             except httpx.HTTPError:
                 time.sleep(BACKOFF_SECONDS * (attempt + 1))
                 continue
+            if response.status_code == 429:
+                break                # quota/rate limit: waiting rarely helps, go to the next model
             if response.status_code in RETRY_STATUS:
                 time.sleep(BACKOFF_SECONDS * (attempt + 1))
                 continue
