@@ -99,6 +99,8 @@ def build_noise_collection(settings: Any) -> tuple[str, int]:
             texts.append(f"{title}\n{paragraph}")
             metas.append({"source": path.name, "section": title, "page": 1, "doc_id": path.stem,
                           "doc_version": "noise", "superseded": False})
+    if not texts:
+        raise FileNotFoundError(f"no noise documents in {EVAL / 'noise'}")
     target.add(ids=noise_ids, documents=texts, metadatas=metas,
                embeddings=embed(settings, texts, DOCUMENT))
     return name, len(noise_ids)

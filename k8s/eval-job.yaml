@@ -44,6 +44,7 @@ spec:
               python eval/run_suite.py --collection "$EVAL_COLLECTION" --label "$EVAL_LABEL"
               --rpm "$EVAL_RPM" --out-dir /data/results &&
               python eval/gate.py "$(ls -t /data/results/*-"$EVAL_LABEL".json | head -1)"
+              ${EVAL_BASELINE:+--baseline "$(ls -t /data/results/*-"$EVAL_BASELINE".json | head -1)"}
               --out-dir /data/results
           envFrom:
             - configMapRef: { name: rahbar-config }
@@ -52,6 +53,10 @@ spec:
             - { name: EVAL_COLLECTION, value: rahbar }
             - { name: EVAL_LABEL, value: k8s-baseline }
             - { name: EVAL_RPM, value: "6" }
+            # Optional: label of an earlier eval run in /data/results to gate against (e.g.
+            # k8s-baseline, the live collection run in this cluster with the same LLM provider).
+            # Empty = the baseline named in gate.yaml (baked into the image).
+            - { name: EVAL_BASELINE, value: "" }
             - { name: GATE_CONFIG, value: /config/gate.yaml }
             - { name: TRACE_FILE, value: /data/traces/eval-traces.jsonl }
           resources:

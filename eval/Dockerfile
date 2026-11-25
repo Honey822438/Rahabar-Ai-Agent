@@ -12,6 +12,8 @@ COPY api/app ./api/app
 COPY eval/run_suite.py eval/gate.py eval/golden.jsonl eval/drift_probes.jsonl ./eval/
 COPY eval/suite ./eval/suite
 COPY eval/pairs ./eval/pairs
+# noise documents for the component-level noise test (it builds a scratch <collection>_noise)
+COPY eval/noise ./eval/noise
 # The gate's baseline result. Thresholds come from the gate ConfigMap, not this copy.
 COPY eval/results/20261124T192554Z-baseline.json ./eval/results/
 COPY config/gate.yaml ./config/gate.yaml

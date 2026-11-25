@@ -13,6 +13,7 @@
 !eval/gate.py
 !eval/suite
 !eval/pairs
+!eval/noise
 !eval/golden.jsonl
 !eval/drift_probes.jsonl
 !eval/results/20261124T192554Z-baseline.json
