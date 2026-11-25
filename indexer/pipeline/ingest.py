@@ -90,11 +90,11 @@ def seed(lake: Lake, source_dir: Path) -> int:
     return len(items)
 
 
-def _extract(path: Path, version: str) -> tuple[Document | None, str | None]:
+def _extract(lake: Lake, path: Path, sha256: str,
+             version: str) -> tuple[Document | None, str | None]:
     from .clean import clean
-    from .extract import extract
     try:
-        return clean(extract(str(path), version or "unknown", False)), None
+        return clean(lake.extract(path, sha256, version or "unknown", False)), None
     except Exception as exc:  # any extraction error is a quality failure, not a crash
         return None, f"{type(exc).__name__}: {exc}"
 
@@ -133,7 +133,7 @@ def verify_incoming(lake: Lake, embed_one: Callable[[str], list[float]] | None) 
             path.with_name(path.name + ".meta.json").unlink(missing_ok=True)
             continue
         started = time.perf_counter()
-        doc, error = _extract(path, version)
+        doc, error = _extract(lake, path, verdict.sha256, version)
         verdict.checks["quality"] = check_quality(doc, error)
         verdict.checks["completeness"] = check_completeness(str(path), doc, meta)
         known = [e["version"] for e in live.values() if e["doc_id"] == doc_id]

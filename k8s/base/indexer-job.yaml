@@ -28,7 +28,7 @@ spec:
           # Skips files already on the volume, so a retry doesn't download them again.
           command: ["python", "corpus/fetch.py"]
           env:
-            - { name: CORPUS_RAW_DIR, value: /corpus }
+            - { name: CORPUS_RAW_DIR, value: /srv/corpus/raw }
             - { name: CORPUS_MANIFEST, value: /tmp/MANIFEST.md }
           resources:
             requests:
@@ -44,13 +44,19 @@ spec:
               drop:
                 - ALL
           volumeMounts:
-            - { name: corpus, mountPath: /corpus }
+            - { name: corpus, mountPath: /srv/corpus/raw }
             - { name: tmp, mountPath: /tmp }
       containers:
         - name: indexer
           image: rahbar-indexer:dev
           imagePullPolicy: IfNotPresent
-          command: ["python", "-m", "pipeline.run"]
+          command: ["sh", "-c"]
+          # A3: verify incoming -> lake (report in /data/results), then embed only new/changed chunks.
+          # Re-seeding is idempotent: an unchanged file (same sha256) is skipped.
+          args:
+            - >-
+              python -m pipeline.ingest --seed /srv/corpus/raw --seed /srv/batch_b
+              --report-dir /data/results && python -m pipeline.sync
           envFrom:
             - configMapRef: { name: rahbar-config }
           # Measured peak 196 MiB (cgroup memory.peak, full corpus with OCR). Request covers the peak;
@@ -69,11 +75,15 @@ spec:
               drop:
                 - ALL
           volumeMounts:
-            - { name: corpus, mountPath: /corpus, readOnly: true }
+            - { name: corpus, mountPath: /srv/corpus/raw, readOnly: true }
+            - { name: data, mountPath: /data }
             - { name: tmp, mountPath: /tmp }
       volumes:
         - name: corpus
           persistentVolumeClaim:
             claimName: corpus
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
         - name: tmp
           emptyDir: {}

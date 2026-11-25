@@ -74,6 +74,24 @@ class Lake:
             found.append((path, meta))
         return found
 
+    def extract(self, path: Path, sha256: str, version: str, superseded: bool) -> Any:
+        """Extraction cached by the file's sha256 under <lake>/cache/ (on the PVC in the
+        cluster): OCR of a scanned PDF takes minutes, so ingest, sync and every candidate
+        collection (C1) reuse one result. Delete cache/ to force a re-extraction."""
+        from dataclasses import asdict
+
+        from .extract import extract
+        from .models import Document, Page
+        cached = self.root / "cache" / f"{sha256}.json"
+        if cached.exists():
+            raw = json.loads(cached.read_text(encoding="utf-8"))
+            return Document(source=raw["source"], doc_version=version, superseded=superseded,
+                            pages=[Page(**p) for p in raw["pages"]])
+        doc = extract(str(path), version, superseded)
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        cached.write_text(json.dumps(asdict(doc)), encoding="utf-8")
+        return doc
+
     def move(self, path: Path, area: str, version: str) -> Path:
         """Move a file (and its sidecar) into an area as <version>__<name>; return the new path."""
         target = self.area(area) / (path.name if path.name.startswith(f"{version}__")

@@ -15,6 +15,10 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 COPY indexer/pipeline ./pipeline
 # The init container downloads the corpus with these; PDFs are never in the image.
 COPY corpus/fetch.py corpus/sources.yaml ./corpus/
+# Mount point for the corpus PVC: sources.yaml must sit next to raw/ (doc_ids for the lake).
+RUN mkdir -p /srv/corpus/raw && chown 10001 /srv/corpus/raw
+# A3 Batch B: small text/Markdown documents (no PDFs), seeded into the lake by the ingest Job.
+COPY data/batch_b ./batch_b
 
 USER 10001
 CMD ["python", "-m", "pipeline.run"]
