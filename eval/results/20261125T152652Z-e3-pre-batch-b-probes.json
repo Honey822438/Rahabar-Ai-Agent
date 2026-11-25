@@ -1,0 +1,585 @@
+{
+  "label": "e3-pre-batch-b-probes",
+  "timestamp": "2026-11-25T15:19:37Z",
+  "git_sha": "9242182",
+  "seed": 42,
+  "golden": "drift_probes.jsonl",
+  "golden_questions": 6,
+  "config": {
+    "collection": "rahbar_e3",
+    "embed_model": "nomic-embed-text",
+    "top_k": 5,
+    "relevance_floor": 0.65,
+    "llm_model": "gemini-flash-lite-latest",
+    "temperature": 0.0
+  },
+  "module": {
+    "embed_model": "nomic-embed-text",
+    "dimension": 768,
+    "paraphrase_mean_cosine": 0.7242,
+    "unrelated_mean_cosine": 0.4498,
+    "similarity_gap": 0.2744,
+    "paraphrase_min": 0.6229,
+    "unrelated_max": 0.6429,
+    "pairs_separable": false,
+    "embed_ms_per_chunk_mean": 205.1,
+    "embed_ms_per_chunk_p95": 594.1,
+    "chunks_timed": 20,
+    "determinism_max_abs_diff": 0.0,
+    "deterministic": true
+  },
+  "component": {
+    "collection": "rahbar_e3",
+    "served_top_k": 5,
+    "summary": {
+      "questions": 6,
+      "recall@3": 0,
+      "recall@5": 0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
+      "retrieval_p50_ms": 81.8,
+      "retrieval_p95_ms": 117.6
+    },
+    "per_question": [
+      {
+        "id": "d01",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.11758606100011093,
+        "top5": [
+          {
+            "chunk_id": "af4c1e0afd3aae8884d9616a5329558d",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 2,
+            "score": 0.8016,
+            "relevant": false
+          },
+          {
+            "chunk_id": "c543112af83beb636b009b34fc822836",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Scope",
+            "page": 1,
+            "score": 0.7526,
+            "relevant": false
+          },
+          {
+            "chunk_id": "2f70372aed8ed3454ba2266276ce3f93",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Declaration",
+            "page": 5,
+            "score": 0.7003,
+            "relevant": false
+          },
+          {
+            "chunk_id": "7146cf153235a24f60f30d042f678b33",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 3,
+            "score": 0.6955,
+            "relevant": false
+          },
+          {
+            "chunk_id": "cb46935d927990743bc12dd46940df18",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Terms",
+            "page": 6,
+            "score": 0.6875,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d02",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.0822450210016541,
+        "top5": [
+          {
+            "chunk_id": "c543112af83beb636b009b34fc822836",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Scope",
+            "page": 1,
+            "score": 0.7555,
+            "relevant": false
+          },
+          {
+            "chunk_id": "7146cf153235a24f60f30d042f678b33",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 3,
+            "score": 0.7487,
+            "relevant": false
+          },
+          {
+            "chunk_id": "af4c1e0afd3aae8884d9616a5329558d",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 2,
+            "score": 0.7281,
+            "relevant": false
+          },
+          {
+            "chunk_id": "5539a27cef3c7a8453ad970dec69702d",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "1. Purpose",
+            "page": 1,
+            "score": 0.7279,
+            "relevant": false
+          },
+          {
+            "chunk_id": "2f70372aed8ed3454ba2266276ce3f93",
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Declaration",
+            "page": 5,
+            "score": 0.6947,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d03",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.07111080899994704,
+        "top5": [
+          {
+            "chunk_id": "a0474250a5705a9b614b7c579b197aef",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 34,
+            "score": 0.5768,
+            "relevant": false
+          },
+          {
+            "chunk_id": "c4f09c029aff45d0f8084b778c0fd245",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 32,
+            "score": 0.5662,
+            "relevant": false
+          },
+          {
+            "chunk_id": "ec15827e42214b2b026e0a4d17ceb783",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 31,
+            "score": 0.5655,
+            "relevant": false
+          },
+          {
+            "chunk_id": "04e34b036668c671911929e804bda3d8",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 35,
+            "score": 0.5577,
+            "relevant": false
+          },
+          {
+            "chunk_id": "7580a314ad52f03c40ad370ae7843a17",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 36,
+            "score": 0.5483,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d04",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.07523853299971961,
+        "top5": [
+          {
+            "chunk_id": "5206507348f736a59e3c823924224d6a",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 31,
+            "score": 0.6749,
+            "relevant": false
+          },
+          {
+            "chunk_id": "64877a5921af225e10af40af0b8d6632",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 43,
+            "score": 0.6712,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1d779b057e9845ab4d092bcb3f2716f0",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 30,
+            "score": 0.6595,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e61d53a5e746d31eb994fb1d59058532",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 30,
+            "score": 0.6584,
+            "relevant": false
+          },
+          {
+            "chunk_id": "9e53922bc6a961e3b5c6e76b9f764718",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Lahore Campus",
+            "page": 54,
+            "score": 0.6575,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d05",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.08179881000069145,
+        "top5": [
+          {
+            "chunk_id": "43dafcf68b9debc7efe3f0d0b5b52955",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Lahore Campus",
+            "page": 47,
+            "score": 0.7505,
+            "relevant": false
+          },
+          {
+            "chunk_id": "68c3a9da9f0ce69517028c355b037956",
+            "source": "annual-report-2023-24.pdf",
+            "section": "4. Professional Development Initiatives /Seminars",
+            "page": 81,
+            "score": 0.7324,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6d7b46d897d701a56010ddb69f2f2f23",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Chapter-8 Industrial Collaboration",
+            "page": 79,
+            "score": 0.6977,
+            "relevant": false
+          },
+          {
+            "chunk_id": "31b786d6c2d030d49fa3fd4d86591661",
+            "source": "annual-report-2023-24.pdf",
+            "section": "3. Recruitment Drives",
+            "page": 79,
+            "score": 0.6784,
+            "relevant": false
+          },
+          {
+            "chunk_id": "12863da0f94503e6de6658045b6fe573",
+            "source": "annual-report-2023-24.pdf",
+            "section": "17. Seminar on CV Writing and Interview Skills",
+            "page": 24,
+            "score": 0.6743,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d06",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.08590938300039852,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.8842,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.8254,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.7208,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7154,
+            "relevant": false
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.6942,
+            "relevant": false
+          }
+        ]
+      }
+    ]
+  },
+  "e2e": {
+    "collection": "rahbar_e3",
+    "model": "gemini-flash-lite-latest",
+    "summary": {
+      "questions": 6,
+      "scored": 4,
+      "fallbacks_after_retries": 2,
+      "abstention_correct_unanswerable": null,
+      "false_abstention_rate": 0.5,
+      "abstention_accuracy": 0.5,
+      "citation_validity": 1,
+      "cites_relevant_chunk": 0,
+      "answer_correct_expect": 0,
+      "faithfulness": 1,
+      "faithfulness_score_mean": 1.0,
+      "judged": 2,
+      "judge_unavailable": 0,
+      "latency_p50_s": 1.746,
+      "latency_p95_s": 3.07,
+      "latency_p95_clean_s": 1.746,
+      "clean_answers": 3,
+      "judge_agreement": {
+        "labelled": 0,
+        "agreement": null
+      }
+    },
+    "per_question": [
+      {
+        "id": "d01",
+        "type": "answerable",
+        "question": "Within how many years must a faculty member have published a JCR journal paper to apply for a technical start-up?",
+        "answer": "A faculty member must have published one journal paper within two years prior to the date of application.",
+        "answered": true,
+        "abstention_correct": true,
+        "citations": [
+          [
+            "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "Tid",
+            2
+          ]
+        ],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.592,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "outage_retries": 0,
+        "top_score": 0.8016,
+        "evidence": [
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 2,
+            "text": "Tid\nEvaluation criteria for a technical start-up Faculty member must have published one journal paper (at least online with a DOI number), with the impact factor journals appearing in Journal Citation Reports by Web of Science Group (JCR) within two years prior to the date of application with NUCES affiliation.\n\nFaculty member must have completed or currently be involved as a Principal Investigator or Co-Principal Investigator of an externally funded research project of significant funding amount within the last five year. The start-up should align with the ongoing research at the university and the university degree programs.\n\nThe start-up should be related to emerging technologies and should be aiming to commercialise the research of faculty members or research projects.\n\na\n\nProcedure for submitting the application Applications may be submitted at any time. Application must be submitted on the prescribed form (Annex -I) with all the required information. A brief business plan must be provided using the form provided in Annex-II. Following information should be provided on the prescribed form: Technical domain of the start-up Research outputs /technologies/products that the start-up aims to commercialize, A transfer/commercial usage of Intellectual Property required from the university should be explicitly listed (see Intellectual Property Rights (IP) Policy available at university website). List of NUCES faculty members and staff involved in the start-up Applications must be submitted through the campus Director office.\n\nProcedure for evaluating the application\n\nThe Campus Director shall provide comments, recommend the application and forward the application to ORIC.\n\nORIC shall evaluate and recommend the application using the criteria provided in Section 5).\n\nFor final approval, the cases shall be presented to the RECTOR NUCES for approval. The decision by the RECTOR is final in this regard.\n\nMandatory periodic (six. monthly) deliverables of the start-up Approximate business/funds being generated by the start-up.\n\nNumber of employments created by the start-up.\n\nSummary of industry partnerships generated by the start-up.\n\nPatents held by university being commercialized by the start-up...\n\nAny new patents registered by the start-up\n\nMarketing material / evidence of commercialization activities by the start-up\n\nOther terms and conditions\n\nThe approval for a start-up does not imply any kind of financial or legal liability of the university.\n\n92.\n\n03.\n\n9.4.\n\n9.5.\n\n9.6.\n\nONT.\n\n9.8.\n\n9.9.\n\n9.10.\n\nThe applicant shall be responsible for ensuring that the start-up does not engage in any activity that may bring disrepute to the university."
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Scope",
+            "page": 1,
+            "text": "Scope\nThe policy covers the grant of permission to full-time NUCES faculty members to participate in \"Faculty Entrepreneurship\", as defined in (1.2) to encourage faculty members initiating /actively participating in setting up commercialization opportunities.\n\nThe policy defines the objectives, eligibility criteria for the applicants seeking to creating new start-ups, the evaluation criteria for approval of applications, the procedure for submission of applications, their evaluation, and requirements of periodic reporting to the university on the progress of the start-up.\n\nObjectives To encourage faculty members to commercialize their research.\n\nTo encourage involvement of faculty members in industrial collaborative activities to better incorporate the state of art in their university courses.\n\nTo support the university in meeting commercialization requirements set by HEC.\n\nTo attract and retain high quality faculty members by providing an opportunity for commercialization of research.\n\nEligibility criteria for a technical start-up Faculty member must be a \"full-time\" faculty member at any of the campuses of the university. Faculty member must have been a full-time faculty member for more than 1 year. The start-up must be based on some research work (as part of internal or externally funded project, student final year project, or student research thesis or any other research/innovation work carried out at NUCES). A licensing agreement, grantin g the startup the right to use the university IP at no initial cost for 2 years, shall be signed between the university and the start-up.\n\nThe financial terms / license fee shall be re-negotiated between the university and the startup after the expiring of no initial cost license. The university may leverage licencing fees for re-newel of license (in particular for cases where Patents are owned/partially owned by university). ,\n\n6. 6:1. 6.2. 6.3. 6.4. 6.4.1.\n\n6.4.2. 6.4.3.\n\n6.4.4. 65;"
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Declaration",
+            "page": 5,
+            "text": "Declaration\nWe, declare that\n\n1) The start-up shall abide by accepted ethical norms and shall disrepute to the university.\n\nnot engage in any business activity that brings\n\n2) The start-up is not violating any intellectual property rights and necessary IP rights exemptions are stated in\n\nthe application.\n\n3) The university is not liable for the any actions or practices of the start-up\n\nPrimary applicant's signatures:\n\nName & signature of other NUCES faculty/staff part of startup: Date: Note: (1) Attach Business Plan. (Annex-III) (2) Attach IP licensing agreement (Annex ~ II) (3) Attach list of impact factor publications in last 2 years (4) Attach list of externally funded projects in last 5 years (Title, Role (PI or Co-PI), Funding agency, grant amount, start & end date) SECTION — IV Recommendation by Director Campus Comments: O Recommended O Not Recommended Name: Signatures: Date: SECTION - V Recommendation by Director ORIC Comments: O Recommended 0 Not Recommended Name: Signatures: Date: Approval by Rector O Approved 01 Not approved Name: Signatures: Date:\n\nAnnex — II Intellectual Property Agreement (On Stamp paper) Parties This Intellectual Property Agreement (hereinafter referred to as the \"Agreement\") is entered\n\ninto on (the \"Effective Date\"), by and between\n\nwith an address of (hereinafter referred to as the \"University\")\n\nand. with an address of (hereinafter referred to as the \"Faculty\n\nMember\") (collectively referred to as the \"Parties\")\n\nIntellectual Property The Parties hereby agree that the University assigns IP rights to the Faculty Member of the IP\n\ntitled: ». For the initial fee of Rs for the duration of two years. The detailed description of the IP is attached in Annex-I.\n\nIntellectual Property includes, but is not limited to, trademarks, trade names, service marks, service mark registrations, service names, patents, patent rights, copyrights, inventions, licenses, approvals, governmental authorizations, trade secrets, algorithms, codes, inventions, processes, software, formulas, ideas, concepts and developments ete."
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 3,
+            "text": "Tid\n92. 03. 9.4. 9.5. 9.6. ONT. 9.8. 9.9. 9.10. The applicant shall be responsible for ensuring that the start-up does not engage in any activity that may bring disrepute to the university.\n\nThe university shall not provide any infrastructure or financial support for the established start-up as part of this approval. Any support required from the university should be requested separately, through the respective campus Directors. The start-up must notify the campus Director and the ORIC office in case it employs (or in any form provides honorarium/ stipend/ or pays compensation to) any university staff or faculty members. No workload exemption shall be provided to the applicant for creating /managing the startup. Applicants are expected to complete all their obligations and responsibilities assigned to them by the university.\n\nWhile the faculty members may be involved in the start-ups, they cannot hold sole management role in the company. A full-time Chief Executive/ Managing Director/ Chief Operations Officers or equivalent position should be filled for managing day-to-day operations of the company.\n\nThe start-up may not engage university students in a manner that creates conflict of interest (for example, by utilizing work completed by students as part of their courses).\n\nThe university has the right to advertise the start-up and its product descriptions and marketing materials, and other disclosed information (such as number of jobs created) for promotional activities, and for meeting documenting requirements of HEC, ranking /accreditation bodies, etc.\n\nThe university has the right to terminate the agreement allowing use of its Intellectual Property, in case the start-up fails to meet the mandatory periodic reporting requirements."
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Terms",
+            "page": 6,
+            "text": "Terms\n1. This Agreement will begin on and will remain in effect until\n\n- (maximum of 2 year from the date of signing)\n\n2. The Faculty Member will share the mandatory deliverables with ORIC office every six months.\n\n3. The Faculty Member is not allowed to outsource the IP right to any third party with fee or without any fee without the approval of the University.\n\n4, The Faculty Member will not share confidential information regarding the IP rights to\n\nanyone.\n\n5. After the termination of this Agreement, The Faculty Member is not allowed to use IP in any manner, without renewing the agreement.\n\n6. Incase of any dispute a committee will be made (by taking members from both sides, or\n\nfrom other university/IP office) to solve the issue.\n\n7. The Maximum duration of this agreement will be two years for the date of signing.\n\n8. Failure to abide the rules and regulation will lead to the immediate termination of the\n\nagreement."
+          }
+        ],
+        "judge": {
+          "faithful": true,
+          "score": 1.0,
+          "unsupported": [],
+          "judge_model": "gemini-flash-lite-latest"
+        }
+      },
+      {
+        "id": "d02",
+        "type": "answerable",
+        "question": "Can a faculty member who founds a technical start-up get a workload exemption?",
+        "answer": "No, faculty members cannot get a workload exemption for creating or managing a start-up. Applicants are expected to complete all their obligations and responsibilities assigned to them by the university.",
+        "answered": true,
+        "abstention_correct": true,
+        "citations": [
+          [
+            "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "Tid",
+            3
+          ]
+        ],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 3.07,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "outage_retries": 2,
+        "top_score": 0.7555,
+        "evidence": [
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Scope",
+            "page": 1,
+            "text": "Scope\nThe policy covers the grant of permission to full-time NUCES faculty members to participate in \"Faculty Entrepreneurship\", as defined in (1.2) to encourage faculty members initiating /actively participating in setting up commercialization opportunities.\n\nThe policy defines the objectives, eligibility criteria for the applicants seeking to creating new start-ups, the evaluation criteria for approval of applications, the procedure for submission of applications, their evaluation, and requirements of periodic reporting to the university on the progress of the start-up.\n\nObjectives To encourage faculty members to commercialize their research.\n\nTo encourage involvement of faculty members in industrial collaborative activities to better incorporate the state of art in their university courses.\n\nTo support the university in meeting commercialization requirements set by HEC.\n\nTo attract and retain high quality faculty members by providing an opportunity for commercialization of research.\n\nEligibility criteria for a technical start-up Faculty member must be a \"full-time\" faculty member at any of the campuses of the university. Faculty member must have been a full-time faculty member for more than 1 year. The start-up must be based on some research work (as part of internal or externally funded project, student final year project, or student research thesis or any other research/innovation work carried out at NUCES). A licensing agreement, grantin g the startup the right to use the university IP at no initial cost for 2 years, shall be signed between the university and the start-up.\n\nThe financial terms / license fee shall be re-negotiated between the university and the startup after the expiring of no initial cost license. The university may leverage licencing fees for re-newel of license (in particular for cases where Patents are owned/partially owned by university). ,\n\n6. 6:1. 6.2. 6.3. 6.4. 6.4.1.\n\n6.4.2. 6.4.3.\n\n6.4.4. 65;"
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 3,
+            "text": "Tid\n92. 03. 9.4. 9.5. 9.6. ONT. 9.8. 9.9. 9.10. The applicant shall be responsible for ensuring that the start-up does not engage in any activity that may bring disrepute to the university.\n\nThe university shall not provide any infrastructure or financial support for the established start-up as part of this approval. Any support required from the university should be requested separately, through the respective campus Directors. The start-up must notify the campus Director and the ORIC office in case it employs (or in any form provides honorarium/ stipend/ or pays compensation to) any university staff or faculty members. No workload exemption shall be provided to the applicant for creating /managing the startup. Applicants are expected to complete all their obligations and responsibilities assigned to them by the university.\n\nWhile the faculty members may be involved in the start-ups, they cannot hold sole management role in the company. A full-time Chief Executive/ Managing Director/ Chief Operations Officers or equivalent position should be filled for managing day-to-day operations of the company.\n\nThe start-up may not engage university students in a manner that creates conflict of interest (for example, by utilizing work completed by students as part of their courses).\n\nThe university has the right to advertise the start-up and its product descriptions and marketing materials, and other disclosed information (such as number of jobs created) for promotional activities, and for meeting documenting requirements of HEC, ranking /accreditation bodies, etc.\n\nThe university has the right to terminate the agreement allowing use of its Intellectual Property, in case the start-up fails to meet the mandatory periodic reporting requirements."
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Tid",
+            "page": 2,
+            "text": "Tid\nEvaluation criteria for a technical start-up Faculty member must have published one journal paper (at least online with a DOI number), with the impact factor journals appearing in Journal Citation Reports by Web of Science Group (JCR) within two years prior to the date of application with NUCES affiliation.\n\nFaculty member must have completed or currently be involved as a Principal Investigator or Co-Principal Investigator of an externally funded research project of significant funding amount within the last five year. The start-up should align with the ongoing research at the university and the university degree programs.\n\nThe start-up should be related to emerging technologies and should be aiming to commercialise the research of faculty members or research projects.\n\na\n\nProcedure for submitting the application Applications may be submitted at any time. Application must be submitted on the prescribed form (Annex -I) with all the required information. A brief business plan must be provided using the form provided in Annex-II. Following information should be provided on the prescribed form: Technical domain of the start-up Research outputs /technologies/products that the start-up aims to commercialize, A transfer/commercial usage of Intellectual Property required from the university should be explicitly listed (see Intellectual Property Rights (IP) Policy available at university website). List of NUCES faculty members and staff involved in the start-up Applications must be submitted through the campus Director office.\n\nProcedure for evaluating the application\n\nThe Campus Director shall provide comments, recommend the application and forward the application to ORIC.\n\nORIC shall evaluate and recommend the application using the criteria provided in Section 5).\n\nFor final approval, the cases shall be presented to the RECTOR NUCES for approval. The decision by the RECTOR is final in this regard.\n\nMandatory periodic (six. monthly) deliverables of the start-up Approximate business/funds being generated by the start-up.\n\nNumber of employments created by the start-up.\n\nSummary of industry partnerships generated by the start-up.\n\nPatents held by university being commercialized by the start-up...\n\nAny new patents registered by the start-up\n\nMarketing material / evidence of commercialization activities by the start-up\n\nOther terms and conditions\n\nThe approval for a start-up does not imply any kind of financial or legal liability of the university.\n\n92.\n\n03.\n\n9.4.\n\n9.5.\n\n9.6.\n\nONT.\n\n9.8.\n\n9.9.\n\n9.10.\n\nThe applicant shall be responsible for ensuring that the start-up does not engage in any activity that may bring disrepute to the university."
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "1. Purpose",
+            "page": 1,
+            "text": "1. Purpose\nREB\n\n4.2. 4.3.\n\n4.4.\n\nsls\n\nty\n\nBwWN ee\n\nFollowing are the guideline for \"Faculty Entrepreneurship/Technical Start-up\", for the fulltime faculty members of National University of Computer and Emerging Sciences (NUCES), Pakistan. The guidelines are limited to technical and innovative start-ups that aim to commercialize research conducted at NUCES Campuses. The Faculty Entrepreneurship, for the purpose of this policy, is defined as the involvement of NUCES faculty in:\n\nfounding or management of a technical start-up,\n\nholding significant share/equity of the company,\n\nas member of the governing board of the start-up,\n\nas recipient of a share of revenue of the start-up."
+          },
+          {
+            "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+            "section": "Declaration",
+            "page": 5,
+            "text": "Declaration\nWe, declare that\n\n1) The start-up shall abide by accepted ethical norms and shall disrepute to the university.\n\nnot engage in any business activity that brings\n\n2) The start-up is not violating any intellectual property rights and necessary IP rights exemptions are stated in\n\nthe application.\n\n3) The university is not liable for the any actions or practices of the start-up\n\nPrimary applicant's signatures:\n\nName & signature of other NUCES faculty/staff part of startup: Date: Note: (1) Attach Business Plan. (Annex-III) (2) Attach IP licensing agreement (Annex ~ II) (3) Attach list of impact factor publications in last 2 years (4) Attach list of externally funded projects in last 5 years (Title, Role (PI or Co-PI), Funding agency, grant amount, start & end date) SECTION — IV Recommendation by Director Campus Comments: O Recommended O Not Recommended Name: Signatures: Date: SECTION - V Recommendation by Director ORIC Comments: O Recommended 0 Not Recommended Name: Signatures: Date: Approval by Rector O Approved 01 Not approved Name: Signatures: Date:\n\nAnnex — II Intellectual Property Agreement (On Stamp paper) Parties This Intellectual Property Agreement (hereinafter referred to as the \"Agreement\") is entered\n\ninto on (the \"Effective Date\"), by and between\n\nwith an address of (hereinafter referred to as the \"University\")\n\nand. with an address of (hereinafter referred to as the \"Faculty\n\nMember\") (collectively referred to as the \"Parties\")\n\nIntellectual Property The Parties hereby agree that the University assigns IP rights to the Faculty Member of the IP\n\ntitled: ». For the initial fee of Rs for the duration of two years. The detailed description of the IP is attached in Annex-I.\n\nIntellectual Property includes, but is not limited to, trademarks, trade names, service marks, service mark registrations, service names, patents, patent rights, copyrights, inventions, licenses, approvals, governmental authorizations, trade secrets, algorithms, codes, inventions, processes, software, formulas, ideas, concepts and developments ete."
+          }
+        ],
+        "judge": {
+          "faithful": true,
+          "score": 1.0,
+          "unsupported": [],
+          "judge_model": "gemini-flash-lite-latest"
+        }
+      },
+      {
+        "id": "d03",
+        "type": "answerable",
+        "question": "What are the central library's opening hours on Saturday?",
+        "answer": "The documents I have do not cover this question, so I can't answer it.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 0.071,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "outage_retries": 0,
+        "top_score": 0.5768
+      },
+      {
+        "id": "d04",
+        "type": "answerable",
+        "question": "When and where is the inter-campus sports week 2026?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 3.319,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.6749
+      },
+      {
+        "id": "d05",
+        "type": "answerable",
+        "question": "When is the career fair and by when must final-year students upload their CV?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 4.748,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.7505
+      },
+      {
+        "id": "d06",
+        "type": "answerable",
+        "question": "What is the minimum CGPA to avoid academic warning according to the library notice?",
+        "answer": "The documents do not cover it.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.746,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "outage_retries": 0,
+        "top_score": 0.8842
+      }
+    ]
+  },
+  "seconds": 434.6,
+  "summary_table": "level      metric                           value\n-------------------------------------------------------------\nmodule     embed_model                      nomic-embed-text\nmodule     dimension                        768\nmodule     paraphrase_mean_cosine           0.7242\nmodule     unrelated_mean_cosine            0.4498\nmodule     similarity_gap                   0.2744\nmodule     paraphrase_min                   0.6229\nmodule     unrelated_max                    0.6429\nmodule     pairs_separable                  False\nmodule     embed_ms_per_chunk_mean          205.1\nmodule     embed_ms_per_chunk_p95           594.1\nmodule     chunks_timed                     20\nmodule     determinism_max_abs_diff         0.0\nmodule     deterministic                    True\ncomponent  questions                        6\ncomponent  recall@3                         0\ncomponent  recall@5                         0\ncomponent  mrr                              0.0\ncomponent  ndcg@5                           0.0\ncomponent  retrieval_p50_ms                 81.8\ncomponent  retrieval_p95_ms                 117.6\ne2e        questions                        6\ne2e        scored                           4\ne2e        fallbacks_after_retries          2\ne2e        abstention_correct_unanswerable  None\ne2e        false_abstention_rate            0.5\ne2e        abstention_accuracy              0.5\ne2e        citation_validity                1\ne2e        cites_relevant_chunk             0\ne2e        answer_correct_expect            0\ne2e        faithfulness                     1\ne2e        faithfulness_score_mean          1.0\ne2e        judged                           2\ne2e        judge_unavailable                0\ne2e        latency_p50_s                    1.746\ne2e        latency_p95_s                    3.07\ne2e        latency_p95_clean_s              1.746\ne2e        clean_answers                    3\ne2e        judge_agreement                  {\"labelled\": 0, \"agreement\": null}"
+}

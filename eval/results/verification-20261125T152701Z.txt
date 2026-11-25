@@ -1,0 +1,14 @@
+doc_id@version                               | quality | complete | recency | unique | max_cos | status      | reason                                                                                    
+---------------------------------------------+---------+----------+---------+--------+---------+-------------+-------------------------------------------------------------------------------------------
+career-fair-2026@2026-11                     | PASS    | PASS     | PASS    | PASS   | 0.770   | VERIFIED    |                                                                                           
+faculty-entrepreneurship-and-technical-start | PASS    | PASS     | PASS    | PASS   | 0.809   | VERIFIED    |                                                                                           
+grading-system-reupload@2026-11              | PASS    | PASS     | PASS    | FAIL   | 0.989   | QUARANTINED | uniqueness: near-duplicate of grading-page@2026 (cosine 0.989 >= 0.95)                    
+library-notice-2026@2026-11                  | PASS    | PASS     | PASS    | PASS   | 0.777   | VERIFIED    |                                                                                           
+b-missing-metadata-lab-safety@unknown        | PASS    | FAIL     | PASS    | PASS   | 0.769   | QUARANTINED | completeness: missing metadata: source, title, doc_version                                
+sports-week-2026@2026-11                     | PASS    | PASS     | PASS    | PASS   | 0.758   | VERIFIED    |                                                                                           
+corrupt-scan@2026-11                         | FAIL    | FAIL     | PASS    | PASS   | -       | QUARANTINED | quality: extraction failed: PdfminerException: No /Root object! - Is this really a PDF?; c
+fee-structure-mirror@2026-11                 | PASS    | PASS     | PASS    | FAIL   | -       | QUARANTINED | uniqueness: exact duplicate of fee-structure-page@2026-27 (sha256)                        
+grading-page-mirror@2026-11                  | PASS    | PASS     | PASS    | FAIL   | -       | QUARANTINED | uniqueness: exact duplicate of grading-page@2026 (sha256)                                 
+empty-upload@2026-11                         | FAIL    | PASS     | PASS    | PASS   | -       | QUARANTINED | quality: empty: 0 characters < 200                                                        
+midterm-notice@2026-11                       | FAIL    | FAIL     | PASS    | PASS   | -       | QUARANTINED | quality: garbled: clean-character ratio 0.53 < 0.9; completeness: truncated: text ends mid
+handbook-upload@2026-11                      | FAIL    | FAIL     | PASS    | PASS   | -       | QUARANTINED | quality: extraction failed: PdfminerException: Unexpected EOF; completeness: missing metad

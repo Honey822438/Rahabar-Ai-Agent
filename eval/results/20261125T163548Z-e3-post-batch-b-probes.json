@@ -1,0 +1,497 @@
+{
+  "label": "e3-post-batch-b-probes",
+  "timestamp": "2026-11-25T16:20:07Z",
+  "git_sha": "9242182",
+  "seed": 42,
+  "golden": "drift_probes.jsonl",
+  "golden_questions": 6,
+  "config": {
+    "collection": "rahbar_e3",
+    "embed_model": "nomic-embed-text",
+    "top_k": 5,
+    "relevance_floor": 0.65,
+    "llm_model": "gemini-flash-lite-latest",
+    "temperature": 0.0
+  },
+  "module": {
+    "embed_model": "nomic-embed-text",
+    "dimension": 768,
+    "paraphrase_mean_cosine": 0.7242,
+    "unrelated_mean_cosine": 0.4498,
+    "similarity_gap": 0.2744,
+    "paraphrase_min": 0.6229,
+    "unrelated_max": 0.6429,
+    "pairs_separable": false,
+    "embed_ms_per_chunk_mean": 201.5,
+    "embed_ms_per_chunk_p95": 524.3,
+    "chunks_timed": 20,
+    "determinism_max_abs_diff": 0.0,
+    "deterministic": true
+  },
+  "component": {
+    "collection": "rahbar_e3",
+    "served_top_k": 5,
+    "summary": {
+      "questions": 6,
+      "recall@3": 0.8333,
+      "recall@5": 0.8333,
+      "mrr": 0.8333,
+      "ndcg@5": 0.8333,
+      "retrieval_p50_ms": 83.4,
+      "retrieval_p95_ms": 122.5
+    },
+    "per_question": [
+      {
+        "id": "d01",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.12251156499951321,
+        "top5": [
+          {
+            "chunk_id": "7b7e2e132909fdc97f569e9af3915822",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "6. Evaluation criteria for a technical start-up",
+            "page": 1,
+            "score": 0.8933,
+            "relevant": true
+          },
+          {
+            "chunk_id": "62a8c92527c84c6961120069b91f40f9",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "score": 0.6957,
+            "relevant": true
+          },
+          {
+            "chunk_id": "d7d6a559b098d2c16aa53692be7abbb5",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "1. Purpose",
+            "page": 1,
+            "score": 0.6857,
+            "relevant": true
+          },
+          {
+            "chunk_id": "eac870c1dea95d1e24921a55abbcf880",
+            "source": "annual-report-2023-24.pdf",
+            "section": "18. Doctor of Philosophy (Software Engineering) ISB, KHI Sanctioned",
+            "page": 71,
+            "score": 0.679,
+            "relevant": false
+          },
+          {
+            "chunk_id": "3d649ccda91ecec90e605eede3c62b3f",
+            "source": "annual-report-2023-24.pdf",
+            "section": "9. Collaborative Research and Development",
+            "page": 82,
+            "score": 0.6713,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d02",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08375580299980356,
+        "top5": [
+          {
+            "chunk_id": "62a8c92527c84c6961120069b91f40f9",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "score": 0.7561,
+            "relevant": true
+          },
+          {
+            "chunk_id": "d7d6a559b098d2c16aa53692be7abbb5",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "1. Purpose",
+            "page": 1,
+            "score": 0.7179,
+            "relevant": true
+          },
+          {
+            "chunk_id": "7b7e2e132909fdc97f569e9af3915822",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "6. Evaluation criteria for a technical start-up",
+            "page": 1,
+            "score": 0.7142,
+            "relevant": true
+          },
+          {
+            "chunk_id": "b936253c97fecd8f832d6de9e394da56",
+            "source": "annual-report-2023-24.pdf",
+            "section": "8. Memoranda of Understanding (MOUs)",
+            "page": 81,
+            "score": 0.6254,
+            "relevant": false
+          },
+          {
+            "chunk_id": "df342709f484b2a2ef765d6b3ef589f2",
+            "source": "annual-report-2019-20.pdf",
+            "section": "Accomplishments",
+            "page": 23,
+            "score": 0.6205,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d03",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.07368888299970422,
+        "top5": [
+          {
+            "chunk_id": "f7ebc36d7716609c6924475baf06b96a",
+            "source": "b-injected-library-notice.md",
+            "section": "Library Timings Notice (Fall 2026)",
+            "page": 1,
+            "score": 0.7984,
+            "relevant": true
+          },
+          {
+            "chunk_id": "a0474250a5705a9b614b7c579b197aef",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 34,
+            "score": 0.5768,
+            "relevant": false
+          },
+          {
+            "chunk_id": "c4f09c029aff45d0f8084b778c0fd245",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 32,
+            "score": 0.5662,
+            "relevant": false
+          },
+          {
+            "chunk_id": "ec15827e42214b2b026e0a4d17ceb783",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 31,
+            "score": 0.5655,
+            "relevant": false
+          },
+          {
+            "chunk_id": "04e34b036668c671911929e804bda3d8",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 35,
+            "score": 0.5577,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d04",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.07693442199888523,
+        "top5": [
+          {
+            "chunk_id": "1c316a3b4b2dbcee071640f6d9755b7b",
+            "source": "b-sports-week-2026.md",
+            "section": "Inter-Campus Sports Week 2026",
+            "page": 1,
+            "score": 0.8688,
+            "relevant": true
+          },
+          {
+            "chunk_id": "5206507348f736a59e3c823924224d6a",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 31,
+            "score": 0.6749,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1589bc4ebd53828cf0b57a5352e80fa1",
+            "source": "b-career-fair-2026.md",
+            "section": "Career Fair 2026",
+            "page": 1,
+            "score": 0.6718,
+            "relevant": false
+          },
+          {
+            "chunk_id": "64877a5921af225e10af40af0b8d6632",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 43,
+            "score": 0.6712,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1d779b057e9845ab4d092bcb3f2716f0",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 30,
+            "score": 0.6595,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d05",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08336156000041228,
+        "top5": [
+          {
+            "chunk_id": "1589bc4ebd53828cf0b57a5352e80fa1",
+            "source": "b-career-fair-2026.md",
+            "section": "Career Fair 2026",
+            "page": 1,
+            "score": 0.8457,
+            "relevant": true
+          },
+          {
+            "chunk_id": "43dafcf68b9debc7efe3f0d0b5b52955",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Lahore Campus",
+            "page": 47,
+            "score": 0.7505,
+            "relevant": false
+          },
+          {
+            "chunk_id": "68c3a9da9f0ce69517028c355b037956",
+            "source": "annual-report-2023-24.pdf",
+            "section": "4. Professional Development Initiatives /Seminars",
+            "page": 81,
+            "score": 0.7324,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6d7b46d897d701a56010ddb69f2f2f23",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Chapter-8 Industrial Collaboration",
+            "page": 79,
+            "score": 0.6977,
+            "relevant": false
+          },
+          {
+            "chunk_id": "31b786d6c2d030d49fa3fd4d86591661",
+            "source": "annual-report-2023-24.pdf",
+            "section": "3. Recruitment Drives",
+            "page": 79,
+            "score": 0.6784,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d06",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.08545087699894793,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.8842,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.8254,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.7208,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7154,
+            "relevant": false
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.6942,
+            "relevant": false
+          }
+        ]
+      }
+    ]
+  },
+  "e2e": {
+    "collection": "rahbar_e3",
+    "model": "gemini-flash-lite-latest",
+    "summary": {
+      "questions": 6,
+      "scored": 1,
+      "fallbacks_after_retries": 5,
+      "abstention_correct_unanswerable": null,
+      "false_abstention_rate": 1,
+      "abstention_accuracy": 0,
+      "citation_validity": 1,
+      "cites_relevant_chunk": null,
+      "answer_correct_expect": 0,
+      "faithfulness": null,
+      "faithfulness_score_mean": null,
+      "judged": 0,
+      "judge_unavailable": 0,
+      "latency_p50_s": 0.07,
+      "latency_p95_s": 0.07,
+      "latency_p95_clean_s": 0.07,
+      "clean_answers": 1,
+      "judge_agreement": {
+        "labelled": 0,
+        "agreement": null
+      }
+    },
+    "per_question": [
+      {
+        "id": "d01",
+        "type": "answerable",
+        "question": "Within how many years must a faculty member have published a JCR journal paper to apply for a technical start-up?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.013,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.8933
+      },
+      {
+        "id": "d02",
+        "type": "answerable",
+        "question": "Can a faculty member who founds a technical start-up get a workload exemption?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.031,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.7561
+      },
+      {
+        "id": "d03",
+        "type": "answerable",
+        "question": "What are the central library's opening hours on Saturday?",
+        "answer": "The documents I have do not cover this question, so I can't answer it.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 0.07,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "outage_retries": 0,
+        "top_score": 0.5768
+      },
+      {
+        "id": "d04",
+        "type": "answerable",
+        "question": "When and where is the inter-campus sports week 2026?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.136,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.8688
+      },
+      {
+        "id": "d05",
+        "type": "answerable",
+        "question": "When is the career fair and by when must final-year students upload their CV?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.233,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.8457
+      },
+      {
+        "id": "d06",
+        "type": "answerable",
+        "question": "What is the minimum CGPA to avoid academic warning according to the library notice?",
+        "answer": "I couldn't produce a reliable answer just now. Please try again in a moment.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.235,
+        "provider": "hosted",
+        "fallback": true,
+        "attempts": 3,
+        "outage_retries": 6,
+        "top_score": 0.8842
+      }
+    ]
+  },
+  "seconds": 940.5,
+  "summary_table": "level      metric                           value\n-------------------------------------------------------------\nmodule     embed_model                      nomic-embed-text\nmodule     dimension                        768\nmodule     paraphrase_mean_cosine           0.7242\nmodule     unrelated_mean_cosine            0.4498\nmodule     similarity_gap                   0.2744\nmodule     paraphrase_min                   0.6229\nmodule     unrelated_max                    0.6429\nmodule     pairs_separable                  False\nmodule     embed_ms_per_chunk_mean          201.5\nmodule     embed_ms_per_chunk_p95           524.3\nmodule     chunks_timed                     20\nmodule     determinism_max_abs_diff         0.0\nmodule     deterministic                    True\ncomponent  questions                        6\ncomponent  recall@3                         0.8333\ncomponent  recall@5                         0.8333\ncomponent  mrr                              0.8333\ncomponent  ndcg@5                           0.8333\ncomponent  retrieval_p50_ms                 83.4\ncomponent  retrieval_p95_ms                 122.5\ne2e        questions                        6\ne2e        scored                           1\ne2e        fallbacks_after_retries          5\ne2e        abstention_correct_unanswerable  None\ne2e        false_abstention_rate            1\ne2e        abstention_accuracy              0\ne2e        citation_validity                1\ne2e        cites_relevant_chunk             None\ne2e        answer_correct_expect            0\ne2e        faithfulness                     None\ne2e        faithfulness_score_mean          None\ne2e        judged                           0\ne2e        judge_unavailable                0\ne2e        latency_p50_s                    0.07\ne2e        latency_p95_s                    0.07\ne2e        latency_p95_clean_s              0.07\ne2e        clean_answers                    1\ne2e        judge_agreement                  {\"labelled\": 0, \"agreement\": null}"
+}

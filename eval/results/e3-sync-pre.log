@@ -1,0 +1,10 @@
+{"ts": "2026-11-25T13:26:34Z", "logger": "rahbar.sync", "msg": "sync finished", "collection": "rahbar_e3", "chunk_config": "400/50", "seconds": 427.9, "docs_live": 10, "docs_extracted": 10, "chunks_total": 420, "chunks_embedded": 420, "chunks_deleted": 0, "chunks_superseded_flipped": 0, "orphans": 0}
+
+  docs_live                  10
+  docs_extracted             10
+  chunks_total               420
+  chunks_embedded            420
+  chunks_deleted             0
+  chunks_superseded_flipped  0
+  orphans                    0
+
