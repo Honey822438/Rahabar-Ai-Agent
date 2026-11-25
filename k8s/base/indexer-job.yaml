@@ -52,11 +52,15 @@ spec:
           imagePullPolicy: IfNotPresent
           command: ["sh", "-c"]
           # A3: verify incoming -> lake (report in /data/results), then embed only new/changed chunks.
+          # Two passes in arrival order: the corpus first, then Batch B. In ONE pass the uniqueness
+          # check kept whichever copy it met first, so the Batch B mirrors quarantined the corpus
+          # originals (fee-structure-page, grading-page): recall@5 fell to 0.68 in the cluster.
           # Re-seeding is idempotent: an unchanged file (same sha256) is skipped.
           args:
             - >-
-              python -m pipeline.ingest --seed /srv/corpus/raw --seed /srv/batch_b
-              --report-dir /data/results && python -m pipeline.sync
+              python -m pipeline.ingest --seed /srv/corpus/raw --report-dir /data/results &&
+              python -m pipeline.ingest --seed /srv/batch_b --report-dir /data/results &&
+              python -m pipeline.sync
           envFrom:
             - configMapRef: { name: rahbar-config }
           # Measured peak 196 MiB (cgroup memory.peak, full corpus with OCR). Request covers the peak;
