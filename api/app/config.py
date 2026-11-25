@@ -56,6 +56,10 @@ class Settings:
     groq_models: str = "openai/gpt-oss-20b,qwen/qwen3.8-27b"
     groq_api_key: str = field(default="", repr=False)   # from the Secret; never log it
 
+    # A3 D1/D4: per-query traces (JSON lines) and the injection rail. "" = stdout only.
+    trace_file: str = "/data/traces/traces.jsonl"
+    injection_rail: str = "drop"     # drop | off (flag only)
+
     log_level: str = "INFO"
 
 
@@ -82,5 +86,7 @@ def get_settings() -> Settings:
         groq_base_url=os.environ.get("GROQ_BASE_URL", "https://api.groq.com/openai/v1/"),
         groq_models=os.environ.get("GROQ_MODELS", "openai/gpt-oss-20b,qwen/qwen3.8-27b"),
         groq_api_key=os.environ.get("GROQ_API_KEY", ""),
+        trace_file=os.environ.get("TRACE_FILE", "/data/traces/traces.jsonl"),
+        injection_rail=os.environ.get("INJECTION_RAIL", "drop"),
         log_level=os.environ.get("LOG_LEVEL", "INFO"),
     )

@@ -107,7 +107,17 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
         if not fallback:
             break
         time.sleep(BACKOFF_SECONDS * 2 * (attempt + 1))
-    passages = retriever.retrieve(question["question"], k=settings.top_k)   # same as the call
+    for wait in (5, 30, 0):      # the local Ollama can time out under load: retry, then raise
+        try:
+            passages = retriever.retrieve(question["question"], k=settings.top_k)  # same call
+            break
+        except httpx.HTTPError:
+            if not wait:
+                raise
+            time.sleep(wait)
+    # Only what the answer used: the injection rail (D4) may have dropped a retrieved chunk.
+    used = {r.chunk_id for r in response.retrieved}
+    passages = [p for p in passages if p.chunk_id in used]
     by_key = {(p.source, p.section, p.page): p for p in passages}
     retrieved_keys = {(r.source, r.section, r.page) for r in response.retrieved}
     cites = [(c.source, c.section, c.page) for c in response.citations]

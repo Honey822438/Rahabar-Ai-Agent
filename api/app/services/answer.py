@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 import logging
+import time
+import uuid
 
 from ..config import Settings
 from ..logjson import request_id_var
 from ..providers.llm.base import LLMProvider
 from ..retrieval.base import Retriever
 from ..schemas import Answer, AskResponse, Passage, RetrievedRef
-from . import telemetry
+from . import guardrails, telemetry, tracing
 from .cache import SemanticCache, skip_cache
 from .grounding import ABSTENTION, FALLBACK, enforce_citations
+from .prompt import build_messages
 
 log = logging.getLogger("rahbar.answer")
 
@@ -65,23 +68,45 @@ def _remember(
         log.warning("cache write failed", extra={"error": type(exc).__name__})
 
 
+def _ms(start: float) -> float:
+    return round((time.perf_counter() - start) * 1000, 1)
+
+
 def answer_question(
     question: str, retriever: Retriever, provider: LLMProvider, settings: Settings,
     cache: SemanticCache | None = None,
 ) -> AskResponse:
     request_id = request_id_var.get()
+    if request_id == "-":            # called outside an HTTP request (eval suite, CLI)
+        request_id = uuid.uuid4().hex
     telemetry.take_generation()
+    started = time.perf_counter()
+    latency: dict[str, float] = {}
     passages: list[Passage] = []
+    raw: list[Passage] = []          # as retrieved, before the injection rail
+    rails: list[dict[str, object]] = guardrails.screen_query(question)
     vector: list[float] | None = None
     generation: str | None = None
     hit: AskResponse | None = None
     used_fallback = False
+    prompt: list[dict[str, str]] | None = None
     try:
         with telemetry.RETRIEVAL_SECONDS.time():
+            t = time.perf_counter()
             vector = retriever.embed(question)
+            latency["embed"] = _ms(t)
+            t = time.perf_counter()
             generation, hit = _cache_lookup(cache, retriever, question, vector)
+            latency["cache"] = _ms(t)
             if hit is None:
-                passages = retriever.retrieve(question, k=settings.top_k, vector=vector)
+                t = time.perf_counter()
+                raw = retriever.retrieve(question, k=settings.top_k, vector=vector)
+                latency["retrieve"] = _ms(t)
+                t = time.perf_counter()
+                passages, dropped = guardrails.screen_passages(
+                    raw, drop=settings.injection_rail != "off")
+                rails += dropped
+                latency["guardrail"] = _ms(t)
     except Exception as exc:  # embedding service or Chroma down: a safe reply, never a 500
         log.warning("retrieval failed", extra={"error": type(exc).__name__})
         answer, used_fallback = FALLBACK, True
@@ -94,9 +119,12 @@ def answer_question(
             # The model is never asked: it can't invent an answer from evidence it doesn't get.
             answer = ABSTENTION
         else:
+            prompt = build_messages(question, passages)
+            t = time.perf_counter()
             answer, used_fallback = _generate(question, passages, provider)
+            latency["generate"] = _ms(t)
             answer = enforce_citations(answer, passages)
-
+    latency["total"] = _ms(started)
     if hit is not None:
         response = hit.model_copy(update={"request_id": request_id, "cached": True})
     else:
@@ -120,6 +148,10 @@ def answer_question(
     safe_to_cache = hit is None and response.answered_from_context and not used_fallback
     _remember(cache, generation, question, vector, response, safe_to_cache)
 
+    gen = telemetry.take_generation()
+    _trace(question, settings, retriever, provider, request_id, raw, passages, rails, prompt,
+           response, gen, latency, hit is not None, cache is not None and generation is not None,
+           used_fallback, generation)
     log.info(
         "answered",
         extra={
@@ -132,7 +164,64 @@ def answer_question(
             "abstained": not response.answered_from_context and not used_fallback,
             "cached": response.cached,
             "fallback": used_fallback,
-            **telemetry.take_generation(),
+            "guardrails": [f"{g['action']}:{g['rail']}" for g in rails],
+            **gen,
         },
     )
     return response
+
+
+def _trace(question: str, settings: Settings, retriever: Retriever, provider: LLMProvider,
+           request_id: str, raw: list[Passage], passages: list[Passage],
+           rails: list[dict[str, object]], prompt: list[dict[str, str]] | None,
+           response: AskResponse, gen: dict[str, object], latency: dict[str, float],
+           cached: bool, cache_lookup: bool, fallback: bool, generation: str | None) -> None:
+    """D1: everything needed to explain this answer later, as one record."""
+    try:
+        kept = {p.chunk_id for p in passages}
+        filters: dict[str, object] = getattr(retriever, "filters", lambda q: {})(question)
+        version = getattr(retriever, "embed_version", lambda: "n/a")()
+        record = {
+            "trace_id": request_id,
+            "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "query": question,
+            "rewritten_query": None,        # no query rewriting in this pipeline
+            "embedding": {"model": settings.embed_model, "version": version,
+                          "query_prefix": "search_query: "
+                          if settings.embed_model.startswith("nomic") else ""},
+            "collection": settings.collection,
+            "index_generation": generation,
+            "filters": filters,
+            "top_k": settings.top_k,
+            "relevance_floor": settings.relevance_floor,
+            "top1_score": round(max((p.score for p in raw), default=0.0), 4) if raw else None,
+            "retrieved": [{"rank": i, "chunk_id": p.chunk_id, "doc_id": p.doc_id,
+                           "doc_version": p.doc_version, "source": p.source,
+                           "section": p.section, "page": p.page, "score": round(p.score, 4),
+                           "boosted": p.boosted, "dropped": p.chunk_id not in kept}
+                          for i, p in enumerate(raw, 1)],
+            "reranked_order": [p.chunk_id for p in passages],
+            "rerank": "exact-term boost (clause numbers, course codes) then cosine",
+            "context": [p.model_dump(include={"chunk_id", "text", "source", "section",
+                                              "page", "score"}) for p in passages]
+            if prompt else [],
+            "prompt_hash": tracing.prompt_hash(prompt) if prompt else None,
+            "prompt": prompt,
+            "llm": {"provider": provider.name, "model": gen.get("model", settings.llm_model),
+                    "temperature": settings.temperature, "seed": settings.llm_seed or None,
+                    "response_format": "json_object", "called": prompt is not None,
+                    "tokens_in": gen.get("tokens_in"), "tokens_out": gen.get("tokens_out")},
+            "response": {"answer": response.answer,
+                         "answered_from_context": response.answered_from_context,
+                         "confidence": response.confidence},
+            "citations": [c.model_dump() for c in response.citations],
+            "guardrails": rails,
+            "abstained": not response.answered_from_context and not fallback,
+            "fallback": fallback,
+            "cached": cached,
+            "cache_lookup": cache_lookup,
+            "latency_ms": latency,
+        }
+        tracing.emit(record, settings.trace_file)
+    except Exception as exc:  # tracing must never fail an answer
+        log.warning("trace failed", extra={"error": type(exc).__name__})

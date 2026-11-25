@@ -36,3 +36,7 @@ data:
   OLLAMA_URL: "http://host.minikube.internal:11434"
   CORPUS_DIR: "/corpus"
   LOG_LEVEL: "INFO"
+  # A3 D1: one JSON trace per query to stdout and this file (the /data PVC; F wires the mount).
+  TRACE_FILE: "/data/traces/traces.jsonl"
+  # A3 D4: drop retrieved chunks that carry instructions to the model ("off" = flag only).
+  INJECTION_RAIL: "drop"

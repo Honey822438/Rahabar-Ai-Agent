@@ -26,6 +26,10 @@ class Passage(BaseModel):
     section: str
     page: int | None = None
     score: float = Field(description="Similarity, higher is closer (1 - cosine distance).")
+    # For the trace (A3 D1); optional so stubs and tests need not set them.
+    doc_id: str | None = None
+    doc_version: str | None = None
+    boosted: bool = False            # moved up by the exact-term boost
 
 
 class Citation(BaseModel):
