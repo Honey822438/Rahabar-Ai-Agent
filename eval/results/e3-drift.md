@@ -39,8 +39,9 @@ provider counts and scored metrics are in the table below (`*-groq.json`).
 
 Reading:
 - The probes show Batch B working end to end. The new 2026 faculty policy answers d01/d02, and the sports
-  week date (d04) is now answered. d05 names the right fair date ("15 January 2027"), but the expect
-  string "15 January" missed it because of the year formatting. Worth fixing in the probe file; it is not a model error.
+  week date (d04) is now answered. d05 names the right fair date ("15 January 2027"), but Groq wrote
+  it with narrow no-break spaces (U+202F), so the plain substring "15 January" did not match. This is a scoring
+  artefact, not a model error. Follow-up: normalise Unicode spaces in the expect check.
   d03 abstains because the injection rail dropped its only source. d06 abstains correctly, and "1.00" never appears.
 - On the golden set, retrieval is identical, but expected-fact and faithfulness drop. **That is the provider change
   (Groq gpt-oss-20b instead of Gemini), not Batch B.** The prompts, retrieved chunks and
