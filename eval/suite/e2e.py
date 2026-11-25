@@ -22,6 +22,7 @@ import json
 import logging
 from collections import Counter
 import os
+import re
 import statistics
 import time
 from typing import Any
@@ -95,6 +96,16 @@ def judge(settings: Any, evidence: list[dict[str, Any]], answer: str, pacer: Pac
                     "score": float(verdict.get("score", 0.0)),
                     "unsupported": list(verdict.get("unsupported", [])), "judge_model": model}
     return None
+
+
+_SPACES = re.compile(r"[\s\u00a0\u2007\u202f\u2009\u200a\u2002-\u2006]+")
+_DASHES = str.maketrans({c: "-" for c in "\u2010\u2011\u2012\u2013\u2014"})
+
+
+def norm(text: str) -> str:
+    """For the expected-fact substring check: models write "15\u202fJanuary" (narrow
+    no-break space) or "non\u2011breaking" hyphens; compare on plain spaces/hyphens, lower case."""
+    return _SPACES.sub(" ", text.translate(_DASHES)).strip().lower()
 
 
 class _OutageCounter(logging.Handler):
@@ -175,7 +186,7 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
         "citations_valid": all(c in retrieved_keys for c in cites),
         "cites_relevant": any(is_relevant(by_key[c], question["relevant"])
                               for c in cites if c in by_key) if question["relevant"] else None,
-        "expect_found": (question["expect"].lower() in response.answer.lower()
+        "expect_found": (norm(question["expect"]) in norm(response.answer)
                          if should_answer and question["expect"] else None),
         "seconds": round(seconds, 3), "provider": response.provider, "fallback": fallback,
         "attempts": attempt + 1,

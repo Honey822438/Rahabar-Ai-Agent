@@ -1446,7 +1446,8 @@
         "labelled": 0,
         "agreement": null
       },
-      "answered_by_note": "backfilled from traces.jsonl (the suite logger missed INFO lines; fixed after this run)"
+      "answered_by_note": "backfilled from traces.jsonl (the suite logger missed INFO lines; fixed after this run)",
+      "rescored_note": "expect_found rescored with Unicode-space normalisation (same answers, no new calls)"
     },
     "per_question": [
       {

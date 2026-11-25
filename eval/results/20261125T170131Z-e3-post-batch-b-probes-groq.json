@@ -372,7 +372,7 @@
       "abstention_accuracy": 0.6667,
       "citation_validity": 1,
       "cites_relevant_chunk": 1,
-      "answer_correct_expect": 0.5,
+      "answer_correct_expect": 0.6667,
       "faithfulness": 1,
       "faithfulness_score_mean": 1.0,
       "judged": 4,
@@ -385,7 +385,8 @@
         "labelled": 0,
         "agreement": null
       },
-      "answered_by_note": "backfilled from traces.jsonl (the suite logger missed INFO lines; fixed after this run)"
+      "answered_by_note": "backfilled from traces.jsonl (the suite logger missed INFO lines; fixed after this run)",
+      "rescored_note": "expect_found rescored with Unicode-space normalisation (same answers, no new calls)"
     },
     "per_question": [
       {
@@ -622,7 +623,7 @@
         ],
         "citations_valid": true,
         "cites_relevant": true,
-        "expect_found": false,
+        "expect_found": true,
         "seconds": 1.542,
         "provider": "hosted",
         "fallback": false,
