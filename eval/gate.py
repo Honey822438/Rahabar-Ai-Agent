@@ -60,17 +60,20 @@ def main() -> int:
     for rule in config["rules"]:
         b, c = metric(base, rule["metric"]), metric(cand, rule["metric"])
         ok, bar = check(rule, b, c)
-        failed += not ok
-        missing += c is None
+        enforced = rule.get("enforce", True)
+        failed += enforced and not ok
+        missing += enforced and c is None
+        result = ("PASS" if ok else "**FAIL**") if enforced else \
+            f"report only ({'within' if ok else 'over'})"
         rows.append(f"| {rule['metric']} | {b if b is not None else '-'} | "
-                    f"{c if c is not None else '-'} | {bar} | {'PASS' if ok else '**FAIL**'} |")
+                    f"{c if c is not None else '-'} | {bar} | {result} |")
     verdict = "PASS" if not failed else "FAIL"
     report = "\n".join([
         f"# Release gate: {cand['label']} ({cand['config']['collection']}) -> {verdict}", "",
         f"baseline `{base_path.name}` ({base['config']['collection']}), candidate "
         f"`{args.candidate.name}`, rules `{args.config.name}`", "",
         "| metric | baseline | candidate | rule | result |", "|---|---|---|---|---|", *rows, "",
-        f"{len(rows) - failed}/{len(rows)} rules passed -> **{verdict}**", ""])
+        f"{failed} enforced rule(s) failed -> **{verdict}**", ""])
     print(report)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     (args.out_dir / f"gate-{cand['label']}.md").write_text(report, encoding="utf-8")

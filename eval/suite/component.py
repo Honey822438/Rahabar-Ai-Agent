@@ -29,11 +29,15 @@ def retriever_for(settings: Any) -> Any:
     return ChromaRetriever(settings)
 
 
-def score_question(retriever: Any, question: dict[str, Any]) -> dict[str, Any]:
+def score_question(retriever: Any, question: dict[str, Any], served: int = DEPTH
+                   ) -> dict[str, Any]:
     started = time.perf_counter()
     passages = retriever.retrieve(question["question"], k=DEPTH)
     seconds = time.perf_counter() - started
-    flags = [is_relevant(p, question["relevant"]) for p in passages]
+    # A chunk ranked below the service's top_k never reaches the model: a miss. Applied only
+    # when top_k < 5, so @3/@5 and MRR of every top_k >= 5 run keep their earlier definition.
+    flags = [is_relevant(p, question["relevant"]) and (served >= 5 or i < served)
+             for i, p in enumerate(passages)]
     first = next((i + 1 for i, hit in enumerate(flags) if hit), None)
     dcg = sum(1 / math.log2(i + 2) for i, hit in enumerate(flags[:5]) if hit)
     ideal = sum(1 / math.log2(i + 2) for i in range(min(5, sum(flags) or 1)))
@@ -60,8 +64,8 @@ def summarise(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def evaluate(settings: Any, golden: list[dict[str, Any]]) -> dict[str, Any]:
     retriever = retriever_for(settings)
-    rows = [score_question(retriever, q) for q in golden if q["relevant"]]
-    return {"collection": settings.collection, "summary": summarise(rows), "per_question": rows}
+    rows = [score_question(retriever, q, settings.top_k) for q in golden if q["relevant"]]
+    return {"collection": settings.collection, "served_top_k": settings.top_k, "summary": summarise(rows), "per_question": rows}
 
 
 def build_noise_collection(settings: Any) -> tuple[str, int]:

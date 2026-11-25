@@ -19,6 +19,7 @@ run (eval/labels/to_label.jsonl); agreement % = labels equal to the judge's verd
 from __future__ import annotations
 
 import json
+import logging
 import os
 import statistics
 import time
@@ -93,15 +94,41 @@ def judge(settings: Any, evidence: list[dict[str, Any]], answer: str, pacer: Pac
     return None
 
 
+class _OutageCounter(logging.Handler):
+    """Counts provider failures (warnings from rahbar.hosted / rahbar.answer) during a call."""
+
+    NAMES = ("rahbar.hosted", "rahbar.answer")
+
+    def __init__(self) -> None:
+        super().__init__(logging.WARNING)
+        self.count = 0
+
+    def emit(self, record: logging.LogRecord) -> None:
+        if record.getMessage().startswith(("provider", "generation failed")):
+            self.count += 1
+
+    def __enter__(self) -> "_OutageCounter":
+        for name in self.NAMES:
+            logging.getLogger(name).addHandler(self)
+        return self
+
+    def __exit__(self, *exc: object) -> None:
+        for name in self.NAMES:
+            logging.getLogger(name).removeHandler(self)
+
+
 def run_question(settings: Any, retriever: Any, provider: Any, question: dict[str, Any],
                  pacer: Pacer, use_judge: bool) -> dict[str, Any]:
     from app.services.answer import FALLBACK, answer_question
 
+    outage = _OutageCounter()
     for attempt in range(3):     # a canned fallback = the hosted model was unavailable: retry
         pacer.wait()
         started = time.perf_counter()
-        response = answer_question(question["question"], retriever, provider, settings,
-                                   cache=None)
+        outage.count = 0
+        with outage:
+            response = answer_question(question["question"], retriever, provider, settings,
+                                       cache=None)
         seconds = time.perf_counter() - started
         fallback = response.answer == FALLBACK.answer
         if not fallback:
@@ -134,6 +161,8 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
                          if should_answer and question["expect"] else None),
         "seconds": round(seconds, 3), "provider": response.provider, "fallback": fallback,
         "attempts": attempt + 1,
+        # provider 429/5xx/timeouts inside the call (retry, failover): an outage, not our code
+        "outage_retries": outage.count + attempt,
         "top_score": round(max((r.score for r in response.retrieved), default=0.0), 4),
     }
     if use_judge and response.answered_from_context:
@@ -173,6 +202,7 @@ def evaluate(settings: Any, golden: list[dict[str, Any]], use_judge: bool = True
     should_answer = [r for r in rows if r["type"] != "unanswerable"]
     judged = [r["judge"] for r in rows if r.get("judge")]
     times = [r["seconds"] for r in rows]
+    clean = [r["seconds"] for r in rows if not r.get("outage_retries")]
     expect = [r["expect_found"] for r in rows if r["expect_found"] is not None]
     relevant = [r["cites_relevant"] for r in rows if r["cites_relevant"] is not None and r["answered"]]
     summary = {
@@ -193,6 +223,9 @@ def evaluate(settings: Any, golden: list[dict[str, Any]], use_judge: bool = True
         "judge_unavailable": sum("judge" in r and r["judge"] is None for r in rows),
         "latency_p50_s": round(percentile(times, 50), 3),
         "latency_p95_s": round(percentile(times, 95), 3),
+        # Same, over the answers that needed no provider retry: what our pipeline costs.
+        "latency_p95_clean_s": round(percentile(clean, 95), 3) if clean else None,
+        "clean_answers": len(clean),
         "judge_agreement": agreement(),
     }
     return {"collection": settings.collection, "model": settings.llm_model,
