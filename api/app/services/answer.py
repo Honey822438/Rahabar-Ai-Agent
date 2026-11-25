@@ -210,6 +210,9 @@ def _trace(question: str, settings: Settings, retriever: Retriever, provider: LL
             "llm": {"provider": provider.name, "model": gen.get("model", settings.llm_model),
                     "temperature": settings.temperature, "seed": settings.llm_seed or None,
                     "response_format": "json_object", "called": prompt is not None,
+                    # which hosted target answered (gemini / groq) and what failed before it
+                    "answered_by": "fallback" if fallback else gen.get("llm_target"),
+                    "failed_over_from": gen.get("failed_over_from", []),
                     "tokens_in": gen.get("tokens_in"), "tokens_out": gen.get("tokens_out")},
             "response": {"answer": response.answer,
                          "answered_from_context": response.answered_from_context,

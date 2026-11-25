@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import logging
+from collections import Counter
 import os
 import statistics
 import time
@@ -100,12 +101,18 @@ class _OutageCounter(logging.Handler):
     NAMES = ("rahbar.hosted", "rahbar.answer")
 
     def __init__(self) -> None:
-        super().__init__(logging.WARNING)
+        super().__init__(logging.INFO)
         self.count = 0
+        self.answered_by: str | None = None      # from the "answered" log line (llm_target)
+        self.failed_over_from: list[str] = []
 
     def emit(self, record: logging.LogRecord) -> None:
-        if record.getMessage().startswith(("provider", "generation failed")):
+        msg = record.getMessage()
+        if msg.startswith(("provider", "generation failed")):
             self.count += 1
+        elif msg == "answered":
+            self.answered_by = getattr(record, "llm_target", None)
+            self.failed_over_from = list(getattr(record, "failed_over_from", None) or [])
 
     def __enter__(self) -> "_OutageCounter":
         for name in self.NAMES:
@@ -125,7 +132,7 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
     for attempt in range(3):     # a canned fallback = the hosted model was unavailable: retry
         pacer.wait()
         started = time.perf_counter()
-        outage.count = 0
+        outage.count, outage.answered_by, outage.failed_over_from = 0, None, []
         with outage:
             response = answer_question(question["question"], retriever, provider, settings,
                                        cache=None)
@@ -161,6 +168,9 @@ def run_question(settings: Any, retriever: Any, provider: Any, question: dict[st
                          if should_answer and question["expect"] else None),
         "seconds": round(seconds, 3), "provider": response.provider, "fallback": fallback,
         "attempts": attempt + 1,
+        # gemini / groq / fallback, or None when no model was called (relevance-floor abstention)
+        "answered_by": "fallback" if fallback else outage.answered_by,
+        "failed_over_from": outage.failed_over_from,
         # provider 429/5xx/timeouts inside the call (retry, failover): an outage, not our code
         "outage_retries": outage.count + attempt,
         "top_score": round(max((r.score for r in response.retrieved), default=0.0), 4),
@@ -209,9 +219,12 @@ def evaluate(settings: Any, golden: list[dict[str, Any]], use_judge: bool = True
         "questions": len(all_rows),
         "scored": len(rows),
         "fallbacks_after_retries": len(all_rows) - len(rows),
+        "answered_by": dict(Counter(str(r.get("answered_by")) for r in all_rows)),
+        "gemini_failures": sum(any(f.startswith("gemini") for f in r.get("failed_over_from", []))
+                               for r in all_rows),
         "abstention_correct_unanswerable": round(statistics.mean(r["abstention_correct"]
-                                                                 for r in must_abstain), 4),
-        "false_abstention_rate": round(statistics.mean(not r["answered"] for r in should_answer), 4),
+                                                                 for r in must_abstain), 4) if must_abstain else None,
+        "false_abstention_rate": round(statistics.mean(not r["answered"] for r in should_answer), 4) if should_answer else None,
         "abstention_accuracy": round(statistics.mean(r["abstention_correct"] for r in rows), 4),
         "citation_validity": round(statistics.mean(r["citations_valid"] for r in rows), 4),
         "cites_relevant_chunk": round(statistics.mean(relevant), 4) if relevant else None,
