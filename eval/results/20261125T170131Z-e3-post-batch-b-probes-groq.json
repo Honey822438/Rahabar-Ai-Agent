@@ -1,0 +1,701 @@
+{
+  "label": "e3-post-batch-b-probes-groq",
+  "timestamp": "2026-11-25T16:49:52Z",
+  "git_sha": "5e93c07",
+  "seed": 42,
+  "golden": "drift_probes.jsonl",
+  "golden_questions": 6,
+  "config": {
+    "collection": "rahbar_e3",
+    "embed_model": "nomic-embed-text",
+    "top_k": 5,
+    "relevance_floor": 0.65,
+    "llm_model": "gemini-flash-lite-latest",
+    "temperature": 0.0
+  },
+  "module": {
+    "embed_model": "nomic-embed-text",
+    "dimension": 768,
+    "paraphrase_mean_cosine": 0.7242,
+    "unrelated_mean_cosine": 0.4498,
+    "similarity_gap": 0.2744,
+    "paraphrase_min": 0.6229,
+    "unrelated_max": 0.6429,
+    "pairs_separable": false,
+    "embed_ms_per_chunk_mean": 230.1,
+    "embed_ms_per_chunk_p95": 590.4,
+    "chunks_timed": 20,
+    "determinism_max_abs_diff": 0.0,
+    "deterministic": true
+  },
+  "component": {
+    "collection": "rahbar_e3",
+    "served_top_k": 5,
+    "summary": {
+      "questions": 6,
+      "recall@3": 0.8333,
+      "recall@5": 0.8333,
+      "mrr": 0.8333,
+      "ndcg@5": 0.8333,
+      "retrieval_p50_ms": 100.6,
+      "retrieval_p95_ms": 155.2
+    },
+    "per_question": [
+      {
+        "id": "d01",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.15515885300192167,
+        "top5": [
+          {
+            "chunk_id": "7b7e2e132909fdc97f569e9af3915822",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "6. Evaluation criteria for a technical start-up",
+            "page": 1,
+            "score": 0.8933,
+            "relevant": true
+          },
+          {
+            "chunk_id": "62a8c92527c84c6961120069b91f40f9",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "score": 0.6957,
+            "relevant": true
+          },
+          {
+            "chunk_id": "d7d6a559b098d2c16aa53692be7abbb5",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "1. Purpose",
+            "page": 1,
+            "score": 0.6857,
+            "relevant": true
+          },
+          {
+            "chunk_id": "eac870c1dea95d1e24921a55abbcf880",
+            "source": "annual-report-2023-24.pdf",
+            "section": "18. Doctor of Philosophy (Software Engineering) ISB, KHI Sanctioned",
+            "page": 71,
+            "score": 0.679,
+            "relevant": false
+          },
+          {
+            "chunk_id": "3d649ccda91ecec90e605eede3c62b3f",
+            "source": "annual-report-2023-24.pdf",
+            "section": "9. Collaborative Research and Development",
+            "page": 82,
+            "score": 0.6713,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d02",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.10472164200109546,
+        "top5": [
+          {
+            "chunk_id": "62a8c92527c84c6961120069b91f40f9",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "score": 0.7561,
+            "relevant": true
+          },
+          {
+            "chunk_id": "d7d6a559b098d2c16aa53692be7abbb5",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "1. Purpose",
+            "page": 1,
+            "score": 0.7179,
+            "relevant": true
+          },
+          {
+            "chunk_id": "7b7e2e132909fdc97f569e9af3915822",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "6. Evaluation criteria for a technical start-up",
+            "page": 1,
+            "score": 0.7142,
+            "relevant": true
+          },
+          {
+            "chunk_id": "b936253c97fecd8f832d6de9e394da56",
+            "source": "annual-report-2023-24.pdf",
+            "section": "8. Memoranda of Understanding (MOUs)",
+            "page": 81,
+            "score": 0.6254,
+            "relevant": false
+          },
+          {
+            "chunk_id": "df342709f484b2a2ef765d6b3ef589f2",
+            "source": "annual-report-2019-20.pdf",
+            "section": "Accomplishments",
+            "page": 23,
+            "score": 0.6205,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d03",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08788787400044384,
+        "top5": [
+          {
+            "chunk_id": "f7ebc36d7716609c6924475baf06b96a",
+            "source": "b-injected-library-notice.md",
+            "section": "Library Timings Notice (Fall 2026)",
+            "page": 1,
+            "score": 0.7984,
+            "relevant": true
+          },
+          {
+            "chunk_id": "a0474250a5705a9b614b7c579b197aef",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 34,
+            "score": 0.5768,
+            "relevant": false
+          },
+          {
+            "chunk_id": "c4f09c029aff45d0f8084b778c0fd245",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 32,
+            "score": 0.5662,
+            "relevant": false
+          },
+          {
+            "chunk_id": "ec15827e42214b2b026e0a4d17ceb783",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vii - Library Services And Rules",
+            "page": 31,
+            "score": 0.5655,
+            "relevant": false
+          },
+          {
+            "chunk_id": "04e34b036668c671911929e804bda3d8",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 35,
+            "score": 0.5577,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d04",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.09672718000001623,
+        "top5": [
+          {
+            "chunk_id": "1c316a3b4b2dbcee071640f6d9755b7b",
+            "source": "b-sports-week-2026.md",
+            "section": "Inter-Campus Sports Week 2026",
+            "page": 1,
+            "score": 0.8688,
+            "relevant": true
+          },
+          {
+            "chunk_id": "5206507348f736a59e3c823924224d6a",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 31,
+            "score": 0.6749,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1589bc4ebd53828cf0b57a5352e80fa1",
+            "source": "b-career-fair-2026.md",
+            "section": "Career Fair 2026",
+            "page": 1,
+            "score": 0.6718,
+            "relevant": false
+          },
+          {
+            "chunk_id": "64877a5921af225e10af40af0b8d6632",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 43,
+            "score": 0.6712,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1d779b057e9845ab4d092bcb3f2716f0",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 30,
+            "score": 0.6595,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d05",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.10061888599739177,
+        "top5": [
+          {
+            "chunk_id": "1589bc4ebd53828cf0b57a5352e80fa1",
+            "source": "b-career-fair-2026.md",
+            "section": "Career Fair 2026",
+            "page": 1,
+            "score": 0.8457,
+            "relevant": true
+          },
+          {
+            "chunk_id": "43dafcf68b9debc7efe3f0d0b5b52955",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Lahore Campus",
+            "page": 47,
+            "score": 0.7505,
+            "relevant": false
+          },
+          {
+            "chunk_id": "68c3a9da9f0ce69517028c355b037956",
+            "source": "annual-report-2023-24.pdf",
+            "section": "4. Professional Development Initiatives /Seminars",
+            "page": 81,
+            "score": 0.7324,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6d7b46d897d701a56010ddb69f2f2f23",
+            "source": "annual-report-2023-24.pdf",
+            "section": "Chapter-8 Industrial Collaboration",
+            "page": 79,
+            "score": 0.6977,
+            "relevant": false
+          },
+          {
+            "chunk_id": "31b786d6c2d030d49fa3fd4d86591661",
+            "source": "annual-report-2023-24.pdf",
+            "section": "3. Recruitment Drives",
+            "page": 79,
+            "score": 0.6784,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "d06",
+        "type": "answerable",
+        "first_relevant_rank": null,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.0,
+        "ndcg@5": 0.0,
+        "seconds": 0.1117082910022873,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.8842,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.8254,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.7208,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7154,
+            "relevant": false
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.6942,
+            "relevant": false
+          }
+        ]
+      }
+    ]
+  },
+  "e2e": {
+    "collection": "rahbar_e3",
+    "model": "gemini-flash-lite-latest",
+    "summary": {
+      "questions": 6,
+      "scored": 6,
+      "fallbacks_after_retries": 0,
+      "answered_by": {
+        "groq": 5,
+        "None": 1
+      },
+      "gemini_failures": 5,
+      "abstention_correct_unanswerable": null,
+      "false_abstention_rate": 0.3333,
+      "abstention_accuracy": 0.6667,
+      "citation_validity": 1,
+      "cites_relevant_chunk": 1,
+      "answer_correct_expect": 0.5,
+      "faithfulness": 1,
+      "faithfulness_score_mean": 1.0,
+      "judged": 4,
+      "judge_unavailable": 0,
+      "latency_p50_s": 1.481,
+      "latency_p95_s": 1.826,
+      "latency_p95_clean_s": 0.076,
+      "clean_answers": 1,
+      "judge_agreement": {
+        "labelled": 0,
+        "agreement": null
+      },
+      "answered_by_note": "backfilled from traces.jsonl (the suite logger missed INFO lines; fixed after this run)"
+    },
+    "per_question": [
+      {
+        "id": "d01",
+        "type": "answerable",
+        "question": "Within how many years must a faculty member have published a JCR journal paper to apply for a technical start-up?",
+        "answer": "Within three years before the date of application.",
+        "answered": true,
+        "abstention_correct": true,
+        "citations": [
+          [
+            "b-faculty-startup-policy-2026.md",
+            "6. Evaluation criteria for a technical start-up",
+            1
+          ]
+        ],
+        "citations_valid": true,
+        "cites_relevant": true,
+        "expect_found": true,
+        "seconds": 1.481,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "answered_by": "groq",
+        "failed_over_from": [
+          "gemini:429"
+        ],
+        "outage_retries": 1,
+        "top_score": 0.8933,
+        "evidence": [
+          {
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "6. Evaluation criteria for a technical start-up",
+            "page": 1,
+            "text": "6. Evaluation criteria for a technical start-up\n6.1 The faculty member must have published at least one journal paper in a JCR impact-factor journal with NUCES affiliation within **three years** before the date of application (the 2022 policy required two years).\n\n6.2 The faculty member must have been Principal Investigator or Co-Principal Investigator of an externally funded research project within the last five years.\n\n6.3 The start-up must align with ongoing research and degree programmes at the university, and must aim to commercialise emerging technologies."
+          },
+          {
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "text": "9. Conditions\n9.1 The university provides no infrastructure or financial support to the start-up as part of this approval; any support is requested separately through the campus Director.\n\n9.2 The start-up must notify the campus Director and the ORIC office if it employs or pays any university staff or faculty member.\n\n9.3 A workload exemption of **up to 3 credit hours per semester** may be granted by the Dean for the first two semesters after approval (the 2022 policy allowed no exemption).\n\n9.4 Approval is reviewed every **two years**."
+          },
+          {
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "1. Purpose",
+            "page": 1,
+            "text": "1. Purpose\nThese guidelines cover full-time faculty members who found, manage, hold equity in, sit on the board of, or receive revenue from a technical start-up that commercialises research conducted at NUCES campuses. This revision replaces the policy dated 30 May 2022."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "18. Doctor of Philosophy (Software Engineering) ISB, KHI Sanctioned",
+            "page": 71,
+            "text": "18. Doctor of Philosophy (Software Engineering) ISB, KHI Sanctioned\nTable 3 Recognized by HEC for Commencement of MS and PhD Programs Program Level Self-Assessment\n\nAll the programs went through self-assessment after an interval of 2 years as per QAA, HEC guidelines. The cycle started with the formation of a Program Team (PT) for preparing the Self-Assessment Report (SAR) as per HEC guidelines. An Assessment Team (AT) is then constituted to evaluate the program through a scheduled visit and submit findings. Based on the AT report, an implementation plan is prepared, followed by periodic QEC reviews to ensure corrective actions are executed effectively.\n\nDuring the reporting period (2023-24), the self-assessment process for all programs whose next cycle was due were concluded. The table below provides campus-wise details of the programs that went under SAP along with number of corrective actions taken during 2023- 24 against the findings highlighted by the AT during various AT visits under the process of self-assessment.\n\nCampus Total Programs No. Programs went under SAP No. of Corrective as per its due SAP cycle actions taken in year 2023-24 CFD 11 1 20 ISB 23 13 09 KHI 15 5 19 LHR 24 8 103 PWR 9 2 36\n\nTable 4 No. of Programs went under SAP and Corrective Actions taken during 2023-24 Institutional Level Self-Assessment\n\nThe Institutional level self-assessment has been initiated by forming an IPE Committee, which compiles the University Portfolio Report (UPR) and University-wide Data (UwD) as per HEC guidelines. A Review Panel, constituted by the Campus Director, conducts a 3day campus visit, reviews document, interacts with stakeholders, and provides feedback. Based on the panel's report, an Implementation Plan is prepared and periodically monitored by QEC to ensure progress. Details of corrective measures taken during 2023-24 against the findings highlighted by the review panel during its visits. Campus No. of Corrective Action CFD 27 ISB 4 KHI 19 LHR 31 PWR 24\n\nTable 5 No. of Corrective Actions Taken against the findings of Institutional Level Self-Assessment Post Graduate Program Review"
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "9. Collaborative Research and Development",
+            "page": 82,
+            "text": "9. Collaborative Research and Development\nThrough continuous collaboration and an ongoing MoU with UpStart Commerce, FAST-NUCES final-year students from 2023 and 2024 successfully secured industry-related research projects funded by the company."
+          }
+        ],
+        "judge": {
+          "faithful": true,
+          "score": 1.0,
+          "unsupported": [],
+          "judge_model": "openai/gpt-oss-20b"
+        }
+      },
+      {
+        "id": "d02",
+        "type": "answerable",
+        "question": "Can a faculty member who founds a technical start-up get a workload exemption?",
+        "answer": "Yes. Under the current faculty‑startup policy, a faculty member who founds a technical start‑up may receive a workload exemption of up to 3 credit hours per semester for the first two semesters after approval, granted by the Dean.",
+        "answered": true,
+        "abstention_correct": true,
+        "citations": [
+          [
+            "b-faculty-startup-policy-2026.md",
+            "9. Conditions",
+            1
+          ]
+        ],
+        "citations_valid": true,
+        "cites_relevant": true,
+        "expect_found": true,
+        "seconds": 1.62,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "answered_by": "groq",
+        "failed_over_from": [
+          "gemini:429"
+        ],
+        "outage_retries": 1,
+        "top_score": 0.7561,
+        "evidence": [
+          {
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "text": "9. Conditions\n9.1 The university provides no infrastructure or financial support to the start-up as part of this approval; any support is requested separately through the campus Director.\n\n9.2 The start-up must notify the campus Director and the ORIC office if it employs or pays any university staff or faculty member.\n\n9.3 A workload exemption of **up to 3 credit hours per semester** may be granted by the Dean for the first two semesters after approval (the 2022 policy allowed no exemption).\n\n9.4 Approval is reviewed every **two years**."
+          },
+          {
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "1. Purpose",
+            "page": 1,
+            "text": "1. Purpose\nThese guidelines cover full-time faculty members who found, manage, hold equity in, sit on the board of, or receive revenue from a technical start-up that commercialises research conducted at NUCES campuses. This revision replaces the policy dated 30 May 2022."
+          },
+          {
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "6. Evaluation criteria for a technical start-up",
+            "page": 1,
+            "text": "6. Evaluation criteria for a technical start-up\n6.1 The faculty member must have published at least one journal paper in a JCR impact-factor journal with NUCES affiliation within **three years** before the date of application (the 2022 policy required two years).\n\n6.2 The faculty member must have been Principal Investigator or Co-Principal Investigator of an externally funded research project within the last five years.\n\n6.3 The start-up must align with ongoing research and degree programmes at the university, and must aim to commercialise emerging technologies."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "8. Memoranda of Understanding (MOUs)",
+            "page": 81,
+            "text": "8. Memoranda of Understanding (MOUs)\no TEKenable (Pvt.) Ltd. Signed on August 9, 2023, this MOU establishes TEKenable as an industrial training and placement partner, focusing on IT skills, soft skills workshops, and student internships. o Trillium Information Security Systems Pvt. Ltd. Signed on August 11, 2023, this MOU focuses on cybersecurity education, providing internship programs, lab sponsorships, and opportunities for final-year project supervision. o AtomCamp Signed on July 6, 2023, this MOU focuses on collaborative training sessions for the faculty of FAST-NUCES. o Foster International School, Islamabad This MOU outlines faculty training and student-led technical training at Foster School, with a 50% fee discount for FAST-NUCES faculty and staff children. o MCG Technologies Signed on August 18, 2023, this MOU establishes a recruitment partnership, with MCG Technologies offering internship programs, recruitment events, and exclusive job opportunities for FAST- NUCES students."
+          },
+          {
+            "source": "annual-report-2019-20.pdf",
+            "section": "Accomplishments",
+            "page": 23,
+            "text": "Accomplishments\nWith lean team in short time, the department has made notable progress reflected as under:  Formulated University's research policies and priorities  Identified avenues for research fund raising, mobilized faculty, partnered with the business community and industry for research commercialization  Streamlined administrative handling of research projects through pro -active sharing of emerging funding opportunities, scrutiny of submitted proposals and timely feed back  Processed over 150 research proposals to external awarding bodies, out of which 60 were awarded  Introduced revised research publications and rewards policy to encourage researchers engaged in quality research.  Collected and showcased particulars of the University entrepreneurs on the website  Developed Business Incubation Centre (BIC) program with a toolkit for prospective start-ups  Business plan competition for student start-ups in the campuses  MoUs were signed with different national / international universities and organizations to perform need based research  Capacity building is one of the latest aspects of development work. A wide range of workshops, seminars, conferences, etc. were arranged for the faculty, students and ORIC staff  Designed and revived the University's newsletter to promote brand, capabilities, expertise and achievements of the faculty and students  9 students were selected for international internship programs under AIESEC. AIESEC is the world's largest youth-run organization. It is an international nongovernmental and not-for-profit organization that provides young people with leadership development, cross-cultural global internships, and volunteer exchange experiences across the globe.  2 students were selected for IAESTE. The International Association for the Exchange of Students for Technical Experience (IAESTE) is an international organization that offers international internships to students for technical work experience abroad. Students gain relevant technical training lasting from 4 weeks to 18 months."
+          }
+        ],
+        "judge": {
+          "faithful": true,
+          "score": 1.0,
+          "unsupported": [],
+          "judge_model": "openai/gpt-oss-20b"
+        }
+      },
+      {
+        "id": "d03",
+        "type": "answerable",
+        "question": "What are the central library's opening hours on Saturday?",
+        "answer": "The documents I have do not cover this question, so I can't answer it.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 0.076,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "answered_by": null,
+        "failed_over_from": [],
+        "outage_retries": 0,
+        "top_score": 0.5768
+      },
+      {
+        "id": "d04",
+        "type": "answerable",
+        "question": "When and where is the inter-campus sports week 2026?",
+        "answer": "The Inter‑Campus Sports Week 2026 will take place in the second week of December 2026 at the Lahore campus.",
+        "answered": true,
+        "abstention_correct": true,
+        "citations": [
+          [
+            "b-sports-week-2026.md",
+            "Inter-Campus Sports Week 2026",
+            1
+          ]
+        ],
+        "citations_valid": true,
+        "cites_relevant": true,
+        "expect_found": true,
+        "seconds": 1.358,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "answered_by": "groq",
+        "failed_over_from": [
+          "gemini:429"
+        ],
+        "outage_retries": 1,
+        "top_score": 0.8688,
+        "evidence": [
+          {
+            "source": "b-sports-week-2026.md",
+            "section": "Inter-Campus Sports Week 2026",
+            "page": 1,
+            "text": "Inter-Campus Sports Week 2026\nThe inter-campus sports week will be held in the second week of December 2026 at the Lahore campus. Events include cricket, football, basketball, table tennis, badminton and chess.\n\nEach campus may register one team per event. Registration closes on 30 November 2026 through the campus sports society. Players must be enrolled students in good academic standing and must carry their university ID card at every match.\n\nTravel for registered teams is arranged by each campus. Winning teams receive trophies, and the best player of each event receives a certificate of merit."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 31,
+            "text": "Islamabad Campus\nThis global victory highlights the talent, dedication, and brilliance of our students and faculty, proving once again that FAST-NUCES Islamabad stands at the forefront of technological innovation.\n\nPrime Minister's University Sports Olympiad 2024 FAST-NUCES Islamabad Campus proudly announces its Girls' Table Tennis Team's exceptional performance in the Prime Minister's University Sports Olympiad 2024 and HEC All Pakistan Inter Universities Table Tennis Championship 2024, qualifying for the semifinals among 48 competing university teams. The team's outstanding achievement is a testament to the university's Sports Office and their commitment to nurturing top athletes for Pakistan's national teams. Dr. Waseem Shahzad, Director Islamabad Campus, and Syed Aoun Abbas, In-charge Sports Office, extend heartfelt congratulations to the team. With this remarkable feat, FAST-NUCES reaffirms its dedication to fostering talent and promoting women in sports and eagerly looks forward to the team's future successes! We proudly participated in the Prime Minister University Sports Olympiad 2024, organized by HEC Pakistan. Our athletes gave their all, showcasing determination, talent, and the spirit of FAST-NUCES. Congratulations to our team for representing us so brilliantly!\n\nWindow into IOT FES organized the seminar \"Window into IoT\" in collaboration with MRS Technologies and speaker Mr. Hasan Ijaz. The session covered IoT's revolutionary impact across industries, highlighting significant device deployment growth. Advancements in IoT technology, including sensors, data analysis, and insights generation, were discussed. Ongoing IoT initiatives in Pakistan, challenges in solution development, and the general IoT architecture were explored. The seminar provided valuable insights into IoT applications, recent advancements, and it's potential.\n\nSoft Skills Workshop with Ma'am Emaan Mirza Description Ma'am Emaan Mirza, a distinguished coach in personal and professional development, conducted a comprehensive workshop on soft skills. The session focused on essential skills such as effective communication, leadership, teamwork, and time management. Emaan Mirza emphasized the importance of these skills in both academic and professional settings, providing students with practical strategies to enhance their interpersonal and organizational abilities.\n\nWebinar with Abdul Hanan Description In partnership with NUST EME's RAC and featuring guest speaker Mr. Abdul Hanan from MRS Technologies, this webinar focused on PCB design implementations. The session provided a thorough rundown of industry expectations, emphasizing the importance of preparing for such roles during undergraduate years. It was a significant opportunity for students to gain insights into the latest trends and best practices in PCB design."
+          },
+          {
+            "source": "b-career-fair-2026.md",
+            "section": "Career Fair 2026",
+            "page": 1,
+            "text": "Career Fair 2026\nThe annual career fair will take place on 15 January 2027 at the Islamabad campus from 10:00 am to 4:00 pm. More than forty companies from software, telecom and finance are expected.\n\nFinal-year students should upload an up-to-date CV to the career services portal by 5 January 2027. Formal dress is required. Students should bring printed copies of their CV and their university ID card.\n\nOn-the-spot interviews will be held for internship and graduate positions. Students who receive an offer must inform career services within one week."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "Karachi Campus",
+            "page": 43,
+            "text": "Karachi Campus\nThe evaluators thoroughly analyzed and assessed the programs' progress according to the defined standards set by HEC. Prof. Dr. Muhammad Atif Tahir, Campus Director of FAST-NUCES Karachi, also contributed his insights to the team.\n\nInter Collegiate Programming Contest (ICPC 2024) The 2024 ICPC Asia Topi Regional On-site Contest was held at FAST-NUCES Main Campus on 24th and 25th February. FAST NUCES Karachi campus won Gold, Silver and Bronze medal in International Collegiate Programming Contest ICPC Asia West Topi Region. FAST NUCES Karachi campus won Gold, Silver and a bronze medal in International Collegiate Programming Contest ICPC Asia West Topi Region.\n\nDeveloper's Day On 25th April 2024, Developer's Day was successfully organized by ACM at FAST NUCES Karachi. The event comprised of thrilling competitions, insightful sessions, and networking opportunities. Devday 2024 at FAST-NUCES Karachi Campus was a resounding success, featuring over 15 companies at the job fair, and participants from all over the nation. The main sponsor of DevDay was E-Ocean and we were honored to have Mr. Cemal Sangu, Consul General Turkiye, as our esteemed chief guest at the closing ceremony.\n\nEmlaak Financial Session FAST School of Management, in collaboration with CPT, hosted a speaker session on March 14, 2024, from 0900 to 1000 A.M., led by Ms. Nusrat Ghafar, Senior Product Manager of Central Depository Company of Pakistan Limited (CDC) having 17 years of experience in Software Industry. The event focused on Emlaak Financial, highlighting investment opportunities and digitalization in financial services. The session was wellreceived by students, who gained valuable knowledge about mutual fund mechanisms and the efficient services offered by CDC in Emlaak Financial.\n\nBRANIAC 2024 IEEE FAST-NU Karachi Chapter in collaboration with FDSS (Fast Data Science Society), and ACM AI has organized an exciting event titled Brainiac on Thursday 18 April, 2024, featuring engaging workshops, and thrilling competitions on Machine Learning and Speed Programming. Director Zulfiqar Ali Memon encouraged students to participate and later distributed shields among winners.\n\nSelf-Assessment Review of BS Business Analytics Program On Friday, March 22nd, 2024, the Self-Assessment Review (SAR) of the BS- BA program was conducted in collaboration with the Management Science department. Dr. Atif Aziz, Professor, Management Science at IQRA University, Karachi, participated as the external evaluator, while Dr. Muhammad Nouman Durrani, Associate Professor at FAST School of Computing, FAST-NUCES Karachi Campus, served as an internal evaluator. The"
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "Islamabad Campus",
+            "page": 30,
+            "text": "Islamabad Campus\nLUMS Pre-ABP 2024 International Online Debate Tournament Heartiest congratulations to Ms. Maryam Agha for her outstanding achievement as she triumphantly clinches victory in the Novice Category Finals and takes home the coveted Best Speaker award at the LUMS Pre-ABP 2024 International Online Debate Tournament!\n\n🏆🎉.Her dedication, eloquence, and remarkable debating skills have shined through in this prestigious event, bringing immense pride to FAST-NUCES.\n\nSpeed Programming Competition We are thrilled to announce that our students, Junaid Zeb and Sameed Ahmed, have made us proud by securing 1st place in the Speed Programming Competition held at COMSATS University Islamabad on October 10th, 2024! Competing against more than 95 teams, their hard work and dedication earned them the top spot along with a cash prize of PKR 20,000. This outstanding achievement showcases the talent of our students and the strength of our academic programs.\n\nHEC All Pakistan Inter-University Taekwondo Championship 2024-25 Aqsa Noor Amin, a BS Cybersecurity student from FAST-NUCES Islamabad Campus, secured a gold medal at the HEC All Pakistan Inter-University Taekwondo Championship 2024-25, organized by the University of Veterinary and Animal Sciences, Lahore. Congratulations to Aqsa on this outstanding achievement! Special thanks to the FAST- NUCES Sports Office for nurturing student talent and facilitating national-level participation.\n\nNational Rugby Team FAST-NUCES Islamabad Campus is thrilled to announce another outstanding achievement under the supervision of the Sports Office. Our student, Hasam Haider, who is pursuing a Bachelor of Science in Business Analytics, has made us proud by representing Pakistan on the national rugby team. He recently participated in the Asian Rugby Sevens Trophy held in Qatar and Nepal in 2024.This remarkable achievement not only showcases Hasam's exceptional talent but also reflects the strength and diversity of our academic programs, demonstrating that our students excel both in and out of the classroom."
+          }
+        ],
+        "judge": {
+          "faithful": true,
+          "score": 1.0,
+          "unsupported": [],
+          "judge_model": "openai/gpt-oss-20b"
+        }
+      },
+      {
+        "id": "d05",
+        "type": "answerable",
+        "question": "When is the career fair and by when must final-year students upload their CV?",
+        "answer": "The career fair is scheduled for 15 January 2027, and final‑year students must upload their CVs by 5 January 2027.",
+        "answered": true,
+        "abstention_correct": true,
+        "citations": [
+          [
+            "b-career-fair-2026.md",
+            "Career Fair 2026",
+            1
+          ]
+        ],
+        "citations_valid": true,
+        "cites_relevant": true,
+        "expect_found": false,
+        "seconds": 1.542,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "answered_by": "groq",
+        "failed_over_from": [
+          "gemini:429"
+        ],
+        "outage_retries": 1,
+        "top_score": 0.8457,
+        "evidence": [
+          {
+            "source": "b-career-fair-2026.md",
+            "section": "Career Fair 2026",
+            "page": 1,
+            "text": "Career Fair 2026\nThe annual career fair will take place on 15 January 2027 at the Islamabad campus from 10:00 am to 4:00 pm. More than forty companies from software, telecom and finance are expected.\n\nFinal-year students should upload an up-to-date CV to the career services portal by 5 January 2027. Formal dress is required. Students should bring printed copies of their CV and their university ID card.\n\nOn-the-spot interviews will be held for internship and graduate positions. Students who receive an offer must inform career services within one week."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "Lahore Campus",
+            "page": 47,
+            "text": "Lahore Campus\nAftab congratulated all high achievers for their outstanding accomplishments. He provided inspiring words on maintaining academic excellence, respecting faculty and parents, and encouraging students to embrace innovation and kindness in their lives. In total, 220 medals were awarded to deserving students, reflecting their hard work and dedication.\n\nAnnual Job Fair, 2024 The Career Services Office (CSO) in collaboration with Career Counseling Society (CCS) organized the Annual Job Fair 2024 on March 06, 2024. This year's job fair was a resounding success, bringing together over 150 companies eager to connect with the next generation of talent. Hundreds of graduating students flocked to the event, exploring a myriad of career prospects that could shape their futures. The graduating class had a fantastic opportunity to connect with various industry partners. Events like this are incredibly beneficial, as representatives from different companies collected resumes and conducted on-the-spot interviews. It was a great way for students to showcase their skills and potentially secure job offers right away. In addition to the graduating class, our enthusiastic third- year students took full advantage of the opportunity, engaging with various companies to discover potential internships that align with their career aspirations. The atmosphere was buzzing with excitement and ambition as students networked, learned about different industries, and made valuable connections. Adding to the vibrancy of the event, the Final Year Project (FYP) exhibition showcased innovative projects from our talented students, allowing them to demonstrate their skills and creativity to potential employers. Overall, the job fair was not just an event; it was a celebration of ambition, innovation, and the bright futures that lie ahead for our students.\n\nOn-campus Recruitment Drives 10 local companies and MNCs conducted their recruitment drives, catering to a diverse group of students from multiple disciplines. They started off with engaging presentations that showcased the company's mission, values, and the exciting projects they are currently working on. Some of them conducted the interviews along with the test. MNCs included Haier, Dubizzle Labs along with big names in local companies i.e. Fatima Group, Systems Limited etc."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "4. Professional Development Initiatives /Seminars",
+            "page": 81,
+            "text": "4. Professional Development Initiatives /Seminars\n31st January, 2024. o Abdul Khaliq Khan, Head of Talent and OD at HBL, shared practical strategies to enhance presentation abilities for professional growth and success 1st January, 2024. o Ms. Hira Zainab, VP Strategic Affairs delivered a session on Career Readiness for IT industry to School of Computing students.\n\n5. Job Fair 2024 The Job Fair/Open House 2024, hosted by the Career Services Office was held at FAST-NUCES Islamabad Campus on April 25th, 2024. The event was a resounding success, attracting a total of 620 graduating students who showcased their projects. It provided a platform for students to interact with 189 registered companies, including 8 consultants, facilitating networking, job opportunities, and exposure to industry trends. The seamless execution of the event was made possible by the dedication of more than 400 ushers, whose contributions ensured a smooth and efficient experience for all attendees."
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "Chapter-8 Industrial Collaboration",
+            "page": 79,
+            "text": "Chapter-8 Industrial Collaboration\nDuring the reporting period from July 1, 2023, to June 30, 2024, the Career Services Office at FAST-NUCES spearheaded multiple initiatives to strengthen industrial linkages and facilitate students' transition from academia to industry. Key achievements include"
+          },
+          {
+            "source": "annual-report-2023-24.pdf",
+            "section": "3. Recruitment Drives",
+            "page": 79,
+            "text": "3. Recruitment Drives\no Careem On July 7, 2023, Careem conducted a recruitment drive for BS and MS students at FAST-NUCES. The process featured an on-campus, rigorous selection procedure that included interviews and assessments, providing students with an opportunity to join a leading technology-driven organization. o 10x Engineers A recruitment drive for 10x Engineers was held on July 19,\n\n2023. The event featured on-spot hiring tests followed by immediate interviews, allowing qualified candidates to secure roles on the same day, emphasizing efficiency and merit-based selection. o Vyroverse Campus Ambassador Program On October 10, 2023, Vyroverse launched its Campus Ambassador Program at FAST-NUCES. This initiative engaged students in leadership-oriented roles, offering them opportunities to develop professional skills while representing the company on campus. o QLU A recruitment drive for QLU was conducted on February 16, 2024. The drive aimed to connect students with job opportunities in a dynamic and innovative work environment, fostering professional growth for the participants. o MCG Technologies MCG Technologies organized multiple recruitment activities at FAST-NUCES. Pre-shortlisted candidates were interviewed for various job roles earlier, and an additional recruitment drive was held on February 19, 2024, to identify and onboard talent for diverse positions. o Zones IT On February 29, 2024, Zones IT conducted a recruitment drive on campus. Students participated in interviews and assessments to explore job opportunities, benefiting from direct interaction with the company's hiring team. o Signatics A recruitment drive for Signatics was held on March 5, 2024. This initiative provided students with the chance to showcase their technical and professional competencies to secure roles in a growing organization. o Careem Engineering On March 4, 2024, Careem Engineering conducted a specialized recruitment drive for engineering roles. The process included oncampus recruitment tests that evaluated candidates' technical expertise and problem-solving abilities, paving the way for them to join a prominent engineering team. o Systems Limited On March 8, 2024, Systems Limited conducted a recruitment drive at FAST-NUCES, offering students opportunities to join one of Pakistan's leading IT and consulting firms.\n\no Coca-Cola Icecek x FAST On March 21, 2024, this flagship trainee program recruitment drive connected students with Coca-Cola Icecek's CCI Next Talent Program. Trainees gain the opportunity to work for 12 months in core functions like Sales, Marketing, Supply Chain, Human Resources, and Finance. Open to Bachelor's students in Engineering, Management Sciences, Social Sciences, and Finance, the program emphasized professional development in a global corporate environment."
+          }
+        ],
+        "judge": {
+          "faithful": true,
+          "score": 1.0,
+          "unsupported": [],
+          "judge_model": "openai/gpt-oss-20b"
+        }
+      },
+      {
+        "id": "d06",
+        "type": "answerable",
+        "question": "What is the minimum CGPA to avoid academic warning according to the library notice?",
+        "answer": "The documents do not cover that.",
+        "answered": false,
+        "abstention_correct": false,
+        "citations": [],
+        "citations_valid": true,
+        "cites_relevant": false,
+        "expect_found": false,
+        "seconds": 1.826,
+        "provider": "hosted",
+        "fallback": false,
+        "attempts": 1,
+        "answered_by": "groq",
+        "failed_over_from": [
+          "gemini:429"
+        ],
+        "outage_retries": 1,
+        "top_score": 0.8842
+      }
+    ]
+  },
+  "seconds": 699.8,
+  "summary_table": "level      metric                           value\n-------------------------------------------------------------\nmodule     embed_model                      nomic-embed-text\nmodule     dimension                        768\nmodule     paraphrase_mean_cosine           0.7242\nmodule     unrelated_mean_cosine            0.4498\nmodule     similarity_gap                   0.2744\nmodule     paraphrase_min                   0.6229\nmodule     unrelated_max                    0.6429\nmodule     pairs_separable                  False\nmodule     embed_ms_per_chunk_mean          230.1\nmodule     embed_ms_per_chunk_p95           590.4\nmodule     chunks_timed                     20\nmodule     determinism_max_abs_diff         0.0\nmodule     deterministic                    True\ncomponent  questions                        6\ncomponent  recall@3                         0.8333\ncomponent  recall@5                         0.8333\ncomponent  mrr                              0.8333\ncomponent  ndcg@5                           0.8333\ncomponent  retrieval_p50_ms                 100.6\ncomponent  retrieval_p95_ms                 155.2\ne2e        questions                        6\ne2e        scored                           6\ne2e        fallbacks_after_retries          0\ne2e        answered_by                      {\"None\": 6}\ne2e        gemini_failures                  0\ne2e        abstention_correct_unanswerable  None\ne2e        false_abstention_rate            0.3333\ne2e        abstention_accuracy              0.6667\ne2e        citation_validity                1\ne2e        cites_relevant_chunk             1\ne2e        answer_correct_expect            0.5\ne2e        faithfulness                     1\ne2e        faithfulness_score_mean          1.0\ne2e        judged                           4\ne2e        judge_unavailable                0\ne2e        latency_p50_s                    1.481\ne2e        latency_p95_s                    1.826\ne2e        latency_p95_clean_s              0.076\ne2e        clean_answers                    1\ne2e        judge_agreement                  {\"labelled\": 0, \"agreement\": null}"
+}

@@ -26,6 +26,28 @@ The first post run was spoiled by a Gemini outage: 13/31 golden and 5/6 probe an
 after retries (fallbacks are not scored). Re-run with automatic Gemini -> Groq failover; the per-
 provider counts and scored metrics are in the table below (`*-groq.json`).
 
-ANSWER_TABLE_PENDING
+| set | metric | before (Gemini) | after (Groq failover) |
+|---|---|---|---|
+| golden (31) | answered by | gemini 31 | groq 30, no LLM call 1 (Gemini 429 on all 30) |
+| golden (31) | abstention on must-abstain | 1.00 | 1.00 |
+| golden (31) | false abstention | 0.038 | 0.038 |
+| golden (31) | answer contains expected fact | 0.885 | 0.769 |
+| golden (31) | faithfulness (judge) | 1.00 (25 judged) | 0.917 (24 judged) |
+| golden (31) | citation validity | 1.00 | 1.00 |
+| probes (6) | answered by | gemini 4, fallback 2 | groq 5, no LLM call 1 |
+| probes (6) | expected new fact in answer | 0/2 scored | 3/6 (d01 three years, d02, d04 December) |
 
-Files: `e3-compare-golden.md`, `e3-compare-probes.md` (first post run), results JSONs `*e3-*`.
+Reading:
+- The probes show Batch B working end to end. The new 2026 faculty policy answers d01/d02, and the sports
+  week date (d04) is now answered. d05 names the right fair date ("15 January 2027"), but the expect
+  string "15 January" missed it because of the year formatting. Worth fixing in the probe file; it is not a model error.
+  d03 abstains because the injection rail dropped its only source. d06 abstains correctly, and "1.00" never appears.
+- On the golden set, retrieval is identical, but expected-fact and faithfulness drop. **That is the provider change
+  (Groq gpt-oss-20b instead of Gemini), not Batch B.** The prompts, retrieved chunks and
+  citations are the same, and only the generator differs. A clean drift attribution would need the same
+  model on both sides. A Gemini re-run when its quota resets is listed as a follow-up.
+- Provider counts come from the traces (`llm.answered_by`, `failed_over_from`). Gemini returned
+  429 on every call in both reruns (daily free quota exhausted), so Groq answered every LLM call.
+
+
+Files: `e3-compare-*-groq.md` (Groq reruns), `e3-compare-golden.md`, `e3-compare-probes.md` (first post run, outage), results JSONs `*e3-*`.

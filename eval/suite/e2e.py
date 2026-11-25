@@ -107,6 +107,7 @@ class _OutageCounter(logging.Handler):
         self.count = 0
         self.answered_by: str | None = None      # from the "answered" log line (llm_target)
         self.failed_over_from: list[str] = []
+        self._levels: dict[str, int] = {}
 
     def emit(self, record: logging.LogRecord) -> None:
         msg = record.getMessage()
@@ -117,13 +118,21 @@ class _OutageCounter(logging.Handler):
             self.failed_over_from = list(getattr(record, "failed_over_from", None) or [])
 
     def __enter__(self) -> "_OutageCounter":
+        # The suite configures no logging (root = WARNING), which would drop the INFO
+        # "answered" line before this handler sees it: lower these two loggers while counting.
+        self._levels = {}
         for name in self.NAMES:
-            logging.getLogger(name).addHandler(self)
+            logger = logging.getLogger(name)
+            self._levels[name] = logger.level
+            logger.setLevel(logging.INFO)
+            logger.addHandler(self)
         return self
 
     def __exit__(self, *exc: object) -> None:
         for name in self.NAMES:
-            logging.getLogger(name).removeHandler(self)
+            logger = logging.getLogger(name)
+            logger.removeHandler(self)
+            logger.setLevel(self._levels[name])
 
 
 def run_question(settings: Any, retriever: Any, provider: Any, question: dict[str, Any],
