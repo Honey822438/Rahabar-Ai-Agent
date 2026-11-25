@@ -108,7 +108,8 @@ def main() -> int:
     table = summary_table(result)
     result["summary_table"] = table
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
-    print("\n" + table + f"\n\nwritten {out.relative_to(common.ROOT)}")
+    shown = out.relative_to(common.ROOT) if out.is_relative_to(common.ROOT) else out
+    print("\n" + table + f"\n\nwritten {shown}")   # /data/results in the eval Job
     return 0
 
 
