@@ -38,11 +38,29 @@ def chunk_id(doc_id: str, version: str, index: int, text: str) -> str:
     return hashlib.sha256(raw).hexdigest()[:32]
 
 
+def _extract_cached(lake: Lake, entry: dict[str, Any]) -> Any:
+    """Extraction (OCR of scanned PDFs takes minutes) cached by the file's sha256 under
+    <lake>/cache/: a re-chunk with another chunk config (C1 candidates) skips it."""
+    from dataclasses import asdict
+
+    from .extract import extract
+    from .models import Document, Page
+    path = lake.root / "cache" / f"{entry['sha256']}.json"
+    if path.exists():
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        return Document(source=raw["source"], doc_version=entry["version"],
+                        superseded=entry["superseded"],
+                        pages=[Page(**p) for p in raw["pages"]])
+    doc = extract(str(lake.root / entry["file"]), entry["version"], entry["superseded"])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(asdict(doc)), encoding="utf-8")
+    return doc
+
+
 def doc_chunks(lake: Lake, entry: dict[str, Any], settings: IndexerSettings) -> list[Chunk]:
     from .chunk import chunk
     from .clean import clean
-    from .extract import extract
-    doc = clean(extract(str(lake.root / entry["file"]), entry["version"], entry["superseded"]))
+    doc = clean(_extract_cached(lake, entry))
     # The file sits in the lake as <version>__<name>; cite it by its original name.
     original = entry["file"].split("/", 1)[1].split("__", 1)[-1]
     doc.source = original
