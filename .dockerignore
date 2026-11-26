@@ -16,5 +16,5 @@
 !eval/noise
 !eval/golden.jsonl
 !eval/drift_probes.jsonl
-!eval/results/20261124T192554Z-baseline.json
+!eval/results/20261126T160622Z-k8s-baseline.json
 !config/gate.yaml

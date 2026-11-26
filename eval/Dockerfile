@@ -15,7 +15,7 @@ COPY eval/pairs ./eval/pairs
 # noise documents for the component-level noise test (it builds a scratch <collection>_noise)
 COPY eval/noise ./eval/noise
 # The gate's baseline result. Thresholds come from the gate ConfigMap, not this copy.
-COPY eval/results/20261124T192554Z-baseline.json ./eval/results/
+COPY eval/results/20261126T160622Z-k8s-baseline.json ./eval/results/
 COPY config/gate.yaml ./config/gate.yaml
 
 USER 10001
