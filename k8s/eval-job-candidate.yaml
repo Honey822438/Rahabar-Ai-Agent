@@ -1,0 +1,90 @@
+# A3 C1/F3: candidate eval Job. Same as k8s/eval-job.yaml but scores collection rahbar_c600
+# and gates it against the in-cluster 39-question baseline run (EVAL_BASELINE=k8s-baseline).
+#   kubectl delete job eval -n rahbar --ignore-not-found && kubectl apply -f k8s/eval-job-candidate.yaml
+# F2: the eval Job. Runs the full suite (module, component, e2e + judge) against a collection,
+# writes the result to the data PVC (/data/results), then runs the release gate with the
+# thresholds from the gate-config ConfigMap. The container exits non-zero when the gate fails,
+# and backoffLimit: 0 makes the Job itself Failed (no retry hides a FAIL).
+#
+#   kubectl apply -f k8s/a3/gate-configmap.yaml
+#   kubectl delete job eval -n rahbar --ignore-not-found && kubectl apply -f k8s/eval-job.yaml
+#   kubectl wait -n rahbar --for=condition=complete job/eval --timeout=40m   # or condition=failed
+#
+# Candidate: set EVAL_COLLECTION / EVAL_LABEL / TOP_K below (e.g. rahbar_c600, or TOP_K=1 for
+# the quality-failing candidate).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eval
+  namespace: rahbar
+  labels: { app: eval }
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels: { app: eval }
+    spec:
+      restartPolicy: Never
+      enableServiceLinks: false
+      serviceAccountName: eval
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: eval
+          image: rahbar-eval:dev
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c"]
+          # Pacing: --rpm 6 keeps Gemini's free tier (15 rpm, shared with the judge) under its
+          # limit; on a 429/503 the provider fails over to Groq (if GROQ_API_KEY is in the Secret)
+          # and the suite backs off before retrying a fallback. No parallel heavy jobs.
+          args:
+            - >-
+              python eval/run_suite.py --collection "$EVAL_COLLECTION" --label "$EVAL_LABEL"
+              --rpm "$EVAL_RPM" --out-dir /data/results &&
+              python eval/gate.py "$(ls -t /data/results/*-"$EVAL_LABEL".json | head -1)"
+              ${EVAL_BASELINE:+--baseline "$(ls -t /data/results/*-"$EVAL_BASELINE".json | head -1)"}
+              --out-dir /data/results
+          envFrom:
+            - configMapRef: { name: rahbar-config }
+            - secretRef: { name: rahbar-secret }
+          env:
+            - { name: EVAL_COLLECTION, value: rahbar_c600 }
+            - { name: EVAL_LABEL, value: k8s-c600 }
+            - { name: EVAL_RPM, value: "6" }
+            # Optional: label of an earlier eval run in /data/results to gate against (e.g.
+            # k8s-baseline, the live collection run in this cluster with the same LLM provider).
+            # Empty = the baseline named in gate.yaml (baked into the image).
+            - { name: EVAL_BASELINE, value: k8s-baseline }
+            - { name: GATE_CONFIG, value: /config/gate.yaml }
+            - { name: TRACE_FILE, value: /data/traces/eval-traces.jsonl }
+          resources:
+            requests:
+              cpu: 100m
+              memory: 192Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: data, mountPath: /data }
+            - { name: gate, mountPath: /config, readOnly: true }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: gate
+          configMap:
+            name: gate-config
+        - name: tmp
+          emptyDir: {}

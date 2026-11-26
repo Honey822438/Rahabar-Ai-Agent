@@ -44,7 +44,7 @@ Change a threshold with no rebuild: `kubectl edit configmap gate-config -n rahba
 kubectl apply -f k8s/a3/candidate-build-job.yaml           # builds collection rahbar_c600 (600/100)
 kubectl wait -n rahbar --for=condition=complete job/build-candidate --timeout=30m
 kubectl apply -f k8s/a3/candidate.yaml                     # api-candidate Deployment + Service
-# eval the candidate: EVAL_COLLECTION=rahbar_c600, EVAL_LABEL=k8s-c600 in k8s/eval-job.yaml
+kubectl delete job eval -n rahbar --ignore-not-found && kubectl apply -f k8s/eval-job-candidate.yaml   # rahbar_c600 vs k8s-baseline
 # gate PASS -> promote: roll the live api onto the candidate collection (maxUnavailable: 0)
 kubectl set env deployment/api -n rahbar CHROMA_COLLECTION=rahbar_c600
 kubectl rollout status deployment/api -n rahbar

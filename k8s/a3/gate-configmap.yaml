@@ -12,7 +12,9 @@ data:
     #
     # Rules compare the candidate run with the baseline run (relative) or a fixed bar (absolute).
     # Every threshold below is justified from our own measurements (eval/results/*):
-    baseline: eval/results/20261124T192554Z-baseline.json
+    # Baseline = the in-cluster run on the current 39-question golden set (26 Nov). The 24 Nov
+    # baseline (20261124T192554Z) was scored on 26 questions, so comparing against it is not like-for-like.
+    baseline: eval/results/20261126T160622Z-k8s-baseline.json
 
     rules:
       # Retrieval quality. Two runs of the baseline gave IDENTICAL retrieval (B4), so any drop is
