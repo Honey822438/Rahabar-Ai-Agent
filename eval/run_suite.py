@@ -71,7 +71,15 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, default=common.EVAL / "results")
     parser.add_argument("--label-sheet", action="store_true",
                         help="write eval/labels/faithfulness_hand.jsonl for hand labels")
+    parser.add_argument("--print", dest="print_file", type=Path, metavar="RESULT_JSON",
+                        help="only print the summary table of an earlier result file")
     args = parser.parse_args()
+    if args.print_file:
+        result = json.loads(args.print_file.read_text(encoding="utf-8"))
+        print(f"{result.get('label')} ({result.get('timestamp')}), "
+              f"{result.get('golden_questions')} questions\n")
+        print(summary_table(result))
+        return 0
 
     common.seed_everything(args.seed)
     os.environ["TEMPERATURE"] = args.temperature

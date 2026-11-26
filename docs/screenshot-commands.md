@@ -4,24 +4,27 @@ Run from the repo root with the venv active (`source .venv/bin/activate`) and ho
 **WAIT** = needs the c600 / baseline / candidate eval chain to have finished (and the cluster up).
 **NOW** = uses results already on disk. One heavy job at a time.
 
-## A. Verification + incremental rerun  (NOW, local lake)
+## A. Verification + incremental rerun
 ```bash
-cat "$(ls -t eval/results/verification-*.txt | head -1)"        # A1: Batch B verification report
-cd indexer && LAKE_DIR=../data/lake OLLAMA_URL=http://localhost:11434 \
-  python -m pipeline.sync 2>&1 | tail -8; cd ..                    # A2: unchanged corpus -> 0 chunks embedded
-```
-In-cluster version (WAIT): `kubectl create job --from=cronjob/reindex reindex-shot -n rahbar && kubectl wait -n rahbar --for=condition=complete job/reindex-shot --timeout=30m && kubectl logs -n rahbar job/reindex-shot | tail -30`
-
-## B. Suite summary, all 3 levels  (WAIT for the baseline run of the chain)
-```bash
-kubectl logs -n rahbar job/eval | sed -n '/SUMMARY/,$p'          # or the local run:
-python eval/compare.py "$(ls -t eval/results/*-baseline.json | head -1)"
+cat "$(ls -t eval/results/verification-*.txt | head -1)"        # A1: Batch B verification report (NOW)
+# A2: unchanged corpus -> 0 chunks embedded. In-cluster (Chroma is ClusterIP, so the local sync cannot reach it):
+kubectl delete job reindex-shot -n rahbar --ignore-not-found
+kubectl create job --from=cronjob/reindex reindex-shot -n rahbar
+kubectl wait -n rahbar --for=condition=complete job/reindex-shot --timeout=30m
+kubectl logs -n rahbar job/reindex-shot | tail -12                # chunks_embedded 0, orphans 0
 ```
 
-## C. Gate fail + gate pass  (NOW from saved runs; WAIT for the fresh chain run)
+## B. Suite summary, all 3 levels  (NOW, from the committed in-cluster baseline run)
 ```bash
-python eval/gate.py "$(ls -t eval/results/*-candidate-c600.json | head -1)"; echo "exit=$?"         # PASS, exit 0
-python eval/gate.py "$(ls -t eval/results/*-candidate-c100-bad.json | head -1)"; echo "exit=$?"     # FAIL, exit 1
+python eval/run_suite.py --print eval/results/20261126T160622Z-k8s-baseline.json
+```
+Live alternative: after `kubectl apply -f k8s/eval-job.yaml`, `kubectl logs -n rahbar job/eval | sed -n '/^level /,/^written/p'`.
+
+## C. Gate pass + gate fail  (NOW, in-cluster 26 Nov results, gated against the k8s-baseline in config/gate.yaml)
+```bash
+python eval/compare.py eval/results/20261126T160622Z-k8s-baseline.json eval/results/20261126T161842Z-k8s-c600.json | head -50   # C1 baseline vs candidate, 3 levels
+python eval/gate.py eval/results/20261126T161842Z-k8s-c600.json; echo "exit=$?"                     # C2 PASS, exit 0
+python eval/gate.py "$(ls -t eval/results/*-k8s-c600-topk1-bad.json | head -1)"; echo "exit=$?"     # C2 FAIL on recall@5 / false abstention, exit 1
 ```
 
 ## D. One trace + prompt rebuild  (NOW)
