@@ -41,9 +41,9 @@ Also in `eval/golden.jsonl`: the 8 questions added for Part E (grade meaning, re
 If a topic is **not** in our documents at all, the question must be marked **unanswerable** (should abstain). Tell Rehan if you change a type.
 
 ### Task 4: D5 root cause from one trace ⏰ Friday
-Rehan will give you **one trace id** for a wrong or abstained answer. Run:
+Your trace id: **`2f213c99a8ea41e597f4a678946f98e3`** ("If I skip too many lectures, am I still allowed to sit the final paper?", collection `rahbar_c100`, the deliberately bad 100/0 chunking candidate). The documents do cover attendance, but the answer came back `answered=False` (a wrong abstention). Run:
 ```bash
-python -m tools.trace <trace_id>        # or the command in README "Part D"
+python -m tools.trace 2f213c99a8ea41e597f4a678946f98e3 --file data/traces/traces.jsonl
 ```
 Using **only that trace**, write **5 lines** in `report/d5-root-cause.md`: the question, what went wrong, which chunk / document version / filter caused it, the evidence in the trace, and the fix.
 

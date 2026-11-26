@@ -37,7 +37,7 @@ kubectl wait -n rahbar --for=condition=complete job/eval --timeout=60m   # Faile
 kubectl logs -n rahbar job/eval | tail -25
 ```
 Change a threshold with no rebuild: `kubectl edit configmap gate-config -n rahbar` (or edit
-`k8s/a3/gate-configmap.yaml` and re-apply), then re-run the eval Job. The verdict changes.
+`k8s/a3/gate-configmap.yaml` and re-apply), then re-run the eval Job. The verdict changes. Scripted: `scripts/demo/f2_configmap_gate.sh`.
 
 ## F3. Candidate → gate → rolling update → rollback
 ```bash
@@ -51,6 +51,8 @@ kubectl rollout status deployment/api -n rahbar
 # a bad release -> back to the previous ReplicaSet (previous collection)
 kubectl rollout undo deployment/api -n rahbar && kubectl rollout status deployment/api -n rahbar
 ```
+Scripted promote/undo with a trace before and after: `scripts/demo/f3_rollout_undo.sh`.
+
 A candidate stopped by the gate: `EVAL_COLLECTION=rahbar_c600`, `TOP_K=1` → the Job ends `Failed`
 and the live api is never touched.
 
@@ -59,6 +61,7 @@ and the live api is never touched.
 kubectl logs -n rahbar deploy/api | grep '"trace"' | tail -1      # one JSON trace per query
 kubectl exec -n rahbar deploy/api -- tail -1 /data/traces/traces.jsonl
 kubectl port-forward -n rahbar svc/api 8000:8000 &  curl -s localhost:8000/metrics | head
+# or: scripts/demo/f4_metrics.sh
 ```
 
 ## F5. Requests and limits
