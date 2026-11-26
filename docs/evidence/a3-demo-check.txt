@@ -1,0 +1,14 @@
+== RAHBAR demo check 2026-11-26T18:26:57Z ==
+PASS  minikube up + namespace rahbar               Running
+PASS  all rahbar pods Ready                        7 running, all Ready
+PASS  HPA api reads CPU (not <unknown>)            cpu: 22%/70%
+PASS  Ollama listening on 0.0.0.0:11434            listening on all interfaces
+PASS  Ollama reachable from the cluster            nomic-embed-text reachable from minikube
+PASS  Secret rahbar-secret keys                    LLM_API_KEY + GROQ_API_KEY set
+PASS  gate ConfigMap present (k8s-baseline)        baseline: eval/results/20261126T160622Z-k8s-baseline.json
+PASS  Chroma collections rahbar + rahbar_c600      rahbar=421 rahbar_c600=382
+PASS  eval image ships k8s-baseline                20261126T160622Z-k8s-baseline.json
+PASS  test question -> cited answer                cited answer, 3 citation(s), id democheck220978
+PASS  trace written to the volume                  trace democheck220978 in /data/traces/traces.jsonl
+PASS  trace tool rebuilds the prompt               prompt rebuilt, hash matches (democheck220978)
+== ALL PASS ==
