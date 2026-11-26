@@ -13,7 +13,7 @@ INGRESS_IP ?= $(shell minikube ip 2>/dev/null)
 HOST ?= rahbar.local
 
 .DEFAULT_GOAL := help
-.PHONY: help install test lint dev cluster images apply secret index ask fetch eval eval-fixtures check suite validate-inputs
+.PHONY: help install test lint dev cluster images apply secret index ask fetch eval eval-fixtures check suite validate-inputs report
 LABEL ?= baseline
 SUITE_ARGS ?=
 
