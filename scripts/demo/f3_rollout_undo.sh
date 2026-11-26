@@ -5,7 +5,7 @@
 set -euo pipefail
 NS=rahbar; Q='What CGPA does an undergraduate need to stay off academic warning?'
 ask() {
-  kubectl exec -n $NS deploy/api -- python -c "import json,urllib.request as u;r=u.Request('http://localhost:8000/ask',json.dumps({'question':'''$Q'''}).encode(),{'Content-Type':'application/json'});print(u.urlopen(r).read().decode()[:300])"
+  kubectl exec -n $NS deploy/api -- python -c "import json,urllib.request as u;r=u.Request('http://localhost:8000/api/ask',json.dumps({'question':'''$Q'''}).encode(),{'Content-Type':'application/json'});print(u.urlopen(r).read().decode()[:300])"
   sleep 2
   kubectl exec -n $NS deploy/api -- tail -1 /data/traces/traces.jsonl \
     | python3 -c "import json,sys;t=json.load(sys.stdin);print('TRACE',t['trace_id'],'collection=',t['collection'],'embedding=',t['embedding'])"
