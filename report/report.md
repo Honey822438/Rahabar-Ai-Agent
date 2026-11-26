@@ -130,7 +130,7 @@ We sized requests and limits from these measurements. Under load the api peaked 
 
 **(a)** The **quality** check caught the most (4 of 8 quarantined: corrupt, truncated, empty, garbled), followed by uniqueness (3). We did **not** catch the **injected instruction** in the library notice. It is well-formed, unique and complete, so it was verified and indexed. The retrieval-time injection rail dropped it in 3 traces (§D), but at the cost of a fact that lives only in that file. An injection-pattern scan inside verification would catch it and quarantine the document before indexing.
 
-**(b)** Module level looked fine: paraphrase vs unrelated cosine gap 0.274, deterministic embeddings. Yet the 100/0 chunking, with the same embedder, wrongly abstained on an attendance question (trace `2f213c99…`) that the 400/50 index answers (trace `36417609…`, `traces/traces.jsonl`). And top_k = 1 leaves every module metric unchanged but raises false abstention at the end-to-end level (§C). Module metrics test the embedder alone, not chunking or the top_k cut-off.
+**(b)** Module level looked fine on average: paraphrase vs unrelated mean cosine gap 0.274, deterministic embeddings. But the extremes overlap: `pairs_separable=False`, because the lowest paraphrase pair (0.6229) scores below the highest unrelated pair (0.6429) (`eval/results/20261126T160622Z-k8s-baseline.json`). No single cosine cut-off separates them, so a mean gap alone overstates the embedder. Yet the 100/0 chunking, with the same embedder, wrongly abstained on an attendance question (trace `2f213c99…`) that the 400/50 index answers (trace `36417609…`, `traces/traces.jsonl`). And top_k = 1 leaves every module metric unchanged but raises false abstention at the end-to-end level (§C). Module metrics test the embedder alone, not chunking or the top_k cut-off.
 
 **(c)** We **archive**. A newer version flips the old chunks to `superseded=true` and moves the file to `archive/`. Retrieval filters on `superseded=false` unless the question asks about an older version. If we deleted: "what did the 2022 policy say?" could not be answered, `restore.py` rollback (14 chunks flipped back, 0 orphans) would be impossible, and old traces would cite chunk ids that no longer exist, breaking traceability.
 
@@ -164,11 +164,29 @@ We sized requests and limits from these measurements. Under load the api peaked 
 \newpage
 
 ## Appendix: Screenshots
-TODO-SCREENSHOTS (Malaika): insert one labelled screenshot per item, with commands from `docs/screenshot-commands.md`.
+Each screenshot shows the command and its output from our own cluster (`docs/evidence/<label>.png`).
 
-- **A1** Batch B verification report · **A2** unchanged corpus → 0 chunks embedded
-- **B1** suite summary, all three levels
-- **C1** gate PASS (c600) · **C2** gate FAIL (top_k = 1)
-- **D1** one full trace record · **D2** trace tool rebuilding the prompt
-- **E1** coverage before · **E2** coverage after
-- **F1** `kubectl get all,pvc,configmap,cronjob,job -n rahbar` · **F2** logs of the completed ingest and eval Jobs · **F3** gate result changing after a ConfigMap edit · **F4** `rollout status` + `rollout undo` + a trace showing the previous collection and embedding version
+TODO-SCREENSHOTS: **D1** (one full trace record), **D2** (trace tool rebuilding the prompt), **E1** (coverage before), **E2** (coverage after) are still missing. Commands: `docs/screenshot-commands.md` §D, §E.
+
+<div class="shot"><p><b>A1: Batch B verification report (pass/fail per check, with reasons)</b></p><img src="docs/evidence/A1.png"></div>
+
+<div class="shot"><p><b>A2: second ingestion run on an unchanged corpus, 0 chunks embedded</b></p><img src="docs/evidence/A2.png"></div>
+
+<div class="shot"><p><b>B: evaluation summary, all three levels</b></p><img src="docs/evidence/B2.png"></div>
+
+<div class="shot"><p><b>C1: release gate PASS (candidate c600)</b></p><img src="docs/evidence/C1.png"></div>
+
+<div class="shot"><p><b>C2: release gate FAIL (candidate top_k = 1)</b></p><img src="docs/evidence/C2.png"></div>
+
+<div class="shot"><p><b>F1: kubectl get all,pvc,configmap,cronjob,job -n rahbar</b></p><img src="docs/evidence/F1.png"></div>
+
+<div class="shot"><p><b>F2a: logs of a completed ingestion Job</b></p><img src="docs/evidence/F2.png"></div>
+
+<div class="shot"><p><b>F2b: logs of a completed evaluation Job (gate PASS)</b></p><img src="docs/evidence/F2b.png"></div>
+
+<div class="shot"><p><b>F3/F4: gate result changing after a ConfigMap edit; rollout status + rollout undo + trace showing the previous collection and embedding version</b></p><img src="docs/evidence/F3-4.png"></div>
+
+<div class="shot"><p><b>F5: /metrics via kubectl port-forward</b></p><img src="docs/evidence/F5.png"></div>
+
+<div class="shot"><p><b>F6: kubectl top pods + HPA (requests/limits evidence)</b></p><img src="docs/evidence/F6.png"></div>
+

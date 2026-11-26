@@ -23,10 +23,10 @@ To show a candidate: `kubectl delete job eval -n rahbar && kubectl apply -f k8s/
 kubectl exec -n rahbar deploy/api -- tail -1 /data/traces/traces.jsonl | python -m json.tool | head -60
 python -m tools.trace 2f213c99a8ea41e597f4a678946f98e3 --file data/traces/traces.jsonl   # wrong abstention (D5)
 ```
-For a live trace, `scripts/demo_check.sh` prints the id of the question it just asked (`democheck<pid>`). Copy that record out and rebuild its prompt:
+For a live trace, take the newest record from the volume and rebuild its prompt:
 ```bash
-kubectl exec -n rahbar deploy/api -- grep -h democheckNNN /data/traces/traces.jsonl > /tmp/t.jsonl
-python -m tools.trace democheckNNN --file /tmp/t.jsonl
+kubectl exec -n rahbar deploy/api -- tail -1 /data/traces/traces.jsonl > /tmp/t.jsonl
+python -m tools.trace "$(python -c 'import json;print(json.load(open("/tmp/t.jsonl"))["trace_id"])')" --file /tmp/t.jsonl
 ```
 
 ## 3. Ingest an unseen batch with the ingestion Job (≈ 2 min)
@@ -46,7 +46,7 @@ Ingest Batch C only at the demo. Do not rehearse with it, or it will no longer b
 | Symptom | Fix |
 |---|---|
 | `kubectl` says "connection refused" or "no route to host" | `minikube start`, wait for it, then `kubectl get pods -n rahbar`. Afterwards check `kubectl get hpa -n rahbar` (next row). |
-| HPA shows `<unknown>` after a restart | `minikube ssh -- 'sudo crictl stop $(sudo crictl ps -q --name kube-controller-manager)'`, then wait about 1 min |
+| HPA shows `<unknown>` | Right after a rollout this is normal: wait about 2 min while the new pods start. If it persists after a minikube restart: | `minikube ssh -- 'sudo crictl stop $(sudo crictl ps -q --name kube-controller-manager)'`, then wait about 1 min |
 | Gemini 429 / quota in the api logs | Nothing to do: the Groq fallback is automatic (`GROQ_API_KEY` is in the Secret). The trace's `llm.provider` shows which provider answered. |
 | Pod not Ready / CrashLoopBackOff | `kubectl describe pod <p> -n rahbar` (events) and `kubectl logs <p> -n rahbar --previous`. `/readyz` gives the reason (Chroma, Redis, embed pin). |
 | `ErrImagePull` / `ImagePullBackOff` | The image is missing in minikube: `make images TAG=dev`. Never run `crictl rmi --prune` (it deletes unused images such as indexer/eval). |

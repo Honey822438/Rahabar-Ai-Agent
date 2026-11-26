@@ -43,13 +43,15 @@ python eval/coverage.py --golden /tmp/golden-before-e4.jsonl --label before-e4; 
 python eval/coverage.py --label after-e4; echo "exit=$?"                                       # exit 0
 ```
 
-## F. Kubernetes  (all WAIT: cluster up, chain finished)
+## F. Kubernetes  (cluster up; run one at a time)
 ```bash
 kubectl get all,pvc,configmap,cronjob,job -n rahbar                          # F1
-kubectl logs -n rahbar job/indexer | tail -30                                # completed ingest Job
-kubectl logs -n rahbar job/eval | tail -25                                   # completed eval Job
-scripts/demo/f2_configmap_gate.sh                                            # F2 verdict changes after ConfigMap edit (heavy: 2 evals)
-scripts/demo/f3_rollout_undo.sh                                              # F3 rollout status + undo + trace with previous collection
-scripts/demo/f4_metrics.sh                                                   # F4 /metrics
-kubectl top pods -n rahbar                                                   # F5 requests/limits evidence
+kubectl logs -n rahbar job/reindex-shot | tail -30                           # F2a completed ingestion Job (from section A2)
+kubectl get job eval -n rahbar && kubectl logs -n rahbar job/eval | tail -25 # F2b completed eval Job, gate PASS
+scripts/demo/f2_configmap_gate.sh                                            # F3 gate PASS -> edit ConfigMap -> FAIL -> restore (heavy: 2 evals, ~25 min)
+scripts/demo/f3_rollout_undo.sh                                              # F4 rollout status + rollout undo + trace with the previous collection
+scripts/demo/f4_metrics.sh                                                   # F5 /metrics via port-forward
+kubectl top pods -n rahbar && kubectl get hpa -n rahbar                      # F6 kubectl top + HPA (not <unknown>)
 ```
+After F3 the eval Job is the FAILED one from the edit: re-run F2b first, or rerun
+`kubectl delete job eval -n rahbar && kubectl apply -f k8s/eval-job.yaml` (~12 min) afterwards.

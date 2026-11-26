@@ -39,11 +39,11 @@ Tick `[x]` only when **Done when** passes.
 - [ ] **E4 Close the gap** (Rehan drafts ≥ 6 new golden questions; **[M]** may replace them): re-run, coverage rises; the script **exits non-zero** below the threshold.
 
 ## Day 4 · Fri 27 — Kubernetes (Part F) + report
-- [ ] **F1** API Deployment, Chroma StatefulSet, Service; **PVC** for the data lake / quarantine / archive / traces.
-- [ ] **F2** Ingestion + verification **Job** + **CronJob** (the only writer); **eval Job** `kubectl apply -f k8s/eval-job.yaml` writes to a volume and **fails when the gate fails**; gate thresholds in a **ConfigMap** → edit it and the outcome changes with no rebuild.
-- [ ] **F3** Candidate = a **second Deployment + Service + its own collection**; eval Job against it; gate pass → rolling update (`maxUnavailable: 0`, `rollout status`); a candidate stopped by the gate; a bad release reversed with **`rollout undo`** → a new trace shows the **previous collection + embedding version**.
-- [ ] **F4** Traces in `kubectl logs` + on the volume; metrics via `kubectl port-forward`.
-- [ ] **F5** Requests and limits from `kubectl top` measurements (numbers go in the report).
+- [x] **F1** API Deployment, Chroma StatefulSet, Service; **PVC** for the data lake / quarantine / archive / traces.
+- [x] **F2** Ingestion + verification **Job** + **CronJob** (the only writer); **eval Job** `kubectl apply -f k8s/eval-job.yaml` writes to a volume and **fails when the gate fails**; gate thresholds in a **ConfigMap** → edit it and the outcome changes with no rebuild.
+- [x] **F3** Candidate = a **second Deployment + Service + its own collection**; eval Job against it; gate pass → rolling update (`maxUnavailable: 0`, `rollout status`); a candidate stopped by the gate; a bad release reversed with **`rollout undo`** → a new trace shows the **previous collection + embedding version**.
+- [x] **F4** Traces in `kubectl logs` + on the volume; metrics via `kubectl port-forward`.
+- [x] **F5** Requests and limits from `kubectl top` measurements (numbers go in the report).
 - [ ] **k8s/README.md**: a fresh cluster → working pipeline. **README**: the exact command for each Part A–F.
 - [ ] **Screenshots** **[M collects and labels them: A, B, C, D, E, F]**: terminal, command + output, nothing cropped.
 

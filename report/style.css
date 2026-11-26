@@ -9,3 +9,4 @@ th, td { border: 1px solid #bbb; padding: 2px 4px; vertical-align: top; }
 th { background: #eee; } code { font-size: 8pt; word-break: break-all; }
 p, ul { margin: 3px 0; } li { margin: 1px 0; }
 .newpage { page-break-before: always; }
+.shot { page-break-inside: avoid; margin: 0 0 8px; } .shot img { max-width: 100%; max-height: 120mm; border: 1px solid #ccc; }
