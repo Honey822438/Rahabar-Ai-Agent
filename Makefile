@@ -84,3 +84,6 @@ suite: ## A3 B5: the whole offline suite (module, component + noise, end-to-end)
 
 validate-inputs: ## A3: check the golden set, live queries, pairs and labels
 	$(BIN)/python scripts/validate_inputs.py
+
+report: ## A3: render report/report.md to report/report.pdf (pandoc + headless Chrome)
+	scripts/render_report.sh
