@@ -166,8 +166,6 @@ We sized requests and limits from these measurements. Under load the api peaked 
 ## Appendix: Screenshots
 Each screenshot shows the command and its output from our own cluster (`docs/evidence/<label>.png`).
 
-TODO-SCREENSHOTS: **D1** (one full trace record), **D2** (trace tool rebuilding the prompt), **E1** (coverage before), **E2** (coverage after) are still missing. Commands: `docs/screenshot-commands.md` §D, §E.
-
 <div class="shot"><p><b>A1: Batch B verification report (pass/fail per check, with reasons)</b></p><img src="docs/evidence/A1.png"></div>
 
 <div class="shot"><p><b>A2: second ingestion run on an unchanged corpus, 0 chunks embedded</b></p><img src="docs/evidence/A2.png"></div>
@@ -178,13 +176,23 @@ TODO-SCREENSHOTS: **D1** (one full trace record), **D2** (trace tool rebuilding 
 
 <div class="shot"><p><b>C2: release gate FAIL (candidate top_k = 1)</b></p><img src="docs/evidence/C2.png"></div>
 
+<div class="shot"><p><b>D1: one full trace record</b></p><img src="docs/evidence/D1.png"></div>
+
+<div class="shot"><p><b>D2: trace tool rebuilding the prompt for a trace id</b></p><img src="docs/evidence/D2.png"></div>
+
+<div class="shot"><p><b>E1: coverage before adding the new golden questions (24/40 = 60 %, exit 1)</b></p><img src="docs/evidence/E1.png"></div>
+
+<div class="shot"><p><b>E2: coverage after (34/40 = 85 %, exit 0)</b></p><img src="docs/evidence/E2.png"></div>
+
 <div class="shot"><p><b>F1: kubectl get all,pvc,configmap,cronjob,job -n rahbar</b></p><img src="docs/evidence/F1.png"></div>
 
 <div class="shot"><p><b>F2a: logs of a completed ingestion Job</b></p><img src="docs/evidence/F2.png"></div>
 
 <div class="shot"><p><b>F2b: logs of a completed evaluation Job (gate PASS)</b></p><img src="docs/evidence/F2b.png"></div>
 
-<div class="shot"><p><b>F3/F4: gate result changing after a ConfigMap edit; rollout status + rollout undo + trace showing the previous collection and embedding version</b></p><img src="docs/evidence/F3-4.png"></div>
+<div class="shot"><p><b>F3: gate result changing after a ConfigMap edit</b></p><img src="docs/evidence/F3.png"></div>
+
+<div class="shot"><p><b>F4: rollout status + rollout undo + trace showing the previous collection and embedding version; /metrics</b></p><img src="docs/evidence/F3-4.png"></div>
 
 <div class="shot"><p><b>F5: /metrics via kubectl port-forward</b></p><img src="docs/evidence/F5.png"></div>
 
