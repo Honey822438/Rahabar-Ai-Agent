@@ -10,7 +10,7 @@ run_eval() {
   kubectl apply -f k8s/eval-job.yaml
   until kubectl get job eval -n $NS -o jsonpath='{.status.conditions[*].type}' | grep -qE 'Complete|Failed'; do sleep 20; done
   kubectl get job eval -n $NS
-  kubectl logs -n $NS job/eval | grep -iE "gate|PASS|FAIL" | tail -15
+  kubectl logs -n $NS job/eval | grep -iE "gate|PASS|FAIL" | tail -15 || true
 }
 kubectl apply -f k8s/a3/gate-configmap.yaml
 echo "=== 1) stock thresholds ==="; run_eval
