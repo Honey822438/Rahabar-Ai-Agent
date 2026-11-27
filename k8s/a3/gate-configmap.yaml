@@ -1,0 +1,58 @@
+# F2: release-gate thresholds, mounted into the eval Job at /config/gate.yaml (GATE_CONFIG).
+# Generated from config/gate.yaml (same rules + justifications):
+#   kubectl create configmap gate-config -n rahbar --from-file=gate.yaml=config/gate.yaml \
+#     --dry-run=client -o yaml > k8s/a3/gate-configmap.yaml
+# Edit a threshold here + re-apply -> the next eval Job's verdict changes with no image rebuild.
+apiVersion: v1
+data:
+  gate.yaml: |
+    # C2 release gate (RAGOps 4.2.5): a candidate index/config ships only if every rule passes.
+    # Mounted from the ConfigMap `rahbar-gate` in the cluster (k8s/eval-job.yaml); the gate script
+    # (eval/gate.py) exits 1 on any failure, which fails the eval Job.
+    #
+    # Rules compare the candidate run with the baseline run (relative) or a fixed bar (absolute).
+    # Every threshold below is justified from our own measurements (eval/results/*):
+    # Baseline = the in-cluster run on the current 39-question golden set (26 Nov). The 24 Nov
+    # baseline (20261124T192554Z) was scored on 26 questions, so comparing against it is not like-for-like.
+    baseline: eval/results/20261126T160622Z-k8s-baseline.json
+
+    rules:
+      # Retrieval quality. Two runs of the baseline gave IDENTICAL retrieval (B4), so any drop is
+      # caused by the change, not by noise. 2 points = less than one question of 26 (1/26 = 3.8),
+      # i.e. the candidate may not lose a single question that the baseline found in the top 5.
+      - {metric: component.recall@5, kind: max_drop, value: 0.02}
+      # MRR / nDCG move with rank shuffles inside the top 5; allow ~ one question moving 1 -> 2
+      # (0.5/26 = 0.019) plus the noise test's spread (0.039 nDCG), round to 0.05.
+      - {metric: component.mrr, kind: max_drop, value: 0.05}
+      - {metric: component.ndcg@5, kind: max_drop, value: 0.05}
+
+      # Answer level. Non-negotiables of the service: every must-abstain question abstains and
+      # every citation matches a retrieved chunk. No tolerance.
+      - {metric: e2e.abstention_correct_unanswerable, kind: min, value: 1.0}
+      - {metric: e2e.citation_validity, kind: min, value: 1.0}
+      # Faithfulness (Gemini judge, temperature 0): baseline 1.0 on 23 judged answers. 0.9 allows
+      # ~2 judge disagreements (B4 showed wording changes but no verdict flips) but blocks a
+      # candidate that grounds answers on the wrong chunks.
+      - {metric: e2e.faithfulness, kind: min, value: 0.9}
+      # Abstention must not get worse: false abstentions (answerable questions refused) may rise
+      # by at most one question of 26 (0.04).
+      - {metric: e2e.false_abstention_rate, kind: max_rise, value: 0.04}
+      # Correct answers (golden `expect` string found): B4 re-run moved this by 0.04 with no change
+      # at all, so allow 0.08 (two questions) before calling it a regression.
+      - {metric: e2e.answer_correct_expect, kind: max_drop, value: 0.08}
+
+      # Latency. End-to-end p95 over ALL calls is dominated by the free-tier provider: 429/503
+      # back-offs and failovers. The c100 run failed here (27.6 s) only because 12/31 questions
+      # needed a retry, while its p50 was the fastest. A gate must judge the candidate, not
+      # Gemini's minute, so it ENFORCES p95 over answers with no provider retry (the cost of our
+      # pipeline + one normal LLM call) and REPORTS the all-calls p95 next to it (enforce: false).
+      # 20 s = the UI's request timeout budget.
+      - {metric: e2e.latency_p95_clean_s, kind: max, value: 20.0}
+      - {metric: e2e.latency_p95_s, kind: max, value: 20.0, enforce: false}
+      # Retrieval p95 is ours alone: baseline 104-132 ms; bigger chunks/more chunks must not
+      # triple it. 400 ms keeps retrieval under 5% of the answer budget.
+      - {metric: component.retrieval_p95_ms, kind: max, value: 400}
+kind: ConfigMap
+metadata:
+  name: gate-config
+  namespace: rahbar

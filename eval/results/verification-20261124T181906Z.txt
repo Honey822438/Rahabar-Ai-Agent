@@ -1,0 +1,3 @@
+doc_id@version      | quality | complete | recency | unique | max_cos | status   | reason
+--------------------+---------+----------+---------+--------+---------+----------+-------
+grading-page@2026-b | PASS    | PASS     | PASS    | PASS   | -       | VERIFIED |       

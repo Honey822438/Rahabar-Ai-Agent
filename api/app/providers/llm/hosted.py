@@ -42,7 +42,9 @@ class HostedProvider:
         if settings.groq_api_key:
             self.targets += [
                 _Target("groq", settings.groq_base_url, model.strip(), settings.groq_api_key,
-                        {"tool_choice": "none"})
+                        {"tool_choice": "none",
+                         # Gemini's OpenAI endpoint rejects "seed" (400); Groq accepts it.
+                         **({"seed": settings.llm_seed} if settings.llm_seed else {})})
                 for model in settings.groq_models.split(",") if model.strip()
             ]
 
@@ -64,17 +66,20 @@ class HostedProvider:
         """Raises on failure; the answer service retries once and then falls back."""
         messages = build_messages(question, passages)
         failure: Exception = RuntimeError("no hosted provider is configured")
+        failed: list[str] = []      # targets that failed before the one that answered (trace)
         for target in self.targets:
             try:
                 response = self._call(target, messages)
             except httpx.HTTPError as exc:
                 failure = exc
+                failed.append(f"{target.label}:{type(exc).__name__}")
                 log.warning("provider unreachable", extra={"target": target.label,
                                                            "model": target.model,
                                                            "error": type(exc).__name__})
                 continue
             if response.status_code in FAILOVER_STATUS:
                 failure = RuntimeError(f"{target.label} returned {response.status_code}")
+                failed.append(f"{target.label}:{response.status_code}")
                 log.warning("provider failed", extra={"target": target.label,
                                                       "model": target.model,
                                                       "status": response.status_code})
@@ -89,6 +94,7 @@ class HostedProvider:
             content = body["choices"][0]["message"]["content"]
             usage = body.get("usage") or {}
             record_generation(target.model, usage.get("prompt_tokens", 0),
-                              usage.get("completion_tokens", 0))
+                              usage.get("completion_tokens", 0), llm_target=target.label,
+                              failed_over_from=failed)
             return Answer.model_validate_json(content)
         raise failure

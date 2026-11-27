@@ -24,6 +24,9 @@ data:
   CACHE_THRESHOLD: "0.94"
   # 0.2: answers are facts in strict JSON, so low randomness; it does not prevent hallucination.
   TEMPERATURE: "0.2"
+  # Fixed sampling seed (A3 B4). Sent to Groq only: Gemini's OpenAI endpoint rejects "seed" (400).
+  # 0 = do not send one.
+  LLM_SEED: "42"
   LLM_MODEL: "gemini-flash-lite-latest"
   HOSTED_BASE_URL: "https://generativelanguage.googleapis.com/v1beta/openai/"
   LLM_TIMEOUT_SECONDS: "30"
@@ -33,3 +36,7 @@ data:
   OLLAMA_URL: "http://host.minikube.internal:11434"
   CORPUS_DIR: "/corpus"
   LOG_LEVEL: "INFO"
+  # A3 D1: one JSON trace per query to stdout and this file (the /data PVC; F wires the mount).
+  TRACE_FILE: "/data/traces/traces.jsonl"
+  # A3 D4: drop retrieved chunks that carry instructions to the model ("off" = flag only).
+  INJECTION_RAIL: "drop"

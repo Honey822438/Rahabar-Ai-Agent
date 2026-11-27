@@ -5,3 +5,16 @@
 !corpus/fetch.py
 !corpus/sources.yaml
 **/__pycache__
+# A3: Batch B text docs (indexer image) and the eval image (suite + gate, no secrets, no PDFs)
+!data/batch_b
+!api/requirements.txt
+!api/app
+!eval/run_suite.py
+!eval/gate.py
+!eval/suite
+!eval/pairs
+!eval/noise
+!eval/golden.jsonl
+!eval/drift_probes.jsonl
+!eval/results/20261126T160622Z-k8s-baseline.json
+!config/gate.yaml

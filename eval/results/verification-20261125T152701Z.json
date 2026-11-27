@@ -1,0 +1,367 @@
+{
+  "timestamp": "2026-11-25T15:27:01Z",
+  "lake": "../data/e3lake",
+  "counts": {
+    "verified": 4,
+    "quarantined": 8,
+    "archived": 0
+  },
+  "documents": [
+    {
+      "doc_id": "career-fair-2026",
+      "version": "2026-11",
+      "file": "b-career-fair-2026.md",
+      "sha256": "218ebba677c9521536d51e5d58e8878dd65335bd761257825cb027ea877458ae",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "659 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.770)"
+        }
+      },
+      "max_cosine": 0.7701,
+      "nearest": "annual-report-2023-24@2023-24"
+    },
+    {
+      "doc_id": "faculty-entrepreneurship-and-technical-start-ups-policy",
+      "version": "2026-11",
+      "file": "b-faculty-startup-policy-2026.md",
+      "sha256": "8f6b822f9ea5ee486496dbe778fb14837d70b0be78ce9733f5410652dea0f3e7",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "1579 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "supersedes 2022-05"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.809)"
+        }
+      },
+      "max_cosine": 0.8086,
+      "nearest": "student-handbook@2026-06"
+    },
+    {
+      "doc_id": "grading-system-reupload",
+      "version": "2026-11",
+      "file": "b-grading-near-duplicate.md",
+      "sha256": "8e085423c7952615227c95c3c0fd26a11186590cd2011414a3d9514eada3e95b",
+      "status": "quarantined",
+      "reasons": [
+        "uniqueness: near-duplicate of grading-page@2026 (cosine 0.989 >= 0.95)"
+      ],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "4793 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": false,
+          "reason": "near-duplicate of grading-page@2026 (cosine 0.989 >= 0.95)"
+        }
+      },
+      "max_cosine": 0.9888,
+      "nearest": "grading-page@2026"
+    },
+    {
+      "doc_id": "library-notice-2026",
+      "version": "2026-11",
+      "file": "b-injected-library-notice.md",
+      "sha256": "b1dd6dca05ae070c3ce119d6da35c4dce3fc5e1f005184633722774b4036cb8c",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "770 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.777)"
+        }
+      },
+      "max_cosine": 0.7769,
+      "nearest": "student-handbook@2026-06"
+    },
+    {
+      "doc_id": "b-missing-metadata-lab-safety",
+      "version": "unknown",
+      "file": "b-missing-metadata-lab-safety.md",
+      "sha256": "094570e1e34ca52a8e23b0c7a02811da2b8f2051bae5a312833545ae81f2fb33",
+      "status": "quarantined",
+      "reasons": [
+        "completeness: missing metadata: source, title, doc_version"
+      ],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "441 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": false,
+          "reason": "missing metadata: source, title, doc_version"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.770)"
+        }
+      },
+      "max_cosine": 0.7695,
+      "nearest": "library-notice-2026@2026-11"
+    },
+    {
+      "doc_id": "sports-week-2026",
+      "version": "2026-11",
+      "file": "b-sports-week-2026.md",
+      "sha256": "55dd7c557461bbbf4655b00ab1336a342fbbbbb8264951fe1a86f99b4c111fd5",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "706 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "unique (max cosine 0.758)"
+        }
+      },
+      "max_cosine": 0.7583,
+      "nearest": "career-fair-2026@2026-11"
+    },
+    {
+      "doc_id": "corrupt-scan",
+      "version": "2026-11",
+      "file": "broken-corrupt-scan.pdf",
+      "sha256": "9b1daf60e30e7f170949a2e1c829485efe5cbb8b5d579cea5735e3ea117defc0",
+      "status": "quarantined",
+      "reasons": [
+        "quality: extraction failed: PdfminerException: No /Root object! - Is this really a PDF?",
+        "completeness: missing metadata: page_count"
+      ],
+      "checks": {
+        "quality": {
+          "ok": false,
+          "reason": "extraction failed: PdfminerException: No /Root object! - Is this really a PDF?"
+        },
+        "completeness": {
+          "ok": false,
+          "reason": "missing metadata: page_count"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "sha256 unique; near-dup check skipped"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    },
+    {
+      "doc_id": "fee-structure-mirror",
+      "version": "2026-11",
+      "file": "broken-dup-fee-structure-page.html",
+      "sha256": "ec8872ae77cac7e96e20e6979933f36b00aaeb0ab3f668a2116e521c655e7b90",
+      "status": "quarantined",
+      "reasons": [
+        "uniqueness: exact duplicate of fee-structure-page@2026-27 (sha256)"
+      ],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "3648 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": false,
+          "reason": "exact duplicate of fee-structure-page@2026-27 (sha256)"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    },
+    {
+      "doc_id": "grading-page-mirror",
+      "version": "2026-11",
+      "file": "broken-dup-grading-page.html",
+      "sha256": "66a995b4d8474e914d37bfa14755a5361f47327d5a7314f9b7ec15d9b6176e6e",
+      "status": "quarantined",
+      "reasons": [
+        "uniqueness: exact duplicate of grading-page@2026 (sha256)"
+      ],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "4723 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": false,
+          "reason": "exact duplicate of grading-page@2026 (sha256)"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    },
+    {
+      "doc_id": "empty-upload",
+      "version": "2026-11",
+      "file": "broken-empty-upload.md",
+      "sha256": "f0bf575a58d10e080bd6770c98475cc5d2ed9cda4729f3aec7ca14572b26967b",
+      "status": "quarantined",
+      "reasons": [
+        "quality: empty: 0 characters < 200"
+      ],
+      "checks": {
+        "quality": {
+          "ok": false,
+          "reason": "empty: 0 characters < 200"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-11"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "sha256 unique; near-dup check skipped"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    },
+    {
+      "doc_id": "midterm-notice",
+      "version": "2026-11",
+      "file": "broken-garbled-notice.txt",
+      "sha256": "ed9d0db0afef795271ec8d08a73f558fc0aa76524f24cc25b0c6ac850342b542",
+      "status": "quarantined",
+      "reasons": [
+        "quality: garbled: clean-character ratio 0.53 < 0.9",
+        "completeness: truncated: text ends mid-sentence: ...'\u0192\u00c2\u00a9\u00a4\u00ff \u00c3\u0192\u00c2\u00bc\u00a4\u00ff \u00c3\u0192\u00c2\u00b1\u00a4\u00ff \u00c3\u0192\u00c2\u00a9\u00a4\u00ff \u00c3\u0192\u00c2\u00bc\u00a4\u00ff \u00c3\u0192\u00c2\u00b1\u00a4\u00ff'"
+      ],
+      "checks": {
+        "quality": {
+          "ok": false,
+          "reason": "garbled: clean-character ratio 0.53 < 0.9"
+        },
+        "completeness": {
+          "ok": false,
+          "reason": "truncated: text ends mid-sentence: ...'\u0192\u00c2\u00a9\u00a4\u00ff \u00c3\u0192\u00c2\u00bc\u00a4\u00ff \u00c3\u0192\u00c2\u00b1\u00a4\u00ff \u00c3\u0192\u00c2\u00a9\u00a4\u00ff \u00c3\u0192\u00c2\u00bc\u00a4\u00ff \u00c3\u0192\u00c2\u00b1\u00a4\u00ff'"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "sha256 unique; near-dup check skipped"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    },
+    {
+      "doc_id": "handbook-upload",
+      "version": "2026-11",
+      "file": "broken-truncated-handbook.pdf",
+      "sha256": "1d61e4ab5170d56b55b1063d5b81fbaeccff831b9a75f803b47f6fa87c560628",
+      "status": "quarantined",
+      "reasons": [
+        "quality: extraction failed: PdfminerException: Unexpected EOF",
+        "completeness: missing metadata: page_count"
+      ],
+      "checks": {
+        "quality": {
+          "ok": false,
+          "reason": "extraction failed: PdfminerException: Unexpected EOF"
+        },
+        "completeness": {
+          "ok": false,
+          "reason": "missing metadata: page_count"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "latest version"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "sha256 unique; near-dup check skipped"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    }
+  ],
+  "table": "doc_id@version                               | quality | complete | recency | unique | max_cos | status      | reason                                                                                    \n---------------------------------------------+---------+----------+---------+--------+---------+-------------+-------------------------------------------------------------------------------------------\ncareer-fair-2026@2026-11                     | PASS    | PASS     | PASS    | PASS   | 0.770   | VERIFIED    |                                                                                           \nfaculty-entrepreneurship-and-technical-start | PASS    | PASS     | PASS    | PASS   | 0.809   | VERIFIED    |                                                                                           \ngrading-system-reupload@2026-11              | PASS    | PASS     | PASS    | FAIL   | 0.989   | QUARANTINED | uniqueness: near-duplicate of grading-page@2026 (cosine 0.989 >= 0.95)                    \nlibrary-notice-2026@2026-11                  | PASS    | PASS     | PASS    | PASS   | 0.777   | VERIFIED    |                                                                                           \nb-missing-metadata-lab-safety@unknown        | PASS    | FAIL     | PASS    | PASS   | 0.769   | QUARANTINED | completeness: missing metadata: source, title, doc_version                                \nsports-week-2026@2026-11                     | PASS    | PASS     | PASS    | PASS   | 0.758   | VERIFIED    |                                                                                           \ncorrupt-scan@2026-11                         | FAIL    | FAIL     | PASS    | PASS   | -       | QUARANTINED | quality: extraction failed: PdfminerException: No /Root object! - Is this really a PDF?; c\nfee-structure-mirror@2026-11                 | PASS    | PASS     | PASS    | FAIL   | -       | QUARANTINED | uniqueness: exact duplicate of fee-structure-page@2026-27 (sha256)                        \ngrading-page-mirror@2026-11                  | PASS    | PASS     | PASS    | FAIL   | -       | QUARANTINED | uniqueness: exact duplicate of grading-page@2026 (sha256)                                 \nempty-upload@2026-11                         | FAIL    | PASS     | PASS    | PASS   | -       | QUARANTINED | quality: empty: 0 characters < 200                                                        \nmidterm-notice@2026-11                       | FAIL    | FAIL     | PASS    | PASS   | -       | QUARANTINED | quality: garbled: clean-character ratio 0.53 < 0.9; completeness: truncated: text ends mid\nhandbook-upload@2026-11                      | FAIL    | FAIL     | PASS    | PASS   | -       | QUARANTINED | quality: extraction failed: PdfminerException: Unexpected EOF; completeness: missing metad"
+}

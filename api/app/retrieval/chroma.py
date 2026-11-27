@@ -55,6 +55,7 @@ class ChromaRetriever:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self._client: Any = None
+        self._digest: str | None = None
 
     def _collection(self) -> Any:
         """Looked up each time: the indexer replaces the collection when it re-indexes."""
@@ -74,6 +75,24 @@ class ChromaRetriever:
 
     def index_metadata(self) -> dict[str, object]:
         return dict(self._collection().metadata or {})
+
+    def filters(self, question: str) -> dict[str, object]:
+        """The metadata filter retrieve() applies to this question (for the trace)."""
+        version = requested_version(question)
+        return {"where": {"superseded": version is not None}, "requested_version": version,
+                "exact_terms": EXACT_TERM.findall(question)}
+
+    def embed_version(self) -> str:
+        """The pinned model's Ollama digest (its exact version), looked up once."""
+        if self._digest is None:
+            try:
+                tags = httpx.get(f"{self.settings.ollama_url}/api/tags", timeout=5).json()
+                self._digest = next((m["digest"][:12] for m in tags.get("models", [])
+                                     if m["name"].split(":")[0] == self.settings.embed_model
+                                     .split(":")[0]), "unknown")
+            except Exception:
+                return "unknown"
+        return self._digest or "unknown"
 
     def embed(self, question: str) -> list[float]:
         prefix = QUERY_PREFIX if self.settings.embed_model.startswith("nomic") else ""
@@ -108,7 +127,8 @@ class ChromaRetriever:
             found = collection.query(query_embeddings=[vector], n_results=EXACT_HITS, where=where,
                                      where_document={"$contains": term},
                                      include=["documents", "metadatas", "distances"])
-            exact += self._to_passages(found, version)
+            exact += [p.model_copy(update={"boosted": True})
+                      for p in self._to_passages(found, version)]
         ids = set()
         ordered = []
         for passage in exact + passages:
@@ -128,6 +148,8 @@ class ChromaRetriever:
                 section=str(meta["section"]),
                 page=int(meta["page"]),
                 score=1 - distance,  # cosine distance to similarity
+                doc_id=str(meta.get("doc_id") or meta["source"]),
+                doc_version=str(meta.get("doc_version", "")),
             )
             for chunk_id, text, meta, distance in zip(
                 found["ids"][0], found["documents"][0], found["metadatas"][0],

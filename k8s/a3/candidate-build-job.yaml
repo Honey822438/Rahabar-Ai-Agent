@@ -1,0 +1,66 @@
+# F3/C1: build the candidate collection rahbar_c600 (chunk 600/100) from the SAME lake.
+# The Job is the only writer (app: indexer, same image, same egress as the indexer). sync.py
+# stores chunk ids per chunk config in the manifest, so it runs on a private manifest copy in
+# /tmp/lake whose verified/, archive/ and cache/ are symlinks into the PVC: the real manifest
+# keeps its 400/50 ids and the OCR cache is shared (no PDF is OCR'd again).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-candidate
+  namespace: rahbar
+  labels: { app: indexer }
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels: { app: indexer }
+    spec:
+      restartPolicy: OnFailure
+      enableServiceLinks: false
+      serviceAccountName: indexer
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: build
+          image: rahbar-indexer:dev
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c"]
+          args:
+            - >-
+              mkdir -p /tmp/lake && cp /data/lake/manifest.json /tmp/lake/ &&
+              for d in verified archive cache; do ln -sfn /data/lake/$d /tmp/lake/$d; done &&
+              python -m pipeline.sync
+          envFrom:
+            - configMapRef: { name: rahbar-config }
+          env:
+            - { name: LAKE_DIR, value: /tmp/lake }
+            - { name: CHROMA_COLLECTION, value: rahbar_c600 }
+            - { name: CHUNK_SIZE, value: "600" }
+            - { name: CHUNK_OVERLAP, value: "100" }
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: tmp
+          emptyDir: {}

@@ -36,6 +36,8 @@ class Settings:
     # Retrieval and generation
     top_k: int = 5
     temperature: float = 0.2
+    # Fixed sampling seed (A3 B4); 0 = not sent. Reduces, but cannot remove, run-to-run variation.
+    llm_seed: int = 0
     llm_model: str = "llama3.2:3b"
     ollama_url: str = "http://host.minikube.internal:11434"
     hosted_base_url: str = ""        # e.g. an OpenAI-compatible endpoint
@@ -54,6 +56,10 @@ class Settings:
     groq_models: str = "openai/gpt-oss-20b,qwen/qwen3.8-27b"
     groq_api_key: str = field(default="", repr=False)   # from the Secret; never log it
 
+    # A3 D1/D4: per-query traces (JSON lines) and the injection rail. "" = stdout only.
+    trace_file: str = "/data/traces/traces.jsonl"
+    injection_rail: str = "drop"     # drop | off (flag only)
+
     log_level: str = "INFO"
 
 
@@ -67,6 +73,7 @@ def get_settings() -> Settings:
         collection=os.environ.get("CHROMA_COLLECTION", "rahbar"),
         top_k=_int("TOP_K", 5),
         temperature=_float("TEMPERATURE", 0.2),
+        llm_seed=_int("LLM_SEED", 0),
         llm_model=os.environ.get("LLM_MODEL", "llama3.2:3b"),
         ollama_url=os.environ.get("OLLAMA_URL", "http://host.minikube.internal:11434"),
         hosted_base_url=os.environ.get("HOSTED_BASE_URL", ""),
@@ -79,5 +86,7 @@ def get_settings() -> Settings:
         groq_base_url=os.environ.get("GROQ_BASE_URL", "https://api.groq.com/openai/v1/"),
         groq_models=os.environ.get("GROQ_MODELS", "openai/gpt-oss-20b,qwen/qwen3.8-27b"),
         groq_api_key=os.environ.get("GROQ_API_KEY", ""),
+        trace_file=os.environ.get("TRACE_FILE", "/data/traces/traces.jsonl"),
+        injection_rail=os.environ.get("INJECTION_RAIL", "drop"),
         log_level=os.environ.get("LOG_LEVEL", "INFO"),
     )

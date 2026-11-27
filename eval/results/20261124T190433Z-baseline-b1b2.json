@@ -1,0 +1,1420 @@
+{
+  "label": "baseline-b1b2",
+  "timestamp": "2026-11-24T19:04:08Z",
+  "git_sha": "34ec5b7",
+  "seed": 42,
+  "golden": "golden.jsonl",
+  "golden_questions": 31,
+  "config": {
+    "collection": "rahbar",
+    "embed_model": "nomic-embed-text",
+    "top_k": 5,
+    "relevance_floor": 0.65,
+    "llm_model": "gemini-flash-lite-latest",
+    "temperature": 0.2
+  },
+  "module": {
+    "embed_model": "nomic-embed-text",
+    "dimension": 768,
+    "paraphrase_mean_cosine": 0.7242,
+    "unrelated_mean_cosine": 0.4498,
+    "similarity_gap": 0.2744,
+    "paraphrase_min": 0.6229,
+    "unrelated_max": 0.6429,
+    "pairs_separable": false,
+    "embed_ms_per_chunk_mean": 225.0,
+    "embed_ms_per_chunk_p95": 564.4,
+    "chunks_timed": 20,
+    "determinism_max_abs_diff": 0.0,
+    "deterministic": true
+  },
+  "component": {
+    "collection": "rahbar",
+    "summary": {
+      "questions": 26,
+      "recall@3": 0.9231,
+      "recall@5": 0.9615,
+      "mrr": 0.866,
+      "ndcg@5": 0.8095,
+      "retrieval_p50_ms": 92.5,
+      "retrieval_p95_ms": 122.0
+    },
+    "per_question": [
+      {
+        "id": "q01",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.8772153153380493,
+        "seconds": 0.10040783600015857,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.8686,
+            "relevant": true
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.8085,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.7605,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7227,
+            "relevant": true
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.7157,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q02",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.07304256600036751,
+        "top5": [
+          {
+            "chunk_id": "b6a3f88aa2e0e252438274d2ae4be282",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Bachelor's Degree Requirements",
+            "page": 10,
+            "score": 0.8578,
+            "relevant": true
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.7113,
+            "relevant": false
+          },
+          {
+            "chunk_id": "164f56be62c4e66f97b74742ce4e607e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Freezing of Semester",
+            "page": 22,
+            "score": 0.6932,
+            "relevant": false
+          },
+          {
+            "chunk_id": "7a0867a84d7f701a301b3b071fed2acd",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "25. Closure of Admission 30. Admission with Credit Transfer",
+            "page": 5,
+            "score": 0.693,
+            "relevant": false
+          },
+          {
+            "chunk_id": "fc37df13853852f1c40e42881c9ce815",
+            "source": "annual-report-2023-24.pdf",
+            "section": "2. Study Loan",
+            "page": 77,
+            "score": 0.6914,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q03",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.7039180890341347,
+        "seconds": 0.0891618079986074,
+        "top5": [
+          {
+            "chunk_id": "0983df644a5e1101d1d1084dec634ad1",
+            "source": "fee-structure-page.html",
+            "section": "Tuition Fee (w.e.f. Fall 2026 semester)",
+            "page": 1,
+            "score": 0.8346,
+            "relevant": true
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.6489,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e8f3e0bfac9497c4ca5b820f10e5c22b",
+            "source": "fee-structure-page.html",
+            "section": "Miscellaneous Fees",
+            "page": 1,
+            "score": 0.6478,
+            "relevant": true
+          },
+          {
+            "chunk_id": "b6a3f88aa2e0e252438274d2ae4be282",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Bachelor's Degree Requirements",
+            "page": 10,
+            "score": 0.6404,
+            "relevant": false
+          },
+          {
+            "chunk_id": "428531712a30a3bdbc3a2219230c693a",
+            "source": "annual-report-2019-20.pdf",
+            "section": "1. Merit Scholarships for Bachelor Students",
+            "page": 31,
+            "score": 0.6395,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q04",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.9060254355346823,
+        "seconds": 0.09499328499987314,
+        "top5": [
+          {
+            "chunk_id": "8097a851b8c2ff6bb4bb5d336e671b6f",
+            "source": "fee-structure-page.html",
+            "section": "Fee Refund Policy",
+            "page": 1,
+            "score": 0.7739,
+            "relevant": true
+          },
+          {
+            "chunk_id": "eb120418e544dcbb15a8ef1d723f9fe7",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Withdrawal from a Course",
+            "page": 22,
+            "score": 0.723,
+            "relevant": false
+          },
+          {
+            "chunk_id": "0983df644a5e1101d1d1084dec634ad1",
+            "source": "fee-structure-page.html",
+            "section": "Tuition Fee (w.e.f. Fall 2026 semester)",
+            "page": 1,
+            "score": 0.6892,
+            "relevant": true
+          },
+          {
+            "chunk_id": "e8f3e0bfac9497c4ca5b820f10e5c22b",
+            "source": "fee-structure-page.html",
+            "section": "Miscellaneous Fees",
+            "page": 1,
+            "score": 0.6792,
+            "relevant": true
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.6764,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q05",
+        "type": "answerable",
+        "first_relevant_rank": 3,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 0.3333333333333333,
+        "ndcg@5": 0.30078518014914984,
+        "seconds": 0.07643046300108836,
+        "top5": [
+          {
+            "chunk_id": "498aad59fecf53ee36a485b769b5c795",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "8. Referencing Generative AI Tools",
+            "page": 52,
+            "score": 0.7935,
+            "relevant": false
+          },
+          {
+            "chunk_id": "79a1e2650a51fe0b990ac2e1c91a8135",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "8. Referencing Generative AI Tools",
+            "page": 59,
+            "score": 0.7907,
+            "relevant": false
+          },
+          {
+            "chunk_id": "2aa634ec9f0847e0e805565c5fffeb2d",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "4. Acceptable Uses of Generative AI Tools",
+            "page": 52,
+            "score": 0.788,
+            "relevant": true
+          },
+          {
+            "chunk_id": "b631824ec2d19a1b279475c422067d7b",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "4. Acceptable Uses of Generative AI Tools",
+            "page": 44,
+            "score": 0.7868,
+            "relevant": false
+          },
+          {
+            "chunk_id": "b2d3b228d358a068db7b3e225d543a32",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "5. Unacceptable Uses of Generative AI Tools",
+            "page": 52,
+            "score": 0.7501,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "q06",
+        "type": "answerable",
+        "first_relevant_rank": 2,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 0.5,
+        "ndcg@5": 0.6934264036172708,
+        "seconds": 0.08242697400055476,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.8442,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.8336,
+            "relevant": true
+          },
+          {
+            "chunk_id": "9b7a72ecf15b02b133ec814fab6473f0",
+            "source": "grading-page.html",
+            "section": "Repeating a Course",
+            "page": 1,
+            "score": 0.7517,
+            "relevant": true
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.726,
+            "relevant": false
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.7089,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q07",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08452560400110087,
+        "top5": [
+          {
+            "chunk_id": "78d1a0aeb730845b1fdc888d84276f82",
+            "source": "grading-page.html",
+            "section": "Incomplete Course",
+            "page": 1,
+            "score": 0.8101,
+            "relevant": true
+          },
+          {
+            "chunk_id": "dad6e4e1d841f3e673648945c442e24b",
+            "source": "grading-page.html",
+            "section": "Academic Grading",
+            "page": 1,
+            "score": 0.6815,
+            "relevant": true
+          },
+          {
+            "chunk_id": "36fa9829fd7e8535ab6aadef7af2bc2a",
+            "source": "grading-page.html",
+            "section": "Description of Grades",
+            "page": 1,
+            "score": 0.6573,
+            "relevant": true
+          },
+          {
+            "chunk_id": "9b7a72ecf15b02b133ec814fab6473f0",
+            "source": "grading-page.html",
+            "section": "Repeating a Course",
+            "page": 1,
+            "score": 0.6513,
+            "relevant": true
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.6443,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "q08",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.07900819900169154,
+        "top5": [
+          {
+            "chunk_id": "7c64e5d1be316bce37fb46e516f52c7e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Attendance Requirements",
+            "page": 10,
+            "score": 0.8298,
+            "relevant": true
+          },
+          {
+            "chunk_id": "9b7a72ecf15b02b133ec814fab6473f0",
+            "source": "grading-page.html",
+            "section": "Repeating a Course",
+            "page": 1,
+            "score": 0.7388,
+            "relevant": false
+          },
+          {
+            "chunk_id": "790d6d19132c75f621f476f146666b51",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vi – Semester Rules",
+            "page": 29,
+            "score": 0.7322,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1481ae9e2a9ad63af2a412a214394fd8",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "V - Examination Rules",
+            "page": 28,
+            "score": 0.7245,
+            "relevant": false
+          },
+          {
+            "chunk_id": "ce744cd54689663c30726b1e430d4c15",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Late conduct of Examination/ Missed Examination",
+            "page": 25,
+            "score": 0.7108,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q09",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.6131471927654584,
+        "seconds": 0.08363067999925988,
+        "top5": [
+          {
+            "chunk_id": "7c64e5d1be316bce37fb46e516f52c7e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Attendance Requirements",
+            "page": 10,
+            "score": 0.6433,
+            "relevant": true
+          },
+          {
+            "chunk_id": "92cf88808a42813ab6a08f58201d6e36",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 4,
+            "score": 0.7065,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7046,
+            "relevant": false
+          },
+          {
+            "chunk_id": "a222597eebc0ec529b702581aa936065",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Code Of Conduct",
+            "page": 11,
+            "score": 0.6869,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6498ba470c5f92d86fbac3a1fe694d46",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "I - ACADEMIC RULES and REGULATIONS",
+            "page": 17,
+            "score": 0.6838,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q10",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.8503449055347546,
+        "seconds": 0.10694371200042951,
+        "top5": [
+          {
+            "chunk_id": "b6a3f88aa2e0e252438274d2ae4be282",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Bachelor's Degree Requirements",
+            "page": 10,
+            "score": 0.7133,
+            "relevant": true
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.7709,
+            "relevant": false
+          },
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.7634,
+            "relevant": false
+          },
+          {
+            "chunk_id": "180d19fbdbda2db1dd9698fb870a6ebe",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "7. Awards and the Honor System",
+            "page": 30,
+            "score": 0.7383,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.722,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "q11",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.07382454599974153,
+        "top5": [
+          {
+            "chunk_id": "f52a6faf7749b8e3eeaa3d0713337bed",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "6. Rules for Summer Semester",
+            "page": 28,
+            "score": 0.8433,
+            "relevant": true
+          },
+          {
+            "chunk_id": "3c022ba3e39ac289fb4dc2a69833a9d6",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Adding or Dropping a Course",
+            "page": 22,
+            "score": 0.7466,
+            "relevant": false
+          },
+          {
+            "chunk_id": "78a71981cd0c7377b95e4fc02d5eca63",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.716,
+            "relevant": false
+          },
+          {
+            "chunk_id": "574e09a7e1f45215077ebaa66510f591",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.7106,
+            "relevant": false
+          },
+          {
+            "chunk_id": "0a13a89bdaad5f47ee92f19525fcace4",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "1. Introduction",
+            "page": 7,
+            "score": 0.7104,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q12",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.1021475149991602,
+        "top5": [
+          {
+            "chunk_id": "f4d263ba90aff36288bdb60e97732064",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "4. Registration",
+            "page": 19,
+            "score": 0.7939,
+            "relevant": true
+          },
+          {
+            "chunk_id": "574e09a7e1f45215077ebaa66510f591",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.7649,
+            "relevant": false
+          },
+          {
+            "chunk_id": "78a71981cd0c7377b95e4fc02d5eca63",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.7615,
+            "relevant": false
+          },
+          {
+            "chunk_id": "164f56be62c4e66f97b74742ce4e607e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Freezing of Semester",
+            "page": 22,
+            "score": 0.7344,
+            "relevant": false
+          },
+          {
+            "chunk_id": "1c9a85e8b686bcfac3f39f08760c895f",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.7328,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "q15",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.8503449055347546,
+        "seconds": 0.11071604000062507,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.834,
+            "relevant": true
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.8128,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.742,
+            "relevant": false
+          },
+          {
+            "chunk_id": "9b7a72ecf15b02b133ec814fab6473f0",
+            "source": "grading-page.html",
+            "section": "Repeating a Course",
+            "page": 1,
+            "score": 0.7415,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7277,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "q16",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08796326700030477,
+        "top5": [
+          {
+            "chunk_id": "6b97f3448baa6b89f9c18663d9403848",
+            "source": "fee-structure-page.html",
+            "section": "Security Deposit",
+            "page": 1,
+            "score": 0.879,
+            "relevant": true
+          },
+          {
+            "chunk_id": "8097a851b8c2ff6bb4bb5d336e671b6f",
+            "source": "fee-structure-page.html",
+            "section": "Fee Refund Policy",
+            "page": 1,
+            "score": 0.7228,
+            "relevant": true
+          },
+          {
+            "chunk_id": "f92d4fda30220cf7f711439ae73d14b4",
+            "source": "fee-structure-page.html",
+            "section": "Admission Fee",
+            "page": 1,
+            "score": 0.7127,
+            "relevant": true
+          },
+          {
+            "chunk_id": "e8f3e0bfac9497c4ca5b820f10e5c22b",
+            "source": "fee-structure-page.html",
+            "section": "Miscellaneous Fees",
+            "page": 1,
+            "score": 0.6577,
+            "relevant": true
+          },
+          {
+            "chunk_id": "0983df644a5e1101d1d1084dec634ad1",
+            "source": "fee-structure-page.html",
+            "section": "Tuition Fee (w.e.f. Fall 2026 semester)",
+            "page": 1,
+            "score": 0.6428,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "q17",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.12204603999998653,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.7962,
+            "relevant": true
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.7257,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.791,
+            "relevant": false
+          },
+          {
+            "chunk_id": "7a0867a84d7f701a301b3b071fed2acd",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "25. Closure of Admission 30. Admission with Credit Transfer",
+            "page": 5,
+            "score": 0.7518,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6a18b108a162387764daf0d30623b204",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Academic Rules & Regulations FAST-NUCES",
+            "page": 2,
+            "score": 0.7228,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "s01",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.8503449055347546,
+        "seconds": 0.08449930399910954,
+        "top5": [
+          {
+            "chunk_id": "164f56be62c4e66f97b74742ce4e607e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Freezing of Semester",
+            "page": 22,
+            "score": 0.8813,
+            "relevant": true
+          },
+          {
+            "chunk_id": "574e09a7e1f45215077ebaa66510f591",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.8044,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.745,
+            "relevant": false
+          },
+          {
+            "chunk_id": "78a71981cd0c7377b95e4fc02d5eca63",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.7368,
+            "relevant": false
+          },
+          {
+            "chunk_id": "3c022ba3e39ac289fb4dc2a69833a9d6",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Adding or Dropping a Course",
+            "page": 22,
+            "score": 0.7342,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "s02",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08432066299974394,
+        "top5": [
+          {
+            "chunk_id": "f92d4fda30220cf7f711439ae73d14b4",
+            "source": "fee-structure-page.html",
+            "section": "Admission Fee",
+            "page": 1,
+            "score": 0.7652,
+            "relevant": true
+          },
+          {
+            "chunk_id": "e8f3e0bfac9497c4ca5b820f10e5c22b",
+            "source": "fee-structure-page.html",
+            "section": "Miscellaneous Fees",
+            "page": 1,
+            "score": 0.6417,
+            "relevant": true
+          },
+          {
+            "chunk_id": "6b97f3448baa6b89f9c18663d9403848",
+            "source": "fee-structure-page.html",
+            "section": "Security Deposit",
+            "page": 1,
+            "score": 0.6331,
+            "relevant": true
+          },
+          {
+            "chunk_id": "0983df644a5e1101d1d1084dec634ad1",
+            "source": "fee-structure-page.html",
+            "section": "Tuition Fee (w.e.f. Fall 2026 semester)",
+            "page": 1,
+            "score": 0.631,
+            "relevant": true
+          },
+          {
+            "chunk_id": "8097a851b8c2ff6bb4bb5d336e671b6f",
+            "source": "fee-structure-page.html",
+            "section": "Fee Refund Policy",
+            "page": 1,
+            "score": 0.5848,
+            "relevant": true
+          }
+        ]
+      },
+      {
+        "id": "s03",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.09323506100008672,
+        "top5": [
+          {
+            "chunk_id": "ec008e238771eb7bd70e58f9b2469870",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Admission with Credit Transfer from another University",
+            "page": 14,
+            "score": 0.7452,
+            "relevant": true
+          },
+          {
+            "chunk_id": "0489221b1cc6fc79822d36ca557ba7b5",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Admission with Credit Transfer from another University",
+            "page": 16,
+            "score": 0.7346,
+            "relevant": true
+          },
+          {
+            "chunk_id": "7a0867a84d7f701a301b3b071fed2acd",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "25. Closure of Admission 30. Admission with Credit Transfer",
+            "page": 5,
+            "score": 0.7141,
+            "relevant": false
+          },
+          {
+            "chunk_id": "fd83c707fb652dd754785bf7b2ce3a13",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "25. Closure of Admission 30. Admission with Credit Transfer",
+            "page": 4,
+            "score": 0.7128,
+            "relevant": false
+          },
+          {
+            "chunk_id": "420f785b233d254a4b530aa4638d5b6a",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "24. Restoration of Suspended 29. Readmission of Current Student",
+            "page": 4,
+            "score": 0.7119,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "s04",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.09884383300050104,
+        "top5": [
+          {
+            "chunk_id": "180d19fbdbda2db1dd9698fb870a6ebe",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "7. Awards and the Honor System",
+            "page": 30,
+            "score": 0.8309,
+            "relevant": true
+          },
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.7212,
+            "relevant": false
+          },
+          {
+            "chunk_id": "d4954dc578b4e113e97d3badcd8817ad",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Dean's List of Honors",
+            "page": 31,
+            "score": 0.708,
+            "relevant": false
+          },
+          {
+            "chunk_id": "428531712a30a3bdbc3a2219230c693a",
+            "source": "annual-report-2019-20.pdf",
+            "section": "1. Merit Scholarships for Bachelor Students",
+            "page": 31,
+            "score": 0.7069,
+            "relevant": false
+          },
+          {
+            "chunk_id": "d654b5f55432ce0299de0f73a706519d",
+            "source": "annual-report-2023-24.pdf",
+            "section": "1. Merit Scholarships for Bachelor Students",
+            "page": 77,
+            "score": 0.7069,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "s05",
+        "type": "answerable",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.08532958599971607,
+        "top5": [
+          {
+            "chunk_id": "0a13a89bdaad5f47ee92f19525fcace4",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "1. Introduction",
+            "page": 7,
+            "score": 0.7773,
+            "relevant": true
+          },
+          {
+            "chunk_id": "f097b3e602322fc299765d3b196918d1",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "Introduction",
+            "page": 1,
+            "score": 0.6646,
+            "relevant": false
+          },
+          {
+            "chunk_id": "62a8c92527c84c6961120069b91f40f9",
+            "source": "b-faculty-startup-policy-2026.md",
+            "section": "9. Conditions",
+            "page": 1,
+            "score": 0.6585,
+            "relevant": false
+          },
+          {
+            "chunk_id": "f4d263ba90aff36288bdb60e97732064",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "4. Registration",
+            "page": 19,
+            "score": 0.6503,
+            "relevant": false
+          },
+          {
+            "chunk_id": "b6a3f88aa2e0e252438274d2ae4be282",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Bachelor's Degree Requirements",
+            "page": 10,
+            "score": 0.6477,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "s06",
+        "type": "answerable",
+        "first_relevant_rank": 4,
+        "hit@3": false,
+        "hit@5": true,
+        "rr": 0.25,
+        "ndcg@5": 0.2640681225725909,
+        "seconds": 0.09248503599883406,
+        "top5": [
+          {
+            "chunk_id": "d95d4956d8a220eeb928519809767770",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Repeating a Course",
+            "page": 25,
+            "score": 0.7805,
+            "relevant": false
+          },
+          {
+            "chunk_id": "9b7a72ecf15b02b133ec814fab6473f0",
+            "source": "grading-page.html",
+            "section": "Repeating a Course",
+            "page": 1,
+            "score": 0.7782,
+            "relevant": false
+          },
+          {
+            "chunk_id": "78d1a0aeb730845b1fdc888d84276f82",
+            "source": "grading-page.html",
+            "section": "Incomplete Course",
+            "page": 1,
+            "score": 0.7709,
+            "relevant": false
+          },
+          {
+            "chunk_id": "eb120418e544dcbb15a8ef1d723f9fe7",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Withdrawal from a Course",
+            "page": 22,
+            "score": 0.7655,
+            "relevant": true
+          },
+          {
+            "chunk_id": "7c64e5d1be316bce37fb46e516f52c7e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Attendance Requirements",
+            "page": 10,
+            "score": 0.7389,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "h01",
+        "type": "hard",
+        "first_relevant_rank": 3,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 0.3333333333333333,
+        "ndcg@5": 0.5,
+        "seconds": 0.09927920299924153,
+        "top5": [
+          {
+            "chunk_id": "790d6d19132c75f621f476f146666b51",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Vi – Semester Rules",
+            "page": 29,
+            "score": 0.7241,
+            "relevant": false
+          },
+          {
+            "chunk_id": "574e09a7e1f45215077ebaa66510f591",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.6927,
+            "relevant": false
+          },
+          {
+            "chunk_id": "7c64e5d1be316bce37fb46e516f52c7e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Attendance Requirements",
+            "page": 10,
+            "score": 0.6911,
+            "relevant": true
+          },
+          {
+            "chunk_id": "ce744cd54689663c30726b1e430d4c15",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Late conduct of Examination/ Missed Examination",
+            "page": 25,
+            "score": 0.6881,
+            "relevant": false
+          },
+          {
+            "chunk_id": "d95d4956d8a220eeb928519809767770",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Repeating a Course",
+            "page": 25,
+            "score": 0.6792,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "h02",
+        "type": "hard",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 0.6366824387328317,
+        "seconds": 0.13571753799988073,
+        "top5": [
+          {
+            "chunk_id": "3c022ba3e39ac289fb4dc2a69833a9d6",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Adding or Dropping a Course",
+            "page": 22,
+            "score": 0.7335,
+            "relevant": true
+          },
+          {
+            "chunk_id": "164f56be62c4e66f97b74742ce4e607e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Freezing of Semester",
+            "page": 22,
+            "score": 0.7188,
+            "relevant": true
+          },
+          {
+            "chunk_id": "574e09a7e1f45215077ebaa66510f591",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 3,
+            "score": 0.7085,
+            "relevant": false
+          },
+          {
+            "chunk_id": "fc37df13853852f1c40e42881c9ce815",
+            "source": "annual-report-2023-24.pdf",
+            "section": "2. Study Loan",
+            "page": 77,
+            "score": 0.6692,
+            "relevant": false
+          },
+          {
+            "chunk_id": "85b720b255c5d92e8ad375502180ca2e",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Scheduling of Classes",
+            "page": 8,
+            "score": 0.6668,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "h03",
+        "type": "hard",
+        "first_relevant_rank": 10,
+        "hit@3": false,
+        "hit@5": false,
+        "rr": 0.1,
+        "ndcg@5": 0.0,
+        "seconds": 0.10874706099821196,
+        "top5": [
+          {
+            "chunk_id": "f427e916456c72046044e5976cfd4e12",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Academic Warning/Probation",
+            "page": 24,
+            "score": 0.6811,
+            "relevant": false
+          },
+          {
+            "chunk_id": "6cfc384e33f22f820d00f938c34fbf01",
+            "source": "grading-page.html",
+            "section": "Warning/Probation",
+            "page": 1,
+            "score": 0.6731,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.6637,
+            "relevant": false
+          },
+          {
+            "chunk_id": "3c022ba3e39ac289fb4dc2a69833a9d6",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Adding or Dropping a Course",
+            "page": 22,
+            "score": 0.6557,
+            "relevant": false
+          },
+          {
+            "chunk_id": "420f785b233d254a4b530aa4638d5b6a",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "24. Restoration of Suspended 29. Readmission of Current Student",
+            "page": 4,
+            "score": 0.6512,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "h04",
+        "type": "hard",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.10061956899880897,
+        "top5": [
+          {
+            "chunk_id": "ec008e238771eb7bd70e58f9b2469870",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Admission with Credit Transfer from another University",
+            "page": 14,
+            "score": 0.7039,
+            "relevant": true
+          },
+          {
+            "chunk_id": "fd83c707fb652dd754785bf7b2ce3a13",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "25. Closure of Admission 30. Admission with Credit Transfer",
+            "page": 4,
+            "score": 0.6959,
+            "relevant": false
+          },
+          {
+            "chunk_id": "420f785b233d254a4b530aa4638d5b6a",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "24. Restoration of Suspended 29. Readmission of Current Student",
+            "page": 4,
+            "score": 0.6815,
+            "relevant": false
+          },
+          {
+            "chunk_id": "eb120418e544dcbb15a8ef1d723f9fe7",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Withdrawal from a Course",
+            "page": 22,
+            "score": 0.6776,
+            "relevant": false
+          },
+          {
+            "chunk_id": "e6c4f7c653827d0feb377922d46cab77",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "13. Registration of Students under",
+            "page": 2,
+            "score": 0.6763,
+            "relevant": false
+          }
+        ]
+      },
+      {
+        "id": "h05",
+        "type": "hard",
+        "first_relevant_rank": 1,
+        "hit@3": true,
+        "hit@5": true,
+        "rr": 1.0,
+        "ndcg@5": 1.0,
+        "seconds": 0.09876117200110457,
+        "top5": [
+          {
+            "chunk_id": "0489221b1cc6fc79822d36ca557ba7b5",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Admission with Credit Transfer from another University",
+            "page": 16,
+            "score": 0.723,
+            "relevant": true
+          },
+          {
+            "chunk_id": "ec008e238771eb7bd70e58f9b2469870",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Admission with Credit Transfer from another University",
+            "page": 14,
+            "score": 0.7051,
+            "relevant": true
+          },
+          {
+            "chunk_id": "4486745daae103bc0d90f99f1ae6efdd",
+            "source": "academic-rules-handbook-jun-2026.pdf",
+            "section": "Registration of Final Year Project (FYP)",
+            "page": 20,
+            "score": 0.6886,
+            "relevant": false
+          },
+          {
+            "chunk_id": "aeb8de0455f43627b8ee9067991086cc",
+            "source": "student-handbook-jun-2026.pdf",
+            "section": "Iv - Migration",
+            "page": 25,
+            "score": 0.6772,
+            "relevant": false
+          },
+          {
+            "chunk_id": "fd83c707fb652dd754785bf7b2ce3a13",
+            "source": "prospectus-2026-academic-rules-and-regulations.pdf",
+            "section": "25. Closure of Admission 30. Admission with Credit Transfer",
+            "page": 4,
+            "score": 0.6654,
+            "relevant": false
+          }
+        ]
+      }
+    ]
+  },
+  "noise": {
+    "noise_collection": "rahbar_noise",
+    "noise_chunks_added": 7,
+    "noise_docs": 4,
+    "summary": {
+      "questions": 26,
+      "recall@3": 0.9231,
+      "recall@5": 0.9615,
+      "mrr": 0.866,
+      "ndcg@5": 0.7707,
+      "retrieval_p50_ms": 104.0,
+      "retrieval_p95_ms": 144.7
+    },
+    "delta": {
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": -0.0388
+    },
+    "questions_with_noise_in_top5": 10
+  },
+  "seconds": 25.0,
+  "summary_table": "level      metric                        value\n----------------------------------------------------------\nmodule     embed_model                   nomic-embed-text\nmodule     dimension                     768\nmodule     paraphrase_mean_cosine        0.7242\nmodule     unrelated_mean_cosine         0.4498\nmodule     similarity_gap                0.2744\nmodule     paraphrase_min                0.6229\nmodule     unrelated_max                 0.6429\nmodule     pairs_separable               False\nmodule     embed_ms_per_chunk_mean       225.0\nmodule     embed_ms_per_chunk_p95        564.4\nmodule     chunks_timed                  20\nmodule     determinism_max_abs_diff      0.0\nmodule     deterministic                 True\ncomponent  questions                     26\ncomponent  recall@3                      0.9231\ncomponent  recall@5                      0.9615\ncomponent  mrr                           0.866\ncomponent  ndcg@5                        0.8095\ncomponent  retrieval_p50_ms              92.5\ncomponent  retrieval_p95_ms              122.0\nnoise      delta recall@3                0.0\nnoise      delta recall@5                0.0\nnoise      delta mrr                     0.0\nnoise      delta ndcg@5                  -0.0388\nnoise      questions with noise in top5  10"
+}

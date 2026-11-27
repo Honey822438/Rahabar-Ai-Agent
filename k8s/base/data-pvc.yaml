@@ -1,0 +1,16 @@
+# A3 F1: the data lake volume, mounted at /data.
+#   /data/lake/{incoming,verified,quarantine,archive,cache}, /data/lake/manifest.json
+#     cache/ = extraction/OCR results by file sha256, so a re-run never OCRs a scanned PDF twice
+#   /data/traces/traces.jsonl   one line per query (the api pods append; D1)
+#   /data/results/              verification reports, eval results, gate reports
+# ReadWriteOnce is enough on single-node minikube: every pod that mounts it runs on that node.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+  namespace: rahbar
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi

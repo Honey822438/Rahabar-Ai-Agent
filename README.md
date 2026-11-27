@@ -176,3 +176,15 @@ kubectl logs -n rahbar -l app=api --prefix --tail=-1 --max-log-requests=8 | grep
 ## License
 
 See [LICENSE](LICENSE).
+
+## Assignment 03 (RAGOps): one command per part
+Cluster runbook: [k8s/README.md](k8s/README.md). Screenshot list: [docs/screenshot-commands.md](docs/screenshot-commands.md).
+
+| Part | Command |
+|---|---|
+| A ingest + verify + incremental | `cd indexer && LAKE_DIR=../data/lake OLLAMA_URL=http://localhost:11434 python -m pipeline.ingest --seed ../corpus/raw --report-dir ../eval/results && python -m pipeline.sync` |
+| B eval suite (3 levels) | `make suite LABEL=baseline` |
+| C release gate | `python eval/gate.py eval/results/20261126T161842Z-k8s-c600.json` (PASS) · `python eval/gate.py eval/results/20261126T192021Z-k8s-c600-topk1-bad.json` (exit 1 = FAIL) |
+| D trace rebuild | `python -m tools.trace <trace_id> --file data/traces/traces.jsonl` |
+| E coverage | `python eval/coverage.py --label run` (exit 1 below 0.80) |
+| F Kubernetes | `kubectl apply -k k8s/overlays/dev && kubectl apply -f k8s/a3/gate-configmap.yaml && kubectl apply -f k8s/eval-job.yaml`; demos in `scripts/demo/f{2,3,4}_*.sh` |

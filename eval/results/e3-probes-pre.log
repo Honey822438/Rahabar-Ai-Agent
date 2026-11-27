@@ -1,0 +1,47 @@
+[suite] e3-pre-batch-b-probes: collection=rahbar_e3, 6 questions
+[suite] module level done
+[suite] component level done
+[suite] end-to-end level done
+
+level      metric                           value
+-------------------------------------------------------------
+module     embed_model                      nomic-embed-text
+module     dimension                        768
+module     paraphrase_mean_cosine           0.7242
+module     unrelated_mean_cosine            0.4498
+module     similarity_gap                   0.2744
+module     paraphrase_min                   0.6229
+module     unrelated_max                    0.6429
+module     pairs_separable                  False
+module     embed_ms_per_chunk_mean          205.1
+module     embed_ms_per_chunk_p95           594.1
+module     chunks_timed                     20
+module     determinism_max_abs_diff         0.0
+module     deterministic                    True
+component  questions                        6
+component  recall@3                         0
+component  recall@5                         0
+component  mrr                              0.0
+component  ndcg@5                           0.0
+component  retrieval_p50_ms                 81.8
+component  retrieval_p95_ms                 117.6
+e2e        questions                        6
+e2e        scored                           4
+e2e        fallbacks_after_retries          2
+e2e        abstention_correct_unanswerable  None
+e2e        false_abstention_rate            0.5
+e2e        abstention_accuracy              0.5
+e2e        citation_validity                1
+e2e        cites_relevant_chunk             0
+e2e        answer_correct_expect            0
+e2e        faithfulness                     1
+e2e        faithfulness_score_mean          1.0
+e2e        judged                           2
+e2e        judge_unavailable                0
+e2e        latency_p50_s                    1.746
+e2e        latency_p95_s                    3.07
+e2e        latency_p95_clean_s              1.746
+e2e        clean_answers                    3
+e2e        judge_agreement                  {"labelled": 0, "agreement": null}
+
+written eval/results/20261125T152652Z-e3-pre-batch-b-probes.json
