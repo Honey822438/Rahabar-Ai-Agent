@@ -1,11 +1,11 @@
-# Table 1: RAGOps Figure 3 mapping
+## 1. Figure 3 stages → our pipeline
 
-| Stage | What our pipeline does | Files | What is missing |
+| Stage | What our pipeline does | File(s) | What is missing |
 |---|---|---|---|
-| Ingest | Reads the corpus and Batch B into a data lake, extracts text (with OCR, cached by file hash) | `indexer/pipeline/ingest.py`, `extract.py`, `lake.py` | File sources only: no API or web-crawler ingestion |
-| Verify | Quality, completeness, recency and uniqueness checks (hash and embedding near-duplicate). Failures are quarantined with a reason; superseded versions are archived; each run writes a report | `indexer/pipeline/verify.py`, `eval/results/verification-*` | No consistency (contradiction) check |
-| Update data lake | Keeps verified, quarantined and archived documents with a manifest of versions, hashes and chunk ids; old versions can be restored | `indexer/pipeline/lake.py`, `restore.py` | Single volume, no off-cluster backup |
-| Update retrieval sources | Embeds only new or changed chunks, removes deleted ones, marks old versions `superseded=true` | `indexer/pipeline/sync.py` | Updates run on a schedule or by hand, not on a data change event |
-| Offline testing | One command runs module, retrieval (with noise test) and answer-level tests, then a release gate | `eval/run_suite.py`, `eval/suite/`, `eval/gate.py`, `config/gate.yaml` | Small golden set; many questions are synthetic and not yet reviewed |
-| Live testing | Candidate collection and second Deployment, gate before promotion, rolling update and rollback | `k8s/a3/candidate.yaml`, `k8s/eval-job.yaml`, `scripts/demo/f3_rollout_undo.sh` | No shadow or A/B testing on real traffic |
-| Check coverage | Compares 40 live queries with the golden questions by embedding cosine; exits non-zero below the threshold | `eval/coverage.py`, `eval/live_queries.jsonl` | Live queries are synthetic, not collected from real users |
+| Ingest | Copies new files into `lake/incoming/` on the `data` PVC. Extraction (PDF/HTML/MD, OCR for scans) is cached by sha256 | `indexer/pipeline/ingest.py`, `lake.py`, `extract.py`; Job `k8s/base/indexer-job.yaml` | No push trigger: ingestion runs weekly (CronJob) or on demand, not on file arrival |
+| Verify | Checks quality, completeness, recency and uniqueness (sha256 plus embedding near-duplicate ≥ 0.95). A failure → `quarantine/` with a reason; a report file per run | `indexer/pipeline/verify.py`; `eval/results/verification-*.{json,txt}` | Verification has no prompt-injection scan (caught later by the retrieval rail, §4a) |
+| Update data lake | `manifest.json` per doc_id/version/sha256/status. Superseded versions → `archive/`, `superseded=true` | `indexer/pipeline/lake.py`, `restore.py` | Single-node PVC (RWO), no off-cluster backup |
+| Update retrieval sources | Incremental sync: chunk id = hash(doc_id, version, idx, text). Embeds only new chunks, deletes by doc_id, 0 orphans. Only the Job writes Chroma | `indexer/pipeline/sync.py`, `store.py`; CronJob `reindex` | Re-chunking (a new chunk size) needs a new collection built in full (`scripts/build_collection.py`) |
+| Offline testing | One command: module, component (+ noise) and end-to-end levels. Release gate from a ConfigMap | `eval/run_suite.py`, `eval/suite/*`, `eval/gate.py`, `config/gate.yaml`, `k8s/eval-job.yaml` | Judge agreement is checked on only 10 hand-labelled answers |
+| Live testing | One trace per query (stdout + `/data/traces`), `/metrics`, monitoring summary over a window | `api/app/services/tracing.py`, `tools/trace.py`, `tools/metrics_summary.py` | No alerting; no user feedback signal |
+| Check coverage | Nearest golden question per live query (cosine ≥ 0.65); uncovered queries clustered into topics; exits 1 below 80 % | `eval/coverage.py`, `eval/live_queries.jsonl` | Live queries are a curated file, not sampled from production traces |

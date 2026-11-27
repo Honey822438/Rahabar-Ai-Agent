@@ -1,13 +1,9 @@
-# Table 2: Qualities
+## 2. Table 2 qualities
 
-Baseline numbers are from `eval/results/20261124T192554Z-baseline.json`; thresholds are from `config/gate.yaml`.
-
-| Quality | What we measure | Our threshold | Evidence |
+| Quality | What we measure | Threshold | Evidence |
 |---|---|---|---|
-| Adaptability | Effect of a chunk-size change; chunks re-embedded after a data change | recall@5 drop ≤ 0.02, MRR and nDCG@5 drop ≤ 0.05 | c600 passes 10/10 rules (`gate-candidate-c600.md`); second run embeds 0 chunks (`a2-incremental-*.log`) |
-| Monitorability | recall@5 0.96, MRR 0.87, nDCG@5 0.81, faithfulness 1.0, query coverage | faithfulness ≥ 0.90; false abstention rise ≤ 0.04; query similarity 0.65, coverage ≥ 80% | Coverage 60% before, 85% after new questions (`*-coverage-*.json`); drift report `e3-drift.md` |
-| Observability | One trace per query: chunks, scores, prompt, latency per stage, guardrail actions | Abstention on must-abstain questions = 1.0 | Baseline 1.0; injected library notice dropped by the retrieval rail (`e3-drift.md`) |
-| Traceability | Document version, collection, embedding model and prompt hash in each trace; citations | Citation validity = 1.0 | Baseline 1.0; `tools/trace.py` rebuilds the prompt |
-| Reliability | End-to-end p95 13.5 s, retrieval p95 132 ms; 3 replicas, HPA 3 to 8, `maxUnavailable: 0` | p95 without provider retries ≤ 20 s; retrieval p95 ≤ 400 ms | `gate-candidate-*.md`, `k8s/base/api.yaml` |
-
-Result files named without a folder are in `eval/results/`.
+| Adaptability | A change (chunk size) goes through its own collection + gate, and the live api is switched with a rolling update | gate rules in `config/gate.yaml` (recall@5 drop ≤ 0.02, MRR/nDCG drop ≤ 0.05, …) | c600 PASS: `eval/results/gate-k8s-c600.md`, `docs/evidence/a3-eval-k8s-c600.txt` |
+| Monitorability | top-1 similarity distribution, abstention, cache hits, fallbacks, per-stage p50/p95, injection flags | latency p95 (clean) ≤ 20 s; retrieval p95 ≤ 400 ms | `docs/evidence/a3-d3-metrics-summary.txt`, `docs/evidence/a3-f4-metrics.txt` |
+| Observability | Every request: trace with chunk ids, scores, filters, prompt hash, model params, guardrail actions, latency per stage | 100 % of queries traced | `traces/traces.jsonl` (365 records), `tools/trace.py` |
+| Traceability | The prompt rebuilt from the trace matches the stored sha256. Collection + embedding model/version recorded | hash match = exit 0 | `docs/evidence/a3-demo-check.txt` (trace tool PASS); `docs/evidence/a3-f3-rollout-undo.txt` |
+| Reliability | Must-abstain questions abstain; citations ⊆ retrieved chunks; faithfulness; Gemini → Groq failover | abstention (unanswerable) = 1.0, citation validity = 1.0, faithfulness ≥ 0.9 | `eval/results/20261126T160622Z-k8s-baseline.json` |

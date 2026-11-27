@@ -1,8 +1,8 @@
-# Contribution
+## 5. Contribution and AI statement
 
-| Member | Work |
+| Member | Contribution |
 |---|---|
-| Rehan Ahmed (i24-3012) | Pipeline code, verification and incremental indexing, evaluation suite and release gate, tracing, coverage, Kubernetes manifests, experiment runs, drafts of the evaluation inputs |
-| Malaika (i24-3098) | The 17 human-written golden questions (from Assignment 02); assigned for Assignment 03 (update when done): review, hand labelling, report tables and screenshots |
+| Rehan Ahmed (i24-3012) | All code, scripts and Kubernetes manifests; the data lake, verification and incremental sync; the eval suite, gate and coverage; traces and tools; every run and result; Batch B; drafts of every input; report results and short answers |
+| Malaika (i24-3098) | 17 human-written golden questions; faithfulness labels for 10 answers; review of 16 synthetic golden questions (s01–s06, h01, h02, e01–e08); D5 root cause |
 
-**AI statement:** We used an AI coding assistant to help write code, scripts, evaluation input drafts and report drafts, including the first draft of these tables. Inputs marked `synthetic` with `reviewed: false` have not been checked by a person.
+**AI statement.** We used Claude Code (Anthropic) to help write code, scripts, Kubernetes manifests and drafts of documents and test inputs. We ran every experiment on our own cluster, and we reviewed, labelled and checked the results ourselves. Every number in this report comes from a committed result file. Malaika's labels, question review and D5 note were prepared with AI assistance (gathering evidence, suggested verdicts and wording); Malaika checked the items and made the final decisions.

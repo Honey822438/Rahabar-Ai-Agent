@@ -21,8 +21,8 @@ Every number below is taken from a committed file and cites that file (`eval/res
 | Verify | Checks quality, completeness, recency and uniqueness (sha256 plus embedding near-duplicate ≥ 0.95). A failure → `quarantine/` with a reason; a report file per run | `indexer/pipeline/verify.py`; `eval/results/verification-*.{json,txt}` | Verification has no prompt-injection scan (caught later by the retrieval rail, §4a) |
 | Update data lake | `manifest.json` per doc_id/version/sha256/status. Superseded versions → `archive/`, `superseded=true` | `indexer/pipeline/lake.py`, `restore.py` | Single-node PVC (RWO), no off-cluster backup |
 | Update retrieval sources | Incremental sync: chunk id = hash(doc_id, version, idx, text). Embeds only new chunks, deletes by doc_id, 0 orphans. Only the Job writes Chroma | `indexer/pipeline/sync.py`, `store.py`; CronJob `reindex` | Re-chunking (a new chunk size) needs a new collection built in full (`scripts/build_collection.py`) |
-| Offline testing | One command: module, component (+ noise) and end-to-end levels. Release gate from a ConfigMap | `eval/run_suite.py`, `eval/suite/*`, `eval/gate.py`, `config/gate.yaml`, `k8s/eval-job.yaml` | The hand faithfulness labels for judge agreement are still being filled in |
-| Live testing | One trace per query (stdout + `/data/traces`), `/metrics`, monitoring summary over a window | `api/app/services/trace.py`, `tools/trace.py`, `tools/metrics_summary.py` | No alerting; no user feedback signal |
+| Offline testing | One command: module, component (+ noise) and end-to-end levels. Release gate from a ConfigMap | `eval/run_suite.py`, `eval/suite/*`, `eval/gate.py`, `config/gate.yaml`, `k8s/eval-job.yaml` | Judge agreement is checked on only 10 hand-labelled answers |
+| Live testing | One trace per query (stdout + `/data/traces`), `/metrics`, monitoring summary over a window | `api/app/services/tracing.py`, `tools/trace.py`, `tools/metrics_summary.py` | No alerting; no user feedback signal |
 | Check coverage | Nearest golden question per live query (cosine ≥ 0.65); uncovered queries clustered into topics; exits 1 below 80 % | `eval/coverage.py`, `eval/live_queries.jsonl` | Live queries are a curated file, not sampled from production traces |
 
 ## 2. Table 2 qualities
@@ -75,6 +75,8 @@ Golden set: 39 questions (26 answerable, 8 unanswerable, 5 hard; 17 human, 22 sy
 | End-to-end | answer contains expected fact | 0.839 |
 | End-to-end | latency p50 / p95 | 4.34 / 6.01 s |
 
+Judge agreement: the LLM judge matches the hand faithfulness labels on 9 of 10 answers (90 %). The one disagreement is `f-q05` (judge: faithful, hand label: unfaithful), the generative-AI citation answer (`eval/labels/faithfulness_hand.jsonl`, `eval/labels/judge_verdicts.jsonl`).
+
 Stochasticity (B4), two seeded runs (`eval/results/b4-stochasticity.md`): every retrieval and module metric is identical (Δ = 0). Only the timings move (retrieval p95 −28.7 ms). At temperature 0 the answers differ only in wording.
 
 ### C. One change + release gate
@@ -102,7 +104,13 @@ Earlier evidence that the gate was too noisy: the 100/0 candidate failed only on
   - injection flagged on 17 requests: 14 query rail, 3 retrieval rail
 - Guardrail (D4): the Batch B library notice is dropped by `retrieval_injection` in 3 traces, e.g. `63539cb2…` (`eval/results/e3-drift.md`), and its injected "1.00" never reaches the prompt.
 
-**D5 root cause from one trace (Malaika).** TODO-D5: Malaika writes 5 lines from trace `2f213c99a8ea41e597f4a678946f98e3` (`python -m tools.trace 2f213c99a8ea41e597f4a678946f98e3 --file traces/traces.jsonl`). The trace is an attendance question wrongly abstained on the 100/0 collection.
+**D5 root cause from one trace (Malaika).**
+
+1. **Question:** trace `2f213c99a8ea41e597f4a678946f98e3`: "If I skip too many lectures, am I still allowed to sit the final paper?" (collection `rahbar_c100`).
+2. **What went wrong:** the answer was "The documents do not cover it" with no citations, a wrong abstention, because the documents do have an attendance rule (handbook clauses 1.21 and 1.22).
+3. **Cause:** retrieval, not the model: none of the five current-version chunks (filter `superseded=false`) mentions attendance; they cover missed or late exams (rules p26, student handbook p29 twice), registration (prospectus p3) and study loans (annual report p77), so the model correctly abstained.
+4. **Evidence:** the model was called; top-1 score 0.733 is above the 0.65 floor, all scores sit between 0.699 and 0.733, nothing was dropped and the query was not rewritten, so the floor could not catch the miss.
+5. **Fix:** do not use the 100-word, no-overlap chunking, which likely split the attendance clause from its heading; keep 400/50 or 600/100, and consider a query rewrite. The saved gate run failed `rahbar_c100` on latency, not on this miss.
 
 ### E. Coverage and drift
 
@@ -134,7 +142,7 @@ We sized requests and limits from these measurements. Under load the api peaked 
 
 **(c)** We **archive**. A newer version flips the old chunks to `superseded=true` and moves the file to `archive/`. Retrieval filters on `superseded=false` unless the question asks about an older version. If we deleted: "what did the 2022 policy say?" could not be answered, `restore.py` rollback (14 chunks flipped back, 0 orphans) would be impossible, and old traces would cite chunk ids that no longer exist, breaking traceability.
 
-**(d)** We trust **faithfulness (LLM judge)** least. It is one Gemini model grading its own family's output, it scored 1.00 on every run, and it moved 0.960 → 0.917 with no data change (one answer out of 24). Hand labels (TODO: Malaika, `eval/labels/faithfulness_hand.jsonl`) are still needed to measure judge agreement. The all-calls p95 latency is a close second, because it measures Gemini's free-tier minute rather than our pipeline (§C).
+**(d)** We trust **faithfulness (LLM judge)** least. It is one Gemini model grading its own family's output, it scored 1.00 on every run, and it moved 0.960 → 0.917 with no data change (one answer out of 24). Against 10 hand labels it agreed on 9 (90 %): it passed an answer (`f-q05`) that the hand label marked unfaithful for leaving out the conditions on the rule (`eval/labels/faithfulness_hand.jsonl`). Ten labels are too few to trust that figure much. The all-calls p95 latency is a close second, because it measures Gemini's free-tier minute rather than our pipeline (§C).
 
 **(e)** **Release testing with a stochastic generator** was hardest to apply. The paper assumes the offline suite measures the candidate, but our e2e numbers moved with provider outages (41 % fallbacks in the trace window) and with the provider (Gemini vs Groq, −0.116 expected fact). We changed three things from the paper:
 - the gate enforces p95 over answers with no provider retry;
@@ -157,9 +165,9 @@ We sized requests and limits from these measurements. Under load the api peaked 
 | Member | Contribution |
 |---|---|
 | Rehan Ahmed (i24-3012) | All code, scripts and Kubernetes manifests; the data lake, verification and incremental sync; the eval suite, gate and coverage; traces and tools; every run and result; Batch B; drafts of every input; report results and short answers |
-| Malaika (i24-3098) | 17 human-written golden questions; TODO-MALAIKA: review of ≥ 8 synthetic questions, hand faithfulness labels, edits to pairs/live queries, D5 root cause, tables 1, 2 and 5 review, screenshot collection |
+| Malaika (i24-3098) | 17 human-written golden questions; faithfulness labels for 10 answers; review of 16 synthetic golden questions (s01–s06, h01, h02, e01–e08); D5 root cause |
 
-**AI statement.** We used Claude Code (Anthropic) to help write code, scripts, Kubernetes manifests and drafts of documents and test inputs. We ran every experiment on our own cluster, and we reviewed, labelled and checked the results ourselves. Every number in this report comes from a committed result file.
+**AI statement.** We used Claude Code (Anthropic) to help write code, scripts, Kubernetes manifests and drafts of documents and test inputs. We ran every experiment on our own cluster, and we reviewed, labelled and checked the results ourselves. Every number in this report comes from a committed result file. Malaika's labels, question review and D5 note were prepared with AI assistance (gathering evidence, suggested verdicts and wording); Malaika checked the items and made the final decisions.
 
 \newpage
 
