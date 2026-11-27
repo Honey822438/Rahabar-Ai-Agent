@@ -1,0 +1,5 @@
+1. **Question:** trace `2f213c99a8ea41e597f4a678946f98e3`: "If I skip too many lectures, am I still allowed to sit the final paper?" (collection `rahbar_c100`).
+2. **What went wrong:** the answer was "The documents do not cover it" with no citations, a wrong abstention, because the documents do have an attendance rule (handbook clauses 1.21 and 1.22).
+3. **Cause:** retrieval, not the model: none of the five current-version chunks (filter `superseded=false`) mentions attendance; they cover missed or late exams (rules p26, student handbook p29 twice), registration (prospectus p3) and study loans (annual report p77), so the model correctly abstained.
+4. **Evidence:** the model was called; top-1 score 0.733 is above the 0.65 floor, all scores sit between 0.699 and 0.733, nothing was dropped and the query was not rewritten, so the floor could not catch the miss.
+5. **Fix:** do not use the 100-word, no-overlap chunking, which likely split the attendance clause from its heading; keep 400/50 or 600/100, and consider a query rewrite. The saved gate run failed `rahbar_c100` on latency, not on this miss.
