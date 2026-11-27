@@ -2,6 +2,9 @@
 # Runs the suite in-process against Chroma + host Ollama + the hosted LLM, then the release gate.
 FROM python:3.12-slim-bookworm
 
+# Debian security fixes the base tag lags behind (e.g. CVE-2025-6020 libpam, fixed in 1.5.2-6+deb12u3).
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HOME=/tmp
 
 WORKDIR /srv

@@ -5,6 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HOME=/tmp
 
 # tesseract and poppler are the OCR path for scanned PDFs.
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng poppler-utils && \
     rm -rf /var/lib/apt/lists/*
 
