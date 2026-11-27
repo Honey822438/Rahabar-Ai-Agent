@@ -60,7 +60,7 @@ Incremental behaviour (`eval/results/a2-incremental-20261124T181904Z.log`):
 In-cluster ingest Job on an unchanged corpus: 13 live docs, 421 chunks, **0 embedded**, 0 orphans (`docs/evidence/a3-ingest-job.txt`).
 
 ### B. Evaluation suite (baseline, collection `rahbar`, 400/50 words, top_k 5, seed 42)
-Golden set: 39 questions (26 answerable, 8 unanswerable, 5 hard; 17 human, 22 synthetic) in `eval/golden.jsonl`. Results: `eval/results/20261126T160622Z-k8s-baseline.json`.
+Golden set: 39 questions (26 answerable, 8 unanswerable, 5 hard; 17 human, 22 synthetic of which 16 reviewed) in `eval/golden.jsonl`. Results: `eval/results/20261126T160622Z-k8s-baseline.json`.
 
 | Level | Metric | Value |
 |---|---|---|

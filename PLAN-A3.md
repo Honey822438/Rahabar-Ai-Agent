@@ -26,17 +26,17 @@ Tick `[x]` only when **Done when** passes.
 - [x] **B5 One command** runs everything → `eval/results/<timestamp>.json` + a summary table.
 
 ## Day 3 · Thu 26 — Gate, traces, drift (Parts C, D, E)
-- [ ] **C1 One change:** candidate = a different **chunk size** (its own collection, e.g. `rahbar_c600`). Run the suite on the baseline and the candidate, compare all three levels.
-- [ ] **C2 Release gate:** `config/gate.yaml` (recall@5 drop ≤ 2 pts, faithfulness ≥ X, p95 ≤ Y, abstention ≥ baseline, thresholds justified). The script exits pass or fail. Show **one failing candidate** (deliberately bad, e.g. 100/0 chunks) and **one passing**.
-- [ ] **D1 Trace record:** one JSON line per query: trace id, timestamp, query, rewritten query, embedding model + version, collection, chunk ids + doc ids + doc versions + scores, filters, reranked order, prompt hash + full prompt, model + params, response, citations, guardrail actions, latency per stage, cache hit or miss. Written to **stdout** and to `/data/traces/traces.jsonl`.
-- [ ] **D2 Trace tool:** `python -m tools.trace <id>` prints the exact context + prompt.
-- [ ] **D3 Metrics summary:** top-1 similarity distribution, abstention rate, cache hit rate, p95 per stage, injection attempts flagged, over a time window.
-- [ ] **D4 Guardrail logging:** the injection rail writes its action to the trace; tested with the Batch B injected doc.
-- [ ] **D5 Root cause from a trace only** (Rehan drafts; **[M]** may edit): pick a wrong or abstained answer from B.
-- [ ] **E1 Live queries** (draft in `eval/live_queries.jsonl`, **[M]** edits): ≥ 40 (≈ 28 in-domain, ≥ 12 from an uncovered topic) → `eval/live_queries.jsonl`.
-- [ ] **E2 Coverage:** nearest golden question per live query, share above a justified threshold, uncovered queries grouped into topics.
-- [ ] **E3 Drift:** ingest Batch B, re-run the suite, report what changed and why.
-- [ ] **E4 Close the gap** (Rehan drafts ≥ 6 new golden questions; **[M]** may replace them): re-run, coverage rises; the script **exits non-zero** below the threshold.
+- [x] **C1 One change:** candidate = a different **chunk size** (its own collection, e.g. `rahbar_c600`). Run the suite on the baseline and the candidate, compare all three levels.
+- [x] **C2 Release gate:** `config/gate.yaml` (recall@5 drop ≤ 2 pts, faithfulness ≥ X, p95 ≤ Y, abstention ≥ baseline, thresholds justified). The script exits pass or fail. Show **one failing candidate** (deliberately bad, e.g. 100/0 chunks) and **one passing**.
+- [x] **D1 Trace record:** one JSON line per query: trace id, timestamp, query, rewritten query, embedding model + version, collection, chunk ids + doc ids + doc versions + scores, filters, reranked order, prompt hash + full prompt, model + params, response, citations, guardrail actions, latency per stage, cache hit or miss. Written to **stdout** and to `/data/traces/traces.jsonl`.
+- [x] **D2 Trace tool:** `python -m tools.trace <id>` prints the exact context + prompt.
+- [x] **D3 Metrics summary:** top-1 similarity distribution, abstention rate, cache hit rate, p95 per stage, injection attempts flagged, over a time window.
+- [x] **D4 Guardrail logging:** the injection rail writes its action to the trace; tested with the Batch B injected doc.
+- [x] **D5 Root cause from a trace only** (Rehan drafts; **[M]** may edit): pick a wrong or abstained answer from B.
+- [x] **E1 Live queries** (draft in `eval/live_queries.jsonl`, **[M]** edits): ≥ 40 (≈ 28 in-domain, ≥ 12 from an uncovered topic) → `eval/live_queries.jsonl`.
+- [x] **E2 Coverage:** nearest golden question per live query, share above a justified threshold, uncovered queries grouped into topics.
+- [x] **E3 Drift:** ingest Batch B, re-run the suite, report what changed and why.
+- [x] **E4 Close the gap** (Rehan drafts ≥ 6 new golden questions; **[M]** may replace them): re-run, coverage rises; the script **exits non-zero** below the threshold.
 
 ## Day 4 · Fri 27 — Kubernetes (Part F) + report
 - [x] **F1** API Deployment, Chroma StatefulSet, Service; **PVC** for the data lake / quarantine / archive / traces.
@@ -44,7 +44,7 @@ Tick `[x]` only when **Done when** passes.
 - [x] **F3** Candidate = a **second Deployment + Service + its own collection**; eval Job against it; gate pass → rolling update (`maxUnavailable: 0`, `rollout status`); a candidate stopped by the gate; a bad release reversed with **`rollout undo`** → a new trace shows the **previous collection + embedding version**.
 - [x] **F4** Traces in `kubectl logs` + on the volume; metrics via `kubectl port-forward`.
 - [x] **F5** Requests and limits from `kubectl top` measurements (numbers go in the report).
-- [ ] **k8s/README.md**: a fresh cluster → working pipeline. **README**: the exact command for each Part A–F.
+- [x] **k8s/README.md**: a fresh cluster → working pipeline. **README**: the exact command for each Part A–F.
 - [ ] **Screenshots** **[M collects and labels them: A, B, C, D, E, F]**: terminal, command + output, nothing cropped.
 
 ## Day 5 · Sat 28 — Report + demo prep + submit
