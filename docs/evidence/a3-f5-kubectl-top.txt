@@ -1,0 +1,31 @@
+Thu Nov 26 06:13:39 PM UTC 2026
+## kubectl top pods -n rahbar (4 concurrent /api/ask in flight)
+NAME                             CPU(cores)   MEMORY(bytes)   
+api-76859ffc7b-f4cm5             295m         66Mi            
+api-76859ffc7b-gpchw             107m         68Mi            
+api-76859ffc7b-ssbrf             105m         66Mi            
+api-candidate-6fc459c99c-6xc77   4m           64Mi            
+chroma-0                         4m           165Mi           
+redis-86c745b94b-c6l9s           17m          4Mi             
+ui-67b998c44b-pnzfw              1m           3Mi             
+
+## configured requests / limits
+POD                              CPU_REQ   CPU_LIM   MEM_REQ   MEM_LIM
+api-76859ffc7b-f4cm5             100m      500m      128Mi     384Mi
+api-76859ffc7b-gpchw             100m      500m      128Mi     384Mi
+api-76859ffc7b-ssbrf             100m      500m      128Mi     384Mi
+api-candidate-6fc459c99c-6xc77   100m      500m      128Mi     384Mi
+chroma-0                         100m      500m      256Mi     768Mi
+eval-mdtgq                       100m      500m      192Mi     512Mi
+indexer-tzx66                    500m      2         256Mi     512Mi
+redis-86c745b94b-c6l9s           50m       200m      64Mi      128Mi
+reindex-29901780-hp52f           500m      2         256Mi     512Mi
+reindex-29921940-6z775           500m      2         256Mi     512Mi
+ui-67b998c44b-pnzfw              25m       100m      32Mi      64Mi
+
+NAME   REFERENCE        TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+api    Deployment/api   cpu: <unknown>/70%   3         8         3          19d
+
+## HPA after restarting kube-controller-manager (stale credentials after the minikube restart: FailedGetScale Unauthorized)
+NAME   REFERENCE        TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+api    Deployment/api   cpu: 30%/70%   3         8         3          19d

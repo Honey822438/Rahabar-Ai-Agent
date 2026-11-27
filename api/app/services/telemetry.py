@@ -19,10 +19,12 @@ _generation: ContextVar[dict[str, object] | None] = ContextVar("generation", def
 _lookups = {"hit": 0, "miss": 0}
 
 
-def record_generation(model: str, tokens_in: int, tokens_out: int) -> None:
+def record_generation(model: str, tokens_in: int, tokens_out: int, llm_target: str | None = None,
+                      failed_over_from: list[str] | None = None) -> None:
     TOKENS.labels(direction="in").inc(tokens_in)
     TOKENS.labels(direction="out").inc(tokens_out)
-    _generation.set({"model": model, "tokens_in": tokens_in, "tokens_out": tokens_out})
+    _generation.set({"model": model, "tokens_in": tokens_in, "tokens_out": tokens_out,
+                     "llm_target": llm_target, "failed_over_from": failed_over_from or []})
 
 
 def take_generation() -> dict[str, object]:

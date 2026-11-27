@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-11-24T18:19:06Z",
+  "lake": "../data/lake",
+  "counts": {
+    "verified": 1,
+    "quarantined": 0,
+    "archived": 0
+  },
+  "documents": [
+    {
+      "doc_id": "grading-page",
+      "version": "2026-b",
+      "file": "grading-page.html",
+      "sha256": "604ff90a2769bc68aca5d93db443fe1c63a6c32f771811c94a17f5fa9efebfeb",
+      "status": "verified",
+      "reasons": [],
+      "checks": {
+        "quality": {
+          "ok": true,
+          "reason": "4787 chars, clean ratio 1.00"
+        },
+        "completeness": {
+          "ok": true,
+          "reason": "1 pages, version 2026-b"
+        },
+        "recency": {
+          "ok": true,
+          "reason": "supersedes 2026"
+        },
+        "uniqueness": {
+          "ok": true,
+          "reason": "sha256 unique; near-dup check skipped"
+        }
+      },
+      "max_cosine": null,
+      "nearest": null
+    }
+  ],
+  "table": "doc_id@version      | quality | complete | recency | unique | max_cos | status   | reason\n--------------------+---------+----------+---------+--------+---------+----------+-------\ngrading-page@2026-b | PASS    | PASS     | PASS    | PASS   | -       | VERIFIED |       "
+}

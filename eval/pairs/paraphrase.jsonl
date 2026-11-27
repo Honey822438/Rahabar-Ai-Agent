@@ -1,0 +1,15 @@
+{"id": "p01", "a": "What CGPA keeps me off academic warning?", "b": "Minimum CGPA needed to avoid being placed on warning", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p02", "a": "How long can I take to finish my bachelor's?", "b": "Maximum duration allowed to complete a BS degree", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p03", "a": "What is the fee per credit hour for BS?", "b": "How much tuition is charged for each credit hour in undergraduate programmes?", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p04", "a": "How much attendance is compulsory?", "b": "What percentage of classes must a student attend?", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p05", "a": "Can I freeze my semester?", "b": "Is it possible to pause my studies for a term?", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p06", "a": "What happens if I fail a course?", "b": "Consequences of getting an F grade in a subject", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p07", "a": "How is GPA calculated?", "b": "Method used to compute the grade point average", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p08", "a": "Can I repeat a course to improve my grade?", "b": "Is retaking a subject allowed to raise my CGPA?", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p09", "a": "What is the refund if I withdraw early?", "b": "How much fee is returned when leaving in the first weeks?", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p10", "a": "Is using ChatGPT for assignments allowed?", "b": "Rules on generative AI tools in coursework", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p11", "a": "How many courses can I take in a semester?", "b": "Normal course load per regular term", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p12", "a": "Who approves credit transfer from another university?", "b": "Authority for exempting courses taken elsewhere", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p13", "a": "How long is the summer semester?", "b": "Duration of the summer term in weeks", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p14", "a": "What is the security deposit at admission?", "b": "Refundable deposit paid when joining the university", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}
+{"id": "p15", "a": "What does an incomplete grade turn into?", "b": "What happens to an I grade if not cleared?", "source": "synthetic", "author": "claude-code-draft", "reviewed": false}

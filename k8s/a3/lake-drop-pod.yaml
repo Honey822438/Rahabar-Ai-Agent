@@ -1,0 +1,31 @@
+# Demo helper: a short-lived pod that mounts the data PVC so an unseen batch can be copied
+# into /data/lake/incoming. It only copies files; the ingestion Job stays the only writer to Chroma.
+#   kubectl apply -f k8s/a3/lake-drop-pod.yaml && kubectl wait -n rahbar --for=condition=Ready pod/lake-drop
+#   kubectl cp data/batch_c/. rahbar/lake-drop:/data/lake/incoming/
+#   kubectl delete pod lake-drop -n rahbar
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lake-drop
+  namespace: rahbar
+  labels: { app: lake-drop }
+spec:
+  automountServiceAccountToken: false
+  securityContext: { runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001 }
+  containers:
+    - name: drop
+      image: rahbar-indexer:dev
+      imagePullPolicy: Never
+      command: ["sleep", "3600"]
+      resources:
+        requests: { cpu: 10m, memory: 32Mi }
+        limits: { cpu: 100m, memory: 64Mi }
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: { drop: ["ALL"] }
+      volumeMounts:
+        - { name: data, mountPath: /data }
+  volumes:
+    - name: data
+      persistentVolumeClaim: { claimName: data }

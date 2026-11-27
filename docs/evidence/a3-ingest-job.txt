@@ -1,0 +1,43 @@
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "seeded incoming", "source": "/srv/corpus/raw", "files": 9}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "academic-rules-undergrad@2026-06"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "annual-report-2019-20@2019-20"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "annual-report-2023-24@2023-24"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "faculty-entrepreneurship-and-technical-start-ups-policy@2022-05"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "fee-structure-page@2026-27"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "grading-page@2026"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "prospectus-2026-academic-rules-and-regulations@2026"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "student-handbook@2026-06"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "academic-rules-undergrad@2023-08"}
+
+doc_id@version | quality | complete | recency | unique | max_cos | status | reason
+---------------+---------+----------+---------+--------+---------+--------+-------
+
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "verification finished", "report": "/data/results/verification-20261126T170202Z.json", "verified": 0, "quarantined": 0, "archived": 0}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "seeded incoming", "source": "/srv/batch_b", "files": 12}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "career-fair-2026@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "faculty-entrepreneurship-and-technical-start-ups-policy@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "grading-system-reupload@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "library-notice-2026@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "b-missing-metadata-lab-safety@unknown"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "sports-week-2026@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "corrupt-scan@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "fee-structure-mirror@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "grading-page-mirror@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "empty-upload@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "midterm-notice@2026-11"}
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "unchanged, skipped", "doc": "handbook-upload@2026-11"}
+
+doc_id@version | quality | complete | recency | unique | max_cos | status | reason
+---------------+---------+----------+---------+--------+---------+--------+-------
+
+{"ts": "2026-11-26T17:02:02Z", "logger": "rahbar.ingest", "msg": "verification finished", "report": "/data/results/verification-20261126T170202Z.json", "verified": 0, "quarantined": 0, "archived": 0}
+{"ts": "2026-11-26T17:02:04Z", "logger": "rahbar.sync", "msg": "sync finished", "collection": "rahbar", "chunk_config": "400/50", "seconds": 1.5, "docs_live": 13, "docs_extracted": 0, "chunks_total": 421, "chunks_embedded": 0, "chunks_deleted": 0, "chunks_superseded_flipped": 0, "orphans": 0}
+
+  docs_live                  13
+  docs_extracted             0
+  chunks_total               421
+  chunks_embedded            0
+  chunks_deleted             0
+  chunks_superseded_flipped  0
+  orphans                    0
+

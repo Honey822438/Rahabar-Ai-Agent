@@ -69,9 +69,14 @@ spec:
                 - ALL
           volumeMounts:
             - { name: tmp, mountPath: /tmp }
+            # D1/F4: traces append to /data/traces/traces.jsonl (TRACE_FILE) on the lake PVC.
+            - { name: data, mountPath: /data/traces, subPath: traces }
       volumes:
         - name: tmp
           emptyDir: {}
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

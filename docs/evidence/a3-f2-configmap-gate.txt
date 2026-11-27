@@ -1,0 +1,53 @@
+configmap/gate-config unchanged
+=== 1) stock thresholds ===
+job.batch "eval" deleted from rahbar namespace
+job.batch/eval created
+job.batch/eval condition met
+NAME   STATUS     COMPLETIONS   DURATION   AGE
+eval   Complete   1/1           12m        12m
+e2e        gemini_failures                  3
+# Release gate: k8s-baseline (rahbar) -> PASS
+baseline `20261126T160622Z-k8s-baseline.json` (rahbar), candidate `20261126T184130Z-k8s-baseline.json`, rules `gate.yaml`
+| component.recall@5 | 0.9355 | 0.9355 | drop <= 0.02 (>= 0.9155) | PASS |
+| component.mrr | 0.8177 | 0.8177 | drop <= 0.05 (>= 0.7677) | PASS |
+| component.ndcg@5 | 0.7789 | 0.7789 | drop <= 0.05 (>= 0.7289) | PASS |
+| e2e.abstention_correct_unanswerable | 1.0 | 1.0 | >= 1.0 | PASS |
+| e2e.citation_validity | 1.0 | 1.0 | >= 1.0 | PASS |
+| e2e.faithfulness | 1.0 | 1.0 | >= 0.9 | PASS |
+| e2e.false_abstention_rate | 0.0645 | 0.0645 | rise <= 0.04 (<= 0.1045) | PASS |
+| e2e.answer_correct_expect | 0.8387 | 0.871 | drop <= 0.08 (>= 0.7587) | PASS |
+| e2e.latency_p95_clean_s | 6.012 | 6.676 | <= 20.0 | PASS |
+| component.retrieval_p95_ms | 187.3 | 302.4 | <= 400.0 | PASS |
+0 enforced rule(s) failed -> **PASS**
+=== 2) edit ConfigMap: e2e.faithfulness min 0.9 -> 1.01 ===
+configmap/gate-config configured
+      - {metric: e2e.faithfulness, kind: min, value: 1.01}
+      {"apiVersion":"v1","data":{"gate.yaml":"# C2 release gate (RAGOps 4.2.5): a candidate index/config ships only if every rule passes.\n# Mounted from the ConfigMap `rahbar-gate` in the cluster (k8s/eval-job.yaml); the gate script\n# (eval/gate.py) exits 1 on any failure, which fails the eval Job.\n#\n# Rules compare the candidate run with the baseline run (relative) or a fixed bar (absolute).\n# Every threshold below is justified from our own measurements (eval/results/*):\n# Baseline = the in-cluster run on the current 39-question golden set (26 Nov). The 24 Nov\n# baseline (20261124T192554Z) was scored on 26 questions, so comparing against it is not like-for-like.\nbaseline: eval/results/20261126T160622Z-k8s-baseline.json\n\nrules:\n  # Retrieval quality. Two runs of the baseline gave IDENTICAL retrieval (B4), so any drop is\n  # caused by the change, not by noise. 2 points = less than one question of 26 (1/26 = 3.8),\n  # i.e. the candidate may not lose a single question that the baseline found in the top 5.\n  - {metric: component.recall@5, kind: max_drop, value: 0.02}\n  # MRR / nDCG move with rank shuffles inside the top 5; allow ~ one question moving 1 -\u003e 2\n  # (0.5/26 = 0.019) plus the noise test's spread (0.039 nDCG), round to 0.05.\n  - {metric: component.mrr, kind: max_drop, value: 0.05}\n  - {metric: component.ndcg@5, kind: max_drop, value: 0.05}\n\n  # Answer level. Non-negotiables of the service: every must-abstain question abstains and\n  # every citation matches a retrieved chunk. No tolerance.\n  - {metric: e2e.abstention_correct_unanswerable, kind: min, value: 1.0}\n  - {metric: e2e.citation_validity, kind: min, value: 1.0}\n  # Faithfulness (Gemini judge, temperature 0): baseline 1.0 on 23 judged answers. 0.9 allows\n  # ~2 judge disagreements (B4 showed wording changes but no verdict flips) but blocks a\n  # candidate that grounds answers on the wrong chunks.\n  - {metric: e2e.faithfulness, kind: min, value: 1.01}\n  # Abstention must not get worse: false abstentions (answerable questions refused) may rise\n  # by at most one question of 26 (0.04).\n  - {metric: e2e.false_abstention_rate, kind: max_rise, value: 0.04}\n  # Correct answers (golden `expect` string found): B4 re-run moved this by 0.04 with no change\n  # at all, so allow 0.08 (two questions) before calling it a regression.\n  - {metric: e2e.answer_correct_expect, kind: max_drop, value: 0.08}\n\n  # Latency. End-to-end p95 over ALL calls is dominated by the free-tier provider: 429/503\n  # back-offs and failovers. The c100 run failed here (27.6 s) only because 12/31 questions\n  # needed a retry, while its p50 was the fastest. A gate must judge the candidate, not\n  # Gemini's minute, so it ENFORCES p95 over answers with no provider retry (the cost of our\n  # pipeline + one normal LLM call) and REPORTS the all-calls p95 next to it (enforce: false).\n  # 20 s = the UI's request timeout budget.\n  - {metric: e2e.latency_p95_clean_s, kind: max, value: 20.0}\n  - {metric: e2e.latency_p95_s, kind: max, value: 20.0, enforce: false}\n  # Retrieval p95 is ours alone: baseline 104-132 ms; bigger chunks/more chunks must not\n  # triple it. 400 ms keeps retrieval under 5% of the answer budget.\n  - {metric: component.retrieval_p95_ms, kind: max, value: 400}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2026-11-25T18:02:28Z","name":"gate-config","namespace":"rahbar","resourceVersion":"37076","uid":"c7bcc90b-2664-4534-a62a-20257b649d39"}}
+job.batch "eval" deleted from rahbar namespace
+job.batch/eval created
+NAME   STATUS   COMPLETIONS   DURATION   AGE
+eval   Failed   0/1           26m        26m
+# Release gate: k8s-baseline (rahbar) -> FAIL
+
+baseline `20261126T160622Z-k8s-baseline.json` (rahbar), candidate `20261126T185340Z-k8s-baseline.json`, rules `gate.yaml`
+
+| metric | baseline | candidate | rule | result |
+|---|---|---|---|---|
+| component.recall@5 | 0.9355 | 0.9355 | drop <= 0.02 (>= 0.9155) | PASS |
+| component.mrr | 0.8177 | 0.8177 | drop <= 0.05 (>= 0.7677) | PASS |
+| component.ndcg@5 | 0.7789 | 0.7789 | drop <= 0.05 (>= 0.7289) | PASS |
+| e2e.abstention_correct_unanswerable | 1.0 | 1.0 | >= 1.0 | PASS |
+| e2e.citation_validity | 1.0 | 1.0 | >= 1.0 | PASS |
+| e2e.faithfulness | 1.0 | 1.0 | >= 1.01 | **FAIL** |
+| e2e.false_abstention_rate | 0.0645 | 0.0645 | rise <= 0.04 (<= 0.1045) | PASS |
+| e2e.answer_correct_expect | 0.8387 | 0.9355 | drop <= 0.08 (>= 0.7587) | PASS |
+| e2e.latency_p95_clean_s | 6.012 | 5.755 | <= 20.0 | PASS |
+| e2e.latency_p95_s | 6.012 | 5.755 | <= 20.0 | report only (within) |
+| component.retrieval_p95_ms | 187.3 | 278.7 | <= 400.0 | PASS |
+
+1 enforced rule(s) failed -> **FAIL**
+
+=== 3) restore ===
+configmap/gate-config configured
+      - {metric: e2e.faithfulness, kind: min, value: 0.9}
+      {"apiVersion":"v1","data":{"gate.yaml":"# C2 release gate (RAGOps 4.2.5): a candidate index/config ships only if every rule passes.\n# Mounted from the ConfigMap `rahbar-gate` in the cluster (k8s/eval-job.yaml); the gate script\n# (eval/gate.py) exits 1 on any failure, which fails the eval Job.\n#\n# Rules compare the candidate run with the baseline run (relative) or a fixed bar (absolute).\n# Every threshold below is justified from our own measurements (eval/results/*):\n# Baseline = the in-cluster run on the current 39-question golden set (26 Nov). The 24 Nov\n# baseline (20261124T192554Z) was scored on 26 questions, so comparing against it is not like-for-like.\nbaseline: eval/results/20261126T160622Z-k8s-baseline.json\n\nrules:\n  # Retrieval quality. Two runs of the baseline gave IDENTICAL retrieval (B4), so any drop is\n  # caused by the change, not by noise. 2 points = less than one question of 26 (1/26 = 3.8),\n  # i.e. the candidate may not lose a single question that the baseline found in the top 5.\n  - {metric: component.recall@5, kind: max_drop, value: 0.02}\n  # MRR / nDCG move with rank shuffles inside the top 5; allow ~ one question moving 1 -\u003e 2\n  # (0.5/26 = 0.019) plus the noise test's spread (0.039 nDCG), round to 0.05.\n  - {metric: component.mrr, kind: max_drop, value: 0.05}\n  - {metric: component.ndcg@5, kind: max_drop, value: 0.05}\n\n  # Answer level. Non-negotiables of the service: every must-abstain question abstains and\n  # every citation matches a retrieved chunk. No tolerance.\n  - {metric: e2e.abstention_correct_unanswerable, kind: min, value: 1.0}\n  - {metric: e2e.citation_validity, kind: min, value: 1.0}\n  # Faithfulness (Gemini judge, temperature 0): baseline 1.0 on 23 judged answers. 0.9 allows\n  # ~2 judge disagreements (B4 showed wording changes but no verdict flips) but blocks a\n  # candidate that grounds answers on the wrong chunks.\n  - {metric: e2e.faithfulness, kind: min, value: 0.9}\n  # Abstention must not get worse: false abstentions (answerable questions refused) may rise\n  # by at most one question of 26 (0.04).\n  - {metric: e2e.false_abstention_rate, kind: max_rise, value: 0.04}\n  # Correct answers (golden `expect` string found): B4 re-run moved this by 0.04 with no change\n  # at all, so allow 0.08 (two questions) before calling it a regression.\n  - {metric: e2e.answer_correct_expect, kind: max_drop, value: 0.08}\n\n  # Latency. End-to-end p95 over ALL calls is dominated by the free-tier provider: 429/503\n  # back-offs and failovers. The c100 run failed here (27.6 s) only because 12/31 questions\n  # needed a retry, while its p50 was the fastest. A gate must judge the candidate, not\n  # Gemini's minute, so it ENFORCES p95 over answers with no provider retry (the cost of our\n  # pipeline + one normal LLM call) and REPORTS the all-calls p95 next to it (enforce: false).\n  # 20 s = the UI's request timeout budget.\n  - {metric: e2e.latency_p95_clean_s, kind: max, value: 20.0}\n  - {metric: e2e.latency_p95_s, kind: max, value: 20.0, enforce: false}\n  # Retrieval p95 is ours alone: baseline 104-132 ms; bigger chunks/more chunks must not\n  # triple it. 400 ms keeps retrieval under 5% of the answer budget.\n  - {metric: component.retrieval_p95_ms, kind: max, value: 400}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"gate-config","namespace":"rahbar"}}

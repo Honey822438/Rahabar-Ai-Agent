@@ -1,0 +1,40 @@
+### run 2: unchanged corpus
+  docs_live                  9
+  docs_extracted             0
+  chunks_total               413
+  chunks_embedded            0
+  chunks_deleted             0
+  chunks_superseded_flipped  0
+  orphans                    0
+
+### changed doc: grading-page edited (new version 2026-b) arrives in incoming
+{"ts": "2026-11-24T18:19:06Z", "logger": "rahbar.ingest", "msg": "archived older version", "doc": "grading-page@2026", "by": "grading-page@2026-b"}
+{"ts": "2026-11-24T18:19:06Z", "logger": "rahbar.ingest", "msg": "verified", "doc": "grading-page@2026-b", "status": "verified", "reasons": [], "seconds": 0.02}
+grading-page@2026-b | PASS    | PASS     | PASS    | PASS   | -       | VERIFIED |       
+  docs_live                  10
+  docs_extracted             1
+  chunks_total               420
+  chunks_embedded            7
+  chunks_deleted             0
+  chunks_superseded_flipped  7
+  orphans                    0
+
+### delete doc: faculty-entrepreneurship policy
+  docs_live                  9
+  docs_extracted             0
+  chunks_total               401
+  chunks_embedded            0
+  chunks_deleted             19
+  chunks_superseded_flipped  0
+  orphans                    0
+
+### rollback: restore grading-page@2026
+restored grading-page@2026; now run: python -m pipeline.sync
+  docs_live                  9
+  docs_extracted             0
+  chunks_total               401
+  chunks_embedded            0
+  chunks_deleted             0
+  chunks_superseded_flipped  14
+  orphans                    0
+

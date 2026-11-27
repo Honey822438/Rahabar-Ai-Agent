@@ -13,7 +13,9 @@ INGRESS_IP ?= $(shell minikube ip 2>/dev/null)
 HOST ?= rahbar.local
 
 .DEFAULT_GOAL := help
-.PHONY: help install test lint dev cluster images apply secret index ask fetch eval eval-fixtures check
+.PHONY: help install test lint dev cluster images apply secret index ask fetch eval eval-fixtures check suite validate-inputs report
+LABEL ?= baseline
+SUITE_ARGS ?=
 
 help: ## list the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -28,7 +30,7 @@ test: ## run the api and indexer tests (stubs only: no cluster, no model, no net
 	cd indexer && $(BIN)/pytest -q
 
 lint: ## ruff and mypy over everything in Python
-	$(BIN)/ruff check api indexer eval corpus
+	$(BIN)/ruff check api indexer eval corpus scripts/validate_inputs.py
 	cd api && $(BIN)/mypy app
 	cd indexer && $(BIN)/mypy pipeline
 
@@ -46,6 +48,7 @@ images: ## build the three images and load them into minikube (needs yours: Dock
 	minikube image build -t rahbar-api:$(TAG) api
 	minikube image build -t rahbar-indexer:$(TAG) -f indexer/Dockerfile .
 	minikube image build -t rahbar-ui:$(TAG) ui
+	minikube image build -t rahbar-eval:$(TAG) -f eval/Dockerfile .
 
 apply: ## apply the dev overlay (needs yours: manifests)
 	kubectl apply -k k8s/overlays/dev
@@ -75,3 +78,12 @@ eval-fixtures: ## score the CI fixture golden set against a local `make dev`
 
 check: ## run the submission checker
 	$(PY) scripts/check_submission.py
+
+suite: ## A3 B5: the whole offline suite (module, component + noise, end-to-end), one command
+	$(BIN)/python eval/run_suite.py --label $(LABEL) $(SUITE_ARGS)
+
+validate-inputs: ## A3: check the golden set, live queries, pairs and labels
+	$(BIN)/python scripts/validate_inputs.py
+
+report: ## A3: render report/report.md to report/report.pdf (pandoc + headless Chrome)
+	scripts/render_report.sh

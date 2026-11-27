@@ -1,0 +1,74 @@
+[suite] k8s-baseline: collection=rahbar, 39 questions
+[suite] module level done
+[suite] component level done
+[suite] end-to-end level done
+
+level      metric                           value
+-------------------------------------------------------------
+module     embed_model                      nomic-embed-text
+module     dimension                        768
+module     paraphrase_mean_cosine           0.7242
+module     unrelated_mean_cosine            0.4498
+module     similarity_gap                   0.2744
+module     paraphrase_min                   0.6229
+module     unrelated_max                    0.6429
+module     pairs_separable                  False
+module     embed_ms_per_chunk_mean          440.6
+module     embed_ms_per_chunk_p95           1110.3
+module     chunks_timed                     20
+module     determinism_max_abs_diff         0.0
+module     deterministic                    True
+component  questions                        31
+component  recall@3                         0.9032
+component  recall@5                         0.9355
+component  mrr                              0.8177
+component  ndcg@5                           0.7789
+component  retrieval_p50_ms                 134.5
+component  retrieval_p95_ms                 187.3
+noise      delta recall@3                   -0.0322
+noise      delta recall@5                   0.0
+noise      delta mrr                        -0.0026
+noise      delta ndcg@5                     -0.0288
+noise      questions with noise in top5     13
+e2e        questions                        39
+e2e        scored                           39
+e2e        fallbacks_after_retries          0
+e2e        answered_by                      {"gemini": 34, "groq": 3, "None": 2}
+e2e        gemini_failures                  3
+e2e        abstention_correct_unanswerable  1
+e2e        false_abstention_rate            0.0645
+e2e        abstention_accuracy              0.9487
+e2e        citation_validity                1
+e2e        cites_relevant_chunk             1
+e2e        answer_correct_expect            0.8387
+e2e        faithfulness                     1
+e2e        faithfulness_score_mean          1.0
+e2e        judged                           29
+e2e        judge_unavailable                0
+e2e        latency_p50_s                    4.339
+e2e        latency_p95_s                    6.012
+e2e        latency_p95_clean_s              6.012
+e2e        clean_answers                    36
+e2e        judge_agreement                  None
+
+written /data/results/20261126T160622Z-k8s-baseline.json
+# Release gate: k8s-baseline (rahbar) -> FAIL
+
+baseline `20261124T192554Z-baseline.json` (rahbar), candidate `20261126T160622Z-k8s-baseline.json`, rules `gate.yaml`
+
+| metric | baseline | candidate | rule | result |
+|---|---|---|---|---|
+| component.recall@5 | 0.9615 | 0.9355 | drop <= 0.02 (>= 0.9415) | **FAIL** |
+| component.mrr | 0.866 | 0.8177 | drop <= 0.05 (>= 0.8160) | PASS |
+| component.ndcg@5 | 0.8095 | 0.7789 | drop <= 0.05 (>= 0.7595) | PASS |
+| e2e.abstention_correct_unanswerable | 1.0 | 1.0 | >= 1.0 | PASS |
+| e2e.citation_validity | 1.0 | 1.0 | >= 1.0 | PASS |
+| e2e.faithfulness | 1.0 | 1.0 | >= 0.9 | PASS |
+| e2e.false_abstention_rate | 0.04 | 0.0645 | rise <= 0.04 (<= 0.0800) | PASS |
+| e2e.answer_correct_expect | 0.88 | 0.8387 | drop <= 0.08 (>= 0.8000) | PASS |
+| e2e.latency_p95_clean_s | - | 6.012 | <= 20.0 | PASS |
+| e2e.latency_p95_s | 13.511 | 6.012 | <= 20.0 | report only (within) |
+| component.retrieval_p95_ms | 132.3 | 187.3 | <= 400.0 | PASS |
+
+1 enforced rule(s) failed -> **FAIL**
+

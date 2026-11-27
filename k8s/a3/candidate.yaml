@@ -1,0 +1,97 @@
+# F3: the candidate = a second Deployment + Service on its own collection (rahbar_c600).
+# Same image and config as the live api; it gets no Ingress route (reach it with
+# kubectl port-forward svc/api-candidate 8100:8000). Gate PASS -> promote by rolling the live
+# api onto the collection (see k8s/README.md); gate FAIL -> delete this, the live api is untouched.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-candidate
+  namespace: rahbar
+  labels: { app: api-candidate }
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels: { app: api-candidate }
+  template:
+    metadata:
+      labels: { app: api-candidate }
+    spec:
+      # A Service named chroma would inject CHROMA_PORT=tcp://..., which Chroma and our config misread.
+      enableServiceLinks: false
+      serviceAccountName: api
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: api
+          image: rahbar-api:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - { name: http, containerPort: 8000 }
+          envFrom:
+            - configMapRef: { name: rahbar-config }
+            # optional: the stub phase and CI run with no key.
+            - secretRef: { name: rahbar-secret, optional: true }
+          env:
+            # F3: the only difference from the live api: the candidate's own collection.
+            - { name: CHROMA_COLLECTION, value: rahbar_c600 }
+          startupProbe:
+            httpGet: { path: /healthz, port: 8000 }
+            failureThreshold: 30
+            periodSeconds: 2
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8000 }
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet: { path: /readyz, port: 8000 }
+            timeoutSeconds: 3
+            periodSeconds: 10
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec: { command: ["sleep", "10"] }
+          # Measured peak 77 MiB idle plus cached traffic; 128Mi request and 384Mi limit leave room for
+          # concurrent generation. CPU request is also the HPA baseline: 70% of 100m. See docs/evidence/kubectl-top.txt.
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 384Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            # D1/F4: traces append to /data/traces/traces.jsonl (TRACE_FILE) on the lake PVC.
+            - { name: data, mountPath: /data/traces, subPath: traces }
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-candidate
+  namespace: rahbar
+spec:
+  type: ClusterIP
+  selector: { app: api-candidate }
+  ports:
+    - { name: http, port: 8000, targetPort: 8000 }

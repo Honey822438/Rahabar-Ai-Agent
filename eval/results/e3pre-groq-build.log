@@ -1,0 +1,11 @@
+removed 12 Batch B entries, restored ['faculty-entrepreneurship-and-technical-start-ups-policy@2022-05'], 10 entries left -> data/e3prelake
+{"ts": "2026-11-25T18:16:54Z", "logger": "rahbar.sync", "msg": "sync finished", "collection": "rahbar_e3pre", "chunk_config": "400/50", "seconds": 301.2, "docs_live": 10, "docs_extracted": 10, "chunks_total": 420, "chunks_embedded": 420, "chunks_deleted": 0, "chunks_superseded_flipped": 0, "orphans": 0}
+
+  docs_live                  10
+  docs_extracted             10
+  chunks_total               420
+  chunks_embedded            420
+  chunks_deleted             0
+  chunks_superseded_flipped  0
+  orphans                    0
+

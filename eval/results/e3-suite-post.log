@@ -1,0 +1,52 @@
+[suite] e3-post-batch-b: collection=rahbar_e3, 31 questions
+[suite] module level done
+[suite] component level done
+[suite] end-to-end level done
+
+level      metric                           value
+-------------------------------------------------------------
+module     embed_model                      nomic-embed-text
+module     dimension                        768
+module     paraphrase_mean_cosine           0.7242
+module     unrelated_mean_cosine            0.4498
+module     similarity_gap                   0.2744
+module     paraphrase_min                   0.6229
+module     unrelated_max                    0.6429
+module     pairs_separable                  False
+module     embed_ms_per_chunk_mean          229.8
+module     embed_ms_per_chunk_p95           598.6
+module     chunks_timed                     20
+module     determinism_max_abs_diff         0.0
+module     deterministic                    True
+component  questions                        26
+component  recall@3                         0.9231
+component  recall@5                         0.9615
+component  mrr                              0.866
+component  ndcg@5                           0.8095
+component  retrieval_p50_ms                 95.4
+component  retrieval_p95_ms                 124.6
+noise      delta recall@3                   0.0
+noise      delta recall@5                   0.0
+noise      delta mrr                        0.0
+noise      delta ndcg@5                     -0.0388
+noise      questions with noise in top5     10
+e2e        questions                        31
+e2e        scored                           18
+e2e        fallbacks_after_retries          13
+e2e        abstention_correct_unanswerable  1
+e2e        false_abstention_rate            0
+e2e        abstention_accuracy              1
+e2e        citation_validity                1
+e2e        cites_relevant_chunk             1
+e2e        answer_correct_expect            1
+e2e        faithfulness                     1
+e2e        faithfulness_score_mean          1.0
+e2e        judged                           13
+e2e        judge_unavailable                1
+e2e        latency_p50_s                    2.751
+e2e        latency_p95_s                    8.02
+e2e        latency_p95_clean_s              8.02
+e2e        clean_answers                    8
+e2e        judge_agreement                  {"labelled": 0, "agreement": null}
+
+written eval/results/20261125T162007Z-e3-post-batch-b.json
